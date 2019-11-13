@@ -53,7 +53,7 @@ MAIN_LOOP:
     ; read first word into D6
     
     ; disassemble word in D6:
-    INCLUDE 'OPCODE.X68'
+    JSR DisassembleOpcode
         ; read opcode
             ; branch to 13 different opcode bins
             ; determine instruction and add string to (A1)
@@ -69,15 +69,14 @@ MAIN_LOOP:
     SIMHALT
 
 *********************************************************************************
-* Method Name: yourDisassemblerFirstMethodHere
-* Description: call this method from your code above; see the examples above on
-*   how to call methods and use them profusely as you build your final project
-*
-* Preconditions:  TBA
-* Postconditions: TBA
+* Method Name: DisassembleOpcode
+* Description: This method will determine which opcode is in the current word, and
+*   write its ASCII assembly code equivalent into (A1)
+* Preconditions:  D6 contains word-length opcode
+* Postconditions: (A1) points to ASCII assembly code ending in 0
 *********************************************************************************
-method1:
-        NOP
+DisassembleOpcode:
+    INCLUDE 'OPCODE.X68'
         RTS
 *********************************************************************************
 * Method Name: yourDisassemblerSecondMethodHere
