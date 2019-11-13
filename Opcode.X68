@@ -8,7 +8,7 @@
 * Preconditions: D6 contains word length opcode
 *-----------------------------------------------------------
 Opcode:
-; MOVEM D2-D3            ; MOVEM all registers used
+    MOVEM.L D2-D3, -(SP)            ; MOVEM all registers used
     
     MOVE.W D6,D2         ; copy current word (D6) into opcode mask register (D2)
     AND MASK_OPCODE,D2   ; apply mask to first 4 bits
@@ -32,7 +32,6 @@ Opcode:
     BEQ CMPI             ; if equal jump to CMPI
     CMP.W #$0800         ; compare with 10
     BEQ BCLR             ; if equal jump to BCLR
-    BRA DATA
 Skip_0000:
     
     CMP.W #$D000,D2      ; compare with 1101
@@ -110,7 +109,7 @@ Skip_1110:
     CMP.W #$6000,D2      ; compare with 0110
     BNE Skip_0110        ; if not equal then skip
     MOVE.W D6,D3         ; move current word into working register (D3)
-    AND MASK_111098,D3    ; mask bits 11, 10, 9, 8
+    AND MASK_111098,D3   ; mask bits 11, 10, 9, 8
     CMP.W #$0000,D3      ; compare with 0000
     BEQ BRA              ; if equal jump to BRA
     CMP.W #$0500,D3      ; compare with 0101
@@ -126,10 +125,26 @@ Skip_0110:
     CMP.W #$4000,D2      ; compare with 0100
     BNE Skip_0100        ; if not equal then skip
     MOVE.W D6,D3         ; move current word into working register (D3)
-    AND                  ; mask
-    
+    CMP.W #$4E75,D3      ; check against constant RTS code
+    BEQ RTS              ; if equal jump to RTS
+    AND MASK_8,D3        ; mask bit 8
+    CMP #$0100,D3        ; compare with 1
+    BEQ LEA              ; if equal jump to LEA
+    MOVE.W D6,D3         ; refresh current word into D3
+    AND MASK_11,D3       ; mask bit 11
+    CMP #$0000,D3        ; compare with 0
+    BEQ NEG              ; if equal jump to NEG
+    MOVE.W D6,D3         ; refresh current word into D3
+    AND MASK_9,D3        ; mask bit 9
+    CMP #$0000,D3        ; compare with 0
+    BEQ MOVEM            ; if equal jump to MOVEM
+    BNE JSR              ; if not equal jump to JSR  
 Skip_0100:
 
+DATA:
+    ; print
+    MOVEM.L (SP)+, D2-D3
+    RTS
 
 SUB:
 SUBQ:
@@ -158,7 +173,11 @@ BCS:
 BGE:
 BLT:
 BVC:
-DATA: 
+RTS:
+LEA:
+NEG:
+MOVEM:
+JSR:
 
 *~Font name~Courier New~
 *~Font size~10~
