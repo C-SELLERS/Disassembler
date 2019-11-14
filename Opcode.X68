@@ -142,9 +142,9 @@ Skip_0110:
 Skip_0100:
 
 DATA:
-    ; print
-    MOVEM.L (SP)+, D2-D3
-    RTS
+    ; print DATA
+    ; print operands?
+    BRA Opcode_Finish
 
 SUB:
 SUBQ:
@@ -178,6 +178,10 @@ LEA:
 NEG:
 MOVEM:
 JSR:
+
+Opcode_Finish: 
+    MOVEM.L (SP)+, D2-D3        ; return registers to their previous state
+    RTS                         ; return from function
 
 *~Font name~Courier New~
 *~Font size~10~

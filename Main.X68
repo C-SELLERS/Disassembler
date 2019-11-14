@@ -77,7 +77,7 @@ MAIN_LOOP:
 *********************************************************************************
 DisassembleOpcode:
     INCLUDE 'OPCODE.X68'
-        RTS
+    RTS
 *********************************************************************************
 * Method Name: yourDisassemblerSecondMethodHere
 * Description:    TBA
