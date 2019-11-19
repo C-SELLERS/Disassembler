@@ -1,0 +1,955 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 11/18/2019 12:49:44 PM
+
+00000000                             1  *=====================================================================================================================
+00000000                             2  * Title      : Matrix Multiplier
+00000000                             3  * Written by : Howie Catlin
+00000000                             4  * Date       :  18-Nov-2019
+00000000                             5  * 
+00000000                             6  * Description:
+00000000                             7  *   Muliplies two M-by-N matrices and prints their results to screen. The matrices, and their properties, are defined 
+00000000                             8  *   at the bottom of the file, as constants. 
+00000000                             9  * 
+00000000                            10  * The following functions are defined: 
+00000000                            11  *   - PrintWelcomeInfo
+00000000                            12  *   - PrintText
+00000000                            13  *   - PrintChar
+00000000                            14  *   - PrintCharInline
+00000000                            15  *   - PrintDecimalInline 
+00000000                            16  *   - GetCursorPosition
+00000000                            17  *   - SaveCursorPosition
+00000000                            18  *   - SetCursorPosition
+00000000                            19  *   - PrintDash
+00000000                            20  *   - PrintTab
+00000000                            21  *   - PrintPipe
+00000000                            22  *   - PrintSpace
+00000000                            23  *   - PrintNewline
+00000000                            24  *   - PrintMatrix_HeaderFooter
+00000000                            25  *   - PrintMatrix_Data
+00000000                            26  *   - Print_MatrixA
+00000000                            27  *   - Print_MatrixB
+00000000                            28  *   - Print_MatrixOut
+00000000                            29  *   - GetRowOrderedOffset
+00000000                            30  *   - GetColOrderedOffset
+00000000                            31  *   - GetOffset
+00000000                            32  *   - InitializeOutputMatrix
+00000000                            33  *=====================================================================================================================
+00000000                            34  
+00000000                            35  * context REG D4-D7/A0-A6
+00000000                            36  
+000007D0                            37      ORG 2000
+000007D0                            38      
+000007D0                            39  *---------------------------------------------------------------------------------------------------------------------
+000007D0                            40  * PrintWelcomeInfo
+000007D0                            41  *
+000007D0                            42  *   Prints a series of strings explaining the origin and
+000007D0                            43  *   purpose of the program 
+000007D0                            44  *---------------------------------------------------------------------------------------------------------------------
+000007D0                            45  PrintWelcomeInfo
+000007D0  48E7 0040                 46          MOVEM.L A1,-(SP)    ; store the context
+000007D4  43F9 00001031             47          LEA HEADER_LINE,A1
+000007DA  4EB9 00000876             48          JSR PrintText            
+000007E0  43F9 00001083             49          LEA HEADER_1,A1
+000007E6  4EB9 00000876             50          JSR PrintText            
+000007EC  43F9 000010D5             51          LEA HEADER_2,A1
+000007F2  4EB9 00000876             52          JSR PrintText
+000007F8  43F9 00001127             53          LEA HEADER_BLANK,A1
+000007FE  4EB9 00000876             54          JSR PrintText           
+00000804  43F9 00001179             55          LEA HEADER_3,A1
+0000080A  4EB9 00000876             56          JSR PrintText           
+00000810  43F9 000011CB             57          LEA HEADER_4,A1
+00000816  4EB9 00000876             58          JSR PrintText           
+0000081C  43F9 00001031             59          LEA HEADER_LINE,A1
+00000822  4EB9 00000876             60          JSR PrintText
+00000828                            61    
+00000828  43F9 0000102E             62          LEA NEWLINE,A1
+0000082E  4EB9 00000876             63          JSR PrintText
+00000834                            64          
+00000834  43F9 0000121D             65          LEA INSTRUCTIONS_1,A1
+0000083A  4EB9 00000876             66          JSR PrintText       
+00000840  43F9 00001269             67          LEA INSTRUCTIONS_2,A1
+00000846  4EB9 00000876             68          JSR PrintText  
+0000084C  43F9 000012AF             69          LEA INSTRUCTIONS_3,A1
+00000852                            70          
+00000852  4EB9 00000876             71          JSR PrintText  
+00000858  43F9 0000102E             72          LEA NEWLINE,A1
+0000085E  4EB9 00000876             73          JSR PrintText
+00000864  43F9 0000102E             74          LEA NEWLINE,A1
+0000086A  4EB9 00000876             75          JSR PrintText
+00000870  4CDF 0200                 76          MOVEM.L (SP)+,A1    ; restore the context
+00000874  4E75                      77          RTS   
+00000876                            78          
+00000876                            79  *---------------------------------------------------------------------------------------------------------------------
+00000876                            80  * PrintText
+00000876                            81  * 
+00000876                            82  * Prints a string to console using Trap Subtask #14
+00000876                            83  * Assumes: 
+00000876                            84  *   - A1 -> null-terminated string
+00000876                            85  *---------------------------------------------------------------------------------------------------------------------   
+00000876                            86  PrintText:
+00000876  48E7 8000                 87      MOVEM.L D0,-(SP)
+0000087A  103C 000E                 88      MOVE.B  #14,D0  * load the 'print text to screen' subtask
+0000087E  4E4F                      89      TRAP    #15     * execute 'print text to screen' subtask
+00000880  4CDF 0001                 90      MOVEM.L (SP)+,D0
+00000884  4E75                      91      RTS             * return
+00000886                            92  
+00000886                            93  *---------------------------------------------------------------------------------------------------------------------
+00000886                            94  * Print_Char 
+00000886                            95  * 
+00000886                            96  * Prints a single character to console using Trap Subtask #6
+00000886                            97  * Assumes: 
+00000886                            98  *   - D1 contains the target charcter
+00000886                            99  *   - Characters are printed on a new line
+00000886                           100  *--------------------------------------------------------------------------------------------------------------------- 
+00000886                           101  PrintChar:
+00000886  48E7 8000                102      MOVEM.L D0,-(SP)
+0000088A  103C 0006                103      MOVE.B  #6,D0   * load the 'print char to screen' subtask
+0000088E  4E4F                     104      TRAP    #15     * execute 'print text to screen' subtask
+00000890  4CDF 0001                105      MOVEM.L (SP)+,D0
+00000894  4E75                     106      RTS
+00000896                           107  
+00000896                           108  *---------------------------------------------------------------------------------------------------------------------
+00000896                           109  * PrintCharInline 
+00000896                           110  * 
+00000896                           111  * Prints a single character to the console on the same line the cursor is already on, and advances the cursor one space
+00000896                           112  * Assumes: 
+00000896                           113  *   - A0 -> the target character
+00000896                           114  *---------------------------------------------------------------------------------------------------------------------
+00000896                           115  PrintCharInline:
+00000896  48E7 E080                116      MOVEM.L D0-D2/A0,-(SP)
+0000089A                           117      
+0000089A  4EB9 00000902            118      JSR     SaveCursorPosition  ;save cursor position to D2
+000008A0                           119      
+000008A0  3208                     120      MOVE.W  A0,D1               ; copy the char from A0 to D1
+000008A2  4EB8 0886                121      JSR     PrintChar   ; display the char using trap subtask 6
+000008A6                           122      
+000008A6  4240                     123      CLR     D0                  ; clear D0 to use as a temp variable
+000008A8  5400                     124      ADD.B   #02,D0              ; set the lower-order bits to 2
+000008AA  E140                     125      ASL     #8,D0               ; swap to set the higher-order bits to 2
+000008AC  D440                     126      ADD.W   D0,D2               ; add 2 to the column of the previous position
+000008AE  3202                     127      MOVE.W  D2,D1               ; move the old position into D1 to be applied
+000008B0                           128      
+000008B0  4EB9 0000090A            129      JSR     SetCursorPosition
+000008B6                           130      
+000008B6  4CDF 0107                131      MOVEM.L (SP)+,D0-D2/A0
+000008BA  4E75                     132      RTS
+000008BC                           133  
+000008BC                           134  *---------------------------------------------------------------------------------------------------------------------
+000008BC                           135  * PrintDecimalInline 
+000008BC                           136  * 
+000008BC                           137  * Displays a decimal number to the console on the same line the cursor is already on, and advances the cursor one space
+000008BC                           138  * Assumes: 
+000008BC                           139  *   - D1 contains the target character
+000008BC                           140  *---------------------------------------------------------------------------------------------------------------------
+000008BC                           141  PrintDecimalInline
+000008BC  48E7 FC00                142      MOVEM.L D0-D5,-(SP)
+000008C0  2A01                     143      MOVE.L  D1,D5               ; copy D1 to d5 so it's not overwritten by saveCursor
+000008C2                           144      
+000008C2  4EB9 00000902            145      JSR     SaveCursorPosition  ; saves the cursor position to D2
+000008C8                           146  
+000008C8                           147      
+000008C8  2205                     148      MOVE.L  D5,D1               ; Recover D1 from d5 local backup
+000008CA  2A02                     149      MOVE.L  D2,D5               ; D2 contains the cursor information 
+000008CC                           150      
+000008CC  143C 000A                151      MOVE.B  #10,D2              ; use 10 as the radix
+000008D0  103C 000F                152      MOVE.B  #15,D0              * load the 'print number to screen' subtask
+000008D4  4E4F                     153      TRAP    #15                 * execute 'print number to screen' subtask
+000008D6                           154       
+000008D6  2405                     155      MOVE.L  D5,D2               ; restore the cursor information
+000008D8                           156      
+000008D8  4240                     157      CLR     D0                  ; clear D0 to use as a temp variable
+000008DA  5400                     158      ADD.B   #02,D0              ; set the lower-order bits to 2
+000008DC  E140                     159      ASL     #8,D0               ; swap to set the higher-order bits to 2
+000008DE  D440                     160      ADD.W   D0,D2               ; add 2 to the column of the previous position
+000008E0  3202                     161      MOVE.W  D2,D1               ; move the old position into D1 to be applied
+000008E2  4EB9 0000090A            162      JSR     SetCursorPosition
+000008E8  4CDF 003F                163      MOVEM.L (SP)+,D0-D5
+000008EC  4E75                     164      RTS                         * return
+000008EE                           165  
+000008EE                           166  *---------------------------------------------------------------------------------------------------------------------
+000008EE                           167  * GetCursorPosition 
+000008EE                           168  * 
+000008EE                           169  * Reads the console to identify the current cursor position, and stores it in D1.W
+000008EE                           170  *   The position is stored in (Col,Row) format, using the D2.W, with the Col occupying the high-bits and Row the 
+000008EE                           171  *   low-bits. Col ranges from 0-255; Row ranges from 0-127; origin is the top-left corner at 0,0. 
+000008EE                           172  *---------------------------------------------------------------------------------------------------------------------
+000008EE                           173  GetCursorPosition
+000008EE  48E7 8000                174      MOVEM.L D0,-(SP)    ; store the context 
+000008F2  323C 00FF                175      MOVE.W  #$00FF,D1   ; apply mask to force "get" functionality from subtask 11
+000008F6  103C 000B                176      MOVE.B  #11,D0      ; load 'get/set cursor position' subtask
+000008FA  4E4F                     177      TRAP    #15         ; execute 'get cursor position' subtask 
+000008FC  4CDF 0001                178      MOVEM.L (SP)+,D0    ; restore context
+00000900  4E75                     179      RTS
+00000902                           180     
+00000902                           181  *---------------------------------------------------------------------------------------------------------------------
+00000902                           182  * SaveCursorPosition
+00000902                           183  * 
+00000902                           184  * Uses GetCursorPosition to identify the cursor position, then stores it in D2.2 
+00000902                           185  * Assumes: 
+00000902                           186  *   - D2 is available for storage 
+00000902                           187  *---------------------------------------------------------------------------------------------------------------------
+00000902                           188  SaveCursorPosition
+00000902  4EB8 08EE                189      JSR     GetCursorPosition   ; load cursor position into D1.W
+00000906  2401                     190      MOVE.L  D1,D2               ; save the cursor position to D2.W
+00000908  4E75                     191      RTS
+0000090A                           192  
+0000090A                           193  *---------------------------------------------------------------------------------------------------------------------
+0000090A                           194  * SetCursorPosition
+0000090A                           195  * 
+0000090A                           196  * Uses Trap Subtask 11 to set the cursor position stored in D1.W
+0000090A                           197  * 
+0000090A                           198  * Assumes: 
+0000090A                           199  *   - D1 contains the cursor position in (Col,Row) format [see GetCursorPosition] 
+0000090A                           200  *---------------------------------------------------------------------------------------------------------------------
+0000090A                           201  SetCursorPosition   
+0000090A  48E7 8000                202      MOVEM.L D0,-(SP)    ; store the context
+0000090E  303C 000B                203      MOVE.W  #11,D0      ; load 'get/set cursor position' subtask 
+00000912  4E4F                     204      TRAP    #15         ; execute 'set cursor position' subtask 
+00000914  4CDF 0001                205      MOVEM.L (SP)+,D0    ; restore context 
+00000918  4E75                     206      RTS
+0000091A                           207  
+0000091A                           208  *---------------------------------------------------------------------------------------------------------------------
+0000091A                           209  * Display_Tab
+0000091A                           210  * 
+0000091A                           211  * Uses Trap Subtask 6 to place a tab on screen and advance the cursor 5 places (4 + 1) on the same line. 
+0000091A                           212  * Typically you would use PrintCharInline, but it only advances 1 space, and Easy68k doesn't automatically pad 
+0000091A                           213  * the horizontal tab character with space so we have to do it manually. 
+0000091A                           214  * 
+0000091A                           215  * Assumes: 
+0000091A                           216  *   - TAB is a defined contant ($09)
+0000091A                           217  *---------------------------------------------------------------------------------------------------------------------
+0000091A                           218  PrintTab
+0000091A  48E7 E000                219      MOVEM.L D0-D2,-(SP)
+0000091E  4EB8 0902                220      JSR     SaveCursorPosition  ;save cursor position to D2
+00000922  323C 0009                221      MOVE.W  #TAB,D1           ; copy the char from A0 to D1
+00000926  4EB8 0886                222      JSR     PrintChar    ; display the char using trap subtask 6
+0000092A  4240                     223      CLR     D0              ; clear D0 to use as a temp variable
+0000092C  5A00                     224      ADD.B   #05,D0          ; set the lower-order bits to 2
+0000092E  E140                     225      ASL     #8,D0           ; swap to set the higher-order bits to 2
+00000930  D440                     226      ADD.W   D0,D2           ; add 2 to the column of the previous position
+00000932  3202                     227      MOVE.W  D2,D1           ; move the old position into D1 to be applied
+00000934  4EB8 090A                228      JSR     SetCursorPosition
+00000938  4CDF 0007                229      MOVEM.L (SP)+,D0-D2
+0000093C  4E75                     230      RTS
+0000093E                           231  
+0000093E                           232  *---------------------------------------------------------------------------------------------------------------------
+0000093E                           233  * Display_Dash
+0000093E                           234  * 
+0000093E                           235  * Uses PrintCharInline to insert a '-' character and advance the cursor one space on the same line. 
+0000093E                           236  * It's the same code with less typing. 
+0000093E                           237  * 
+0000093E                           238  * Assumes: 
+0000093E                           239  *   - DASH is a defined contant ($2D)
+0000093E                           240  *---------------------------------------------------------------------------------------------------------------------
+0000093E                           241  PrintDash
+0000093E  48E7 0080                242      MOVEM.L A0,-(SP)
+00000942  41F9 0000002D            243      LEA     DASH,A0
+00000948  4EB8 0896                244      JSR     PrintCharInline
+0000094C  4CDF 0100                245      MOVEM.L (SP)+,A0
+00000950  4E75                     246      RTS
+00000952                           247  
+00000952                           248  *---------------------------------------------------------------------------------------------------------------------
+00000952                           249  * PrintSpace
+00000952                           250  * 
+00000952                           251  * Uses PrintCharInline to insert a ' ' character and advance the cursor one space on the same line. 
+00000952                           252  * It's the same code with less typing. 
+00000952                           253  * 
+00000952                           254  * Assumes: 
+00000952                           255  *   - SPACE is a defined contant ($20)
+00000952                           256  *---------------------------------------------------------------------------------------------------------------------
+00000952                           257  PrintSpace
+00000952  48E7 0080                258      MOVEM.L A0,-(SP)
+00000956  41F9 00000020            259      LEA     SPACE,A0
+0000095C  4EB8 0896                260      JSR     PrintCharInline
+00000960  4CDF 0100                261      MOVEM.L (SP)+,A0
+00000964  4E75                     262      RTS
+00000966                           263  
+00000966                           264  *---------------------------------------------------------------------------------------------------------------------
+00000966                           265  * PrintSpace
+00000966                           266  * 
+00000966                           267  * Uses PrintCharInline to insert a '|' character and advance the cursor one space on the same line. 
+00000966                           268  * It's the same code with less typing. 
+00000966                           269  * 
+00000966                           270  * Assumes: 
+00000966                           271  *   - PIPE is a defined contant ($7C)
+00000966                           272  *---------------------------------------------------------------------------------------------------------------------
+00000966                           273  PrintPipe
+00000966  48E7 0080                274      MOVEM.L A0,-(SP)    
+0000096A  41F9 0000007C            275      LEA     PIPE,A0
+00000970  4EB8 0896                276      JSR     PrintCharInline
+00000974  4CDF 0100                277      MOVEM.L (SP)+,A0
+00000978  4E75                     278      RTS
+0000097A                           279  
+0000097A                           280  
+0000097A                           281  *---------------------------------------------------------------------------------------------------------------------
+0000097A                           282  * PrintNewline
+0000097A                           283  * 
+0000097A                           284  * Uses PrintText to start a new line via carriage return + line feed 
+0000097A                           285  * 
+0000097A                           286  * Assumes: 
+0000097A                           287  *   - NL is a defined constant ($0D,$0A,0)
+0000097A                           288  *---------------------------------------------------------------------------------------------------------------------
+0000097A                           289  PrintNewline
+0000097A  48E7 0040                290      MOVEM.L A1,-(SP)
+0000097E  43F9 0000102E            291      LEA     NEWLINE,A1
+00000984  4EB8 0876                292      JSR     PrintText
+00000988  4CDF 0200                293      MOVEM.L (SP)+,A1
+0000098C  4E75                     294      RTS
+0000098E                           295  
+0000098E                           296  
+0000098E                           297  *---------------------------------------------------------------------------------------------------------------------
+0000098E                           298  * PrintMatrix_HeaderFooter
+0000098E                           299  * 
+0000098E                           300  * Uses a series of functiosn to calculate the separation distance of "-" characters that to act as end caps for 
+0000098E                           301  * ascii-art matrices. The vertical lines of the matrices are inserted by PrintMatrix_Data. Together you should get 
+0000098E                           302  * something close to: 
+0000098E                           303  * 
+0000098E                           304  *   -           -
+0000098E                           305  *   |   1   2   | 
+0000098E                           306  *   |   3   4   |
+0000098E                           307  *   -           -
+0000098E                           308  * 
+0000098E                           309  * but it never quite comes out as nice as you want it to
+0000098E                           310  * 
+0000098E                           311  * Assumes: 
+0000098E                           312  *   - The matrix will always be tabbed to the right by 1 to start
+0000098E                           313  *   - D3 contains the width of the matrix 
+0000098E                           314  *---------------------------------------------------------------------------------------------------------------------   
+0000098E                           315  PrintMatrix_HeaderFooter:
+0000098E  48E7 1000                316      MOVEM.L D3,-(SP)
+00000992  163C 0002                317      MOVE.B  #MatrixOut_Width,D3
+00000996  4EB8 097A                318      JSR     PrintNewline
+0000099A  4EB8 091A                319      JSR     PrintTab
+0000099E  4EB8 093E                320      JSR     PrintDash
+000009A2  4EB8 091A                321      JSR     PrintTab
+000009A6                           322  
+000009A6                           323  PMHF_Loop:
+000009A6  4EB8 091A                324      JSR     PrintTab
+000009AA  4EB8 091A                325      JSR     PrintTab
+000009AE  5303                     326      SUBQ.B  #01,D3
+000009B0  6DF4                     327      BLT     PMHF_Loop
+000009B2  4EB8 091A                328      JSR     PrintTab
+000009B6  4EB8 093E                329      JSR     PrintDash
+000009BA  4CDF 0008                330      MOVEM.L (SP)+,D3
+000009BE  4E75                     331      RTS
+000009C0                           332  
+000009C0                           333  
+000009C0                           334  
+000009C0                           335      
+000009C0                           336  *---------------------------------------------------------------------------------------------------------------------
+000009C0                           337  * PrintMatrix_Data
+000009C0                           338  * 
+000009C0                           339  * Uses a series of functions to print the data inside a matrix. See PrintMatrix_HeaderFooter for more information. 
+000009C0                           340  * 
+000009C0                           341  * Assumes: 
+000009C0                           342  *   - A1 -> start of matrix 
+000009C0                           343  *   - D6 = # cols 
+000009C0                           344  *   - D7 =  # rows
+000009C0                           345  *   - Matrix calculation has either not started or already completed
+000009C0                           346  *---------------------------------------------------------------------------------------------------------------------   
+000009C0                           347  PrintMatrix_Data
+000009C0  4EB8 098E                348      JSR     PrintMatrix_HeaderFooter    ; always print a header
+000009C4  4EB8 097A                349      JSR     PrintNewline               ; start data on a new line
+000009C8  4EB8 091A                350      JSR     PrintTab                 ; start each new line with a tab
+000009CC  4EB8 0966                351      JSR     PrintPipe
+000009D0  4EB8 091A                352      JSR     PrintTab
+000009D4                           353  
+000009D4  4244                     354      CLR     D4          ; D5 = col index
+000009D6  4245                     355      CLR     D5          ; D6 = row index
+000009D8  41D1                     356      LEA     (A1),A0     ; load the matrix data
+000009DA                           357     
+000009DA                           358  PM_DataLoop:
+000009DA  4241                     359      CLR     D1 
+000009DC  1219                     360      MOVE.B  (A1)+,D1                ; load the matrix data
+000009DE                           361      
+000009DE  4EB8 08BC                362      JSR     PrintDecimalInline  ; print the matrix value
+000009E2                           363      
+000009E2  4EB8 091A                364      JSR     PrintTab             ; separate with a tab
+000009E6  5244                     365      ADDI    #01,D4              ; increment the column counter
+000009E8                           366      
+000009E8                           367      
+000009E8  B846                     368      CMP     D6,D4               ; compare to the column width
+000009EA  6DEE                     369      BLT     PM_DataLoop         ; loop if not at end of row
+000009EC                           370  
+000009EC  4EB8 0966                371      JSR     PrintPipe        ; + final pipe
+000009F0  4244                     372      CLR     D4                  ; restart the column counter on the new line
+000009F2                           373      
+000009F2  5245                     374      ADDI    #01,D5              ; increment the row counter
+000009F4  BA47                     375      CMP     D7,D5               ; compare to the row height    
+000009F6  6700 0014                376      BEQ     PM_Exit             ; exit if reached the end 
+000009FA                           377                                  
+000009FA                           378                                  ; otherwise, start a new line
+000009FA  4EB8 097A                379      JSR     PrintNewline       ; start a new line
+000009FE  4EB8 091A                380      JSR     PrintTab         ; new lines always have a "tab | tab"
+00000A02  4EB8 0966                381      JSR     PrintPipe        ; pipe
+00000A06  4EB8 091A                382      JSR     PrintTab
+00000A0A  60CE                     383      BRA     PM_DataLoop         ; continue the loop 
+00000A0C                           384      
+00000A0C                           385  PM_Exit
+00000A0C  4EB8 098E                386      JSR     PrintMatrix_HeaderFooter  ; print footer at end of rows
+00000A10  4E75                     387      RTS   
+00000A12                           388      
+00000A12                           389  *---------------------------------------------------------------------------------------------------------------------
+00000A12                           390  * Print_MatrixA
+00000A12                           391  * 
+00000A12                           392  * Uses a series of functions to print the Matrix A name and data
+00000A12                           393  * 
+00000A12                           394  * Assumes: 
+00000A12                           395  *   - PrintMatrix_Data requires: A1 -> start of matrix 
+00000A12                           396  *   - PrintMatrix_Data requires: D6 = # cols 
+00000A12                           397  *   - PrintMatrix_Data requires: D7 =  # rows
+00000A12                           398  *---------------------------------------------------------------------------------------------------------------------   
+00000A12                           399  Print_MatrixA
+00000A12  48E7 0340                400      MOVEM.L D6-D7/A1,-(SP)          ; save the context on the way in 
+00000A16                           401      
+00000A16  43F9 000012F0            402      LEA     HEADER_MATRIX_A,A1      ; load the matrix name
+00000A1C  4EB8 0876                403      JSR     PrintText            ; print the matrix name 
+00000A20                           404          
+00000A20  43F9 0000101E            405      LEA     MatrixA,A1              ; point to the matrix info
+00000A26  1C3C 0002                406      MOVE.B  #MatrixA_Width,D6       ; provide matrix width in D6
+00000A2A  1E3C 0002                407      MOVE.B  #MatrixA_Height,D7      ; provide matrix height in D7
+00000A2E                           408      
+00000A2E  4EB8 09C0                409      JSR     PrintMatrix_Data        ; print the matrix data
+00000A32                           410      
+00000A32  4CDF 02C0                411      MOVEM.L (SP)+,D6-D7/A1          ; restore context on the way out 
+00000A36  4E75                     412      RTS
+00000A38                           413  
+00000A38                           414  
+00000A38                           415  *---------------------------------------------------------------------------------------------------------------------
+00000A38                           416  * Print_MatrixB
+00000A38                           417  * 
+00000A38                           418  * Uses a series of functions to print the Matrix B name and data
+00000A38                           419  * 
+00000A38                           420  * Assumes: 
+00000A38                           421  *   - PrintMatrix_Data requires: A1 -> start of matrix 
+00000A38                           422  *   - PrintMatrix_Data requires: D6 = # cols 
+00000A38                           423  *   - PrintMatrix_Data requires: D7 =  # rows
+00000A38                           424  *---------------------------------------------------------------------------------------------------------------------  
+00000A38                           425  Print_MatrixB
+00000A38  48E7 0340                426      MOVEM.L D6-D7/A1,-(SP)          ; save the context on the way in 
+00000A3C                           427      
+00000A3C  43F9 000012FE            428      LEA     HEADER_MATRIX_B,A1      ; load the matrix name
+00000A42  4EB8 0876                429      JSR     PrintText            ; print the matrix name 
+00000A46                           430          
+00000A46  43F9 00001022            431      LEA     MatrixB,A1              ; point to the matrix info
+00000A4C  1C3C 0002                432      MOVE.B  #MatrixB_Width,D6       ; provide matrix width in D6
+00000A50  1E3C 0002                433      MOVE.B  #MatrixB_Height,D7      ; provide matrix height in D7
+00000A54                           434      
+00000A54  4EB8 09C0                435      JSR     PrintMatrix_Data        ; print the matrix data
+00000A58                           436      
+00000A58  4CDF 02C0                437      MOVEM.L (SP)+,D6-D7/A1          ; restore context on the way out 
+00000A5C  4E75                     438      RTS
+00000A5E                           439  
+00000A5E                           440  *---------------------------------------------------------------------------------------------------------------------
+00000A5E                           441  * Print_MatrixOut
+00000A5E                           442  * 
+00000A5E                           443  * Uses a series of functions to print the Matrix Out name and data
+00000A5E                           444  * 
+00000A5E                           445  * Assumes: 
+00000A5E                           446  *   - PrintMatrix_Data requires: A1 -> start of matrix 
+00000A5E                           447  *   - PrintMatrix_Data requires: D6 = # cols 
+00000A5E                           448  *   - PrintMatrix_Data requires: D7 =  # rows
+00000A5E                           449  *---------------------------------------------------------------------------------------------------------------------  
+00000A5E                           450  Print_MatrixOut
+00000A5E  48E7 0340                451      MOVEM.L D6-D7/A1,-(SP)          ; save the context on the way in 
+00000A62                           452      
+00000A62  43F9 0000130C            453      LEA     HEADER_MATRIX_OUT,A1    ; load the matrix name
+00000A68  4EB8 0876                454      JSR     PrintText            ; print the matrix name 
+00000A6C                           455          
+00000A6C  43F9 00001026            456      LEA     MatrixOut,A1            ; point to the matrix info
+00000A72  1C3C 0002                457      MOVE.B  #MatrixOut_Width,D6     ; provide matrix width in D6
+00000A76  1E3C 0002                458      MOVE.B  #MatrixOut_Height,D7    ; provide matrix height in D7
+00000A7A                           459      
+00000A7A  4EB8 09C0                460      JSR     PrintMatrix_Data        ; print the matrix data
+00000A7E                           461      
+00000A7E  4CDF 02C0                462      MOVEM.L (SP)+,D6-D7/A1          ; restore context on the way out 
+00000A82  4E75                     463      RTS    
+00000A84                           464  
+00000A84                           465  
+00000A84                           466  
+00000A84                           467  
+00000A84                           468  *---------------------------------------------------------------------------------------------------------------------
+00000A84                           469  * GetRowOrderedOffset
+00000A84                           470  * 
+00000A84                           471  * Calculates the memory offset required to access a cell in a matrix, assuming row-ordered interleaving.
+00000A84                           472  *   Puts all the variables on the stack and then calls GetOffset. 
+00000A84                           473  * 
+00000A84                           474  * Assumes: 
+00000A84                           475  *   - A0 is free to start a stack frame
+00000A84                           476  *   - D5 = column index 
+00000A84                           477  *   - D4 =  row index
+00000A84                           478  * 
+00000A84                           479  * Postconditions
+00000A84                           480  *   - (SP)+ [the top of the stack] contains the offset 
+00000A84                           481  *---------------------------------------------------------------------------------------------------------------------   
+00000A84                           482  GetRowOrderedOffset:
+00000008=                          483      offset 4+4                      ; offset = 4 (A0 link) + 4 (output)
+00000008=                          484  rowOffset   ds.l    1
+00000A84                           485      ORG     *
+00000A84  4E50 0000                486      LINK    A0,#0                   ; create the stack frame    
+00000A88  2F3C 00000001            487      MOVE.L  #CellSize,-(SP)         ; load the cell size in 4th var
+00000A8E  2F05                     488      MOVE.L  D5,-(SP)                ; load the col index in 3rd var
+00000A90  2F3C 00000002            489      MOVE.L  #MatrixA_Width,-(SP)    ; load the #cols in 2nd var
+00000A96  2F04                     490      MOVE.L  D4,-(SP)                ; load the row in 1st var
+00000A98  4EB9 00000AC8            491      JSR     GetOffset               ; calculate matrix offset
+00000A9E  215F 0008                492      MOVE.L  (SP)+,(rowOffset,A0)    ; bubble the result to the top 
+00000AA2  4E58                     493      UNLK    A0                      ; remove the stack frame
+00000AA4  4E75                     494      RTS
+00000AA6                           495  
+00000AA6                           496  
+00000AA6                           497  *---------------------------------------------------------------------------------------------------------------------
+00000AA6                           498  * GetColOrderedOffset
+00000AA6                           499  * 
+00000AA6                           500  * Calculates the memory offset required to access a cell in a matrix, assuming column-ordered interleaving.
+00000AA6                           501  *   Puts all the variables on the stack and then calls GetOffset. 
+00000AA6                           502  * 
+00000AA6                           503  * Assumes: 
+00000AA6                           504  *   - A0 is free to start a stack frame
+00000AA6                           505  *   - D6 = column index 
+00000AA6                           506  *   - D7 = row index
+00000AA6                           507  * 
+00000AA6                           508  * Postconditions
+00000AA6                           509  *   - (SP)+ [the top of the stack] contains the offset 
+00000AA6                           510  *---------------------------------------------------------------------------------------------------------------------   
+00000AA6                           511  GetColOrderedOffset:
+00000008=                          512      offset 4+4                      ; offset = 4 (A0 link) + 4 (output)
+00000008=                          513  colOffset   ds.l    1
+00000AA6                           514      ORG     *
+00000AA6  4E50 0000                515      LINK    A0,#0                   ; create the stack frame  
+00000AAA  2F3C 00000001            516      MOVE.L  #CellSize,-(SP)         ; load the cell size in 4th var
+00000AB0  2F07                     517      MOVE.L  D7,-(SP)                ; load the row index in the 3rd var
+00000AB2  2F3C 00000002            518      MOVE.L  #MatrixB_Height,-(SP)   ; load the #rows in the 2nd var 
+00000AB8  2F06                     519      MOVE.L  D6,-(SP)                ; load the col index in 1st var
+00000ABA  4EB9 00000AC8            520      JSR     GetOffset               ; calculate the matrix offset
+00000AC0  215F 0008                521      MOVE.L  (SP)+,(colOffset,A0)    ; bubble the result to the top 
+00000AC4  4E58                     522      UNLK    A0                      ; remove the stack frame
+00000AC6  4E75                     523      RTS
+00000AC8                           524  
+00000AC8                           525  *---------------------------------------------------------------------------------------------------------------------
+00000AC8                           526  * GetOffset
+00000AC8                           527  * 
+00000AC8                           528  * Calculates the memory offset required to access a cell in a matrix, regardless of interleaving, due to positional 
+00000AC8                           529  * parameterization. Pull all the variables from the stack and then returns the values from the top of the stack. 
+00000AC8                           530  *
+00000AC8                           531  * This method is analogous to memory addressing, where you have a page + offset. You need to know how many pages
+00000AC8                           532  * per unit, how many pages to offset, and the individual offset. It doesn't matter if they're rows or columns, the
+00000AC8                           533  * math works out the same. 
+00000AC8                           534  * 
+00000AC8                           535  * Assumes: 
+00000AC8                           536  *   - (SP)+1 [top] is the page offset  
+00000AC8                           537  *   - (SP)+2 is the # of pages per address
+00000AC8                           538  *   - (SP)+2 is the local offset
+00000AC8                           539  *   - (SP)+4 is the size of each individual cell (1 for byte, 2 for word, 4 for long)
+00000AC8                           540  *   - D7 = row index
+00000AC8                           541  * 
+00000AC8                           542  * Postconditions
+00000AC8                           543  *   - (SP)+ [the top of the stack] contains the offset 
+00000AC8                           544  *---------------------------------------------------------------------------------------------------------------------   
+00000AC8                           545  GetOffset:
+00000008=                          546      offset 4+4                      ; offset = 4 (A1 link) + 4 (return address)
+00000008=                          547  totalOffset     DS.L    1
+00000AC8                           548      ORG *
+00000AC8  4E51 0008                549      LINK        A1,#8
+00000ACC                           550     
+00000ACC  261F                     551      MOVE.L      (SP)+,D3            ; load first var into temp
+00000ACE  241F                     552      MOVE.L      (SP)+,D2            ; load 2nd var into other-temp
+00000AD0  C6C2                     553      MULU        D2,D3               ; multiply temps & store in d3
+00000AD2  D69F                     554      ADD.L       (SP)+,D3            ; Add 3rd var to temp
+00000AD4  241F                     555      MOVE.L      (SP)+,D2            ; load 4th var into other-temp
+00000AD6  C6C2                     556      MULU        D2,D3               ; multiply temps & store in d3
+00000AD8  2343 0008                557      MOVE.L      D3,(totalOffset,A1) ; return the value using the top of the stack
+00000ADC  4E59                     558      UNLK        A1
+00000ADE  4E75                     559      RTS
+00000AE0                           560      
+00000AE0                           561  *---------------------------------------------------------------------------------------------------------------------
+00000AE0                           562  * InitializeOutputMatrix:
+00000AE0                           563  * 
+00000AE0                           564  * Initializes all elements of the output matrix to 0, so that results can aggreggated from an accurate start point.
+00000AE0                           565  *
+00000AE0                           566  * Assumes:  
+00000AE0                           567  *---------------------------------------------------------------------------------------------------------------------    
+00000AE0                           568  InitializeOutputMatrix:
+00000AE0  48E7 0C00                569      MOVEM.L D4-D5,-(SP)
+00000AE4  49F9 00001026            570      LEA     MatrixOut,A4
+00000AEA  283C 00000002            571      MOVE.L  #MatrixA_Height,D4  ; load the matrix a height into D4
+00000AF0  2A3C 00000002            572      MOVE.L  #MatrixB_Width,D5   ; load the matrix b width into D5
+00000AF6  CAC4                     573      MULU    D4,D5               ; multiply and store in D5
+00000AF8  5305                     574      SUBQ.B  #1,D5               ; subtract 1, because were decrementing not incrementing
+00000AFA                           575      
+00000AFA                           576  InitLoop:
+00000AFA  6D00 000C                577      BLT     InitExit            ; quit if D5 = 0
+00000AFE  19BC 0000 5000           578      MOVE.B  #00,(A4,D5)         ; copy 0's into byte (MatrixOut)+D5
+00000B04  5345                     579      SUBQ.W  #01,D5              ; decrement D5 index
+00000B06  60F2                     580      BRA     InitLoop            ; continue to count down
+00000B08                           581     
+00000B08                           582  InitExit:
+00000B08  4CDF 0030                583      MOVEM.L (SP)+,D4-D5
+00000B0C  4E75                     584      RTS
+00000B0E                           585  
+00000B0E                           586  
+00000B0E                           587  
+00000B0E                           588  
+00000B0E                           589  *---------------------------------------------------------------------------------------------------------------------
+00000B0E                           590  * MultiplyMatrixA_B
+00000B0E                           591  * 
+00000B0E                           592  * Multiplies the values stored in Matrices A & B
+00000B0E                           593  *
+00000B0E                           594  * Assumes: 
+00000B0E                           595  *   - Matrix A & B are defined constants
+00000B0E                           596  *   - Matrix A & B have defined constants for height & widths (# rows, & # cols) 
+00000B0E                           597  *   - The matrices can be multiplied (i.e.: MatrixA.Cols == MatrixB.Rows)
+00000B0E                           598  *   - A constant space has been allocated for the resulting matrix
+00000B0E                           599  *---------------------------------------------------------------------------------------------------------------------   
+00000B0E                           600  MultiplyMatrixA_B:
+00000B0E  48E7 0F38                601      MOVEM.L D4-D7/A2-A4,-(SP)
+00000B12                           602      
+00000B12  4EB8 0AE0                603      JSR     InitializeOutputMatrix      ; automatically initialized the output matrix to 00s
+00000B16                           604      
+00000B16                           605      
+00000B16  45F9 0000101E            606      LEA     MatrixA,A2          ; A2 -> matrix A;  
+00000B1C  47F9 00001022            607      LEA     MatrixB,A3          ; A3 -> Matrix B; 
+00000B22  49F9 00001026            608      LEA     MatrixOut,A4
+00000B28                           609      
+00000B28  4244                     610      CLR D4              ; init MatrixA row index to 0
+00000B2A  4245                     611      CLR D5              ; init MatrixA col index to 0
+00000B2C                           612      
+00000B2C  4246                     613      CLR D6              ; init MatrixB row index to 0
+00000B2E  4247                     614      CLR D7              ; init MatrixB col index to 0
+00000B30                           615  
+00000B30                           616      
+00000B30                           617  MatrixMultiplyLoop:
+00000B30                           618      * calculate the MatrixA offset
+00000B30  48E7 0F38                619      MOVEM.L D4-D7/A2-A4,-(SP)           ; store registers D4-7/A0-6
+00000B34  2F3C 00000000            620      MOVE.L  #0,-(SP)                ; prep a space on the stack for the offset 
+00000B3A  4EB8 0A84                621      JSR     GetRowOrderedOffset
+00000B3E  201F                     622      MOVE.L  (SP)+,D0
+00000B40  4CDF 1CF0                623      MOVEM.L (SP)+,D4-D7/A2-A4
+00000B44                           624   
+00000B44  1432 0000                625      MOVE.B  (A2,D0),D2      *get the MatrixA cell value based on the offset 
+00000B48                           626      
+00000B48                           627      * calculate the MatrixB offset
+00000B48  48E7 2000                628      MOVEM.L D2,-(SP)                ; store D2 also
+00000B4C  48E7 0F38                629      MOVEM.L D4-D7/A2-A4,-(SP)           ; store registers D4-7/A0-6
+00000B50  2F3C 00000000            630      MOVE.L  #0,-(SP)                ; prep a space on the stack for the offset 
+00000B56  4EB8 0AA6                631      JSR     GetColOrderedOffset
+00000B5A  201F                     632      MOVE.L  (SP)+,D0     ; pull the offset off the stack       
+00000B5C                           633      
+00000B5C  4CDF 1CF0                634      MOVEM.L (SP)+,D4-D7/A2-A4           ; recover D4-7/A0-6
+00000B60  4CDF 0004                635      MOVEM.L (SP)+,D2                ; recover D2 first
+00000B64                           636      
+00000B64  1633 0000                637      MOVE.B (A3,D0),D3   * get the MatrixB cell value based on the offset
+00000B68                           638          
+00000B68  C6C2                     639      MULU    D2,D3       * multiply the MatrixA & B cells and store in D3
+00000B6A                           640        
+00000B6A  D714                     641      ADD.B     D3,(A4)   * aggregate the cell value products in the output matrix cell
+00000B6C                           642      
+00000B6C  5205                     643      ADDI.B  #01,D5  ; increment the MatrixA Col index (move right)
+00000B6E  5206                     644      ADDI.B  #01,D6  ; increment the MatrixB Row index (move down)
+00000B70                           645  
+00000B70                           646  
+00000B70                           647  
+00000B70                           648  * Cell Math: iterate over Matrix A (one row) x Matrix B (one column)
+00000B70                           649  Check_Cell
+00000B70  BC7C 0002                650      CMP     #MatrixB_Height,D6  ; check if reached end of Matrix B column elements
+00000B74  66BA                     651      BNE     MatrixMultiplyLoop  ; not reached, therefore loop to continue multiplication
+00000B76                           652      
+00000B76  BA7C 0002                653      CMP     #MatrixA_Width,D5   ; check if reached the end of Matrix A row elements
+00000B7A  66B4                     654      BNE     MatrixMultiplyLoop  ; not reached, therefore loop to continue multiplication
+00000B7C                           655  
+00000B7C                           656      
+00000B7C                           657      * reached the end of the current (row * col) math; 
+00000B7C                           658      * therefore prepare to write to a new output element 
+00000B7C                           659      
+00000B7C  4245                     660      CLR D5                  ; clear the Matrix A column index (move left)
+00000B7E  4246                     661      CLR D6                  ; clear the Matrix B row index (move up)
+00000B80                           662      
+00000B80  5247                     663      ADDI    #01,D7          ; increment the Matrix B col index (move right) 
+00000B82  D8FC 0001                664      ADDA    #CellSize,A4    ; increment the output pointer (move right &/or word-wrap like Notepad/Excel)
+00000B86                           665      
+00000B86                           666  * Row Math: iterate over Matrix A (one row) x Matrix B (all columns) 
+00000B86                           667  Check_MatrixA_Complete
+00000B86  BE7C 0002                668      CMP     #MatrixB_Width,D7       ; check if reached end of Matrix B columns
+00000B8A  66A4                     669      BNE     MatrixMultiplyLoop      ; not reached, therefore continue looping through Matrix B columns
+00000B8C                           670      
+00000B8C                           671      ; end of columns reached, therefore reset to iterate down Matrix A
+00000B8C  4247                     672      CLR     D7           ; clear Matrix B col index (move right)
+00000B8E  5244                     673      ADDI    #01,D4       ; increment Matrix A row index (move down)
+00000B90                           674  
+00000B90                           675  * Column Math: iterate over Matrix A (all rows) x Matrix B (all columns)     
+00000B90                           676  Check_MatrixA_Row
+00000B90  B87C 0002                677      CMP     #MatrixA_Height,D4  ; check if reached end of Matrix A rows
+00000B94  669A                     678      BNE     MatrixMultiplyLoop  ; not reached, therefore continue looping
+00000B96                           679      
+00000B96                           680      ; all rows completed, therefore perform cleanup actions
+00000B96  4CDF 1CF0                681      MOVEM.L (SP)+,D4-D7/A2-A4 ; restore the context on the way out  
+00000B9A  4E75                     682      RTS
+00000B9C                           683  
+00000B9C                           684  
+00000B9C                           685  
+00000B9C                           686  
+00000B9C                           687  
+00000B9C                           688  *=====================================================================================================================
+00000B9C                           689  * START
+00000B9C                           690  * 
+00000B9C                           691  * This is where the fun begins
+00000B9C                           692  *=====================================================================================================================
+00001000                           693      ORG    $1000
+00001000                           694  START:                  
+00001000  4FF9 00003000            695      LEA     stack,SP            ; create a place for the stack t live
+00001006                           696      
+00001006  4EB8 07D0                697      JSR PrintWelcomeInfo      ; print the welcome information
+0000100A  4EB8 0A12                698      JSR Print_MatrixA           ; print the current 'Matrix A' information
+0000100E  4EB8 0A38                699      JSR Print_MatrixB           ; print the current 'Matrix B' information
+00001012                           700      
+00001012  4EB8 0B0E                701      JSR MultiplyMatrixA_B       ; calcualte the output matrix 
+00001016                           702      
+00001016  4EB8 0A5E                703      JSR Print_MatrixOut         ; print the resultintg output matrix
+0000101A                           704      
+0000101A                           705  
+0000101A                           706  Exit
+0000101A  FFFF FFFF                707      SIMHALT           
+0000101E                           708  
+0000101E                           709  
+0000101E                           710  *---------------------------------------------------------------------------------------------------------------------
+0000101E                           711  * Matrix Constants
+0000101E                           712  *---------------------------------------------------------------------------------------------------------------------
+0000101E                           713  
+0000101E  =00000001                714  CellSize            EQU     1   ; defines the width of the data stored in the matrix, where byte=1, word=2, long=4
+0000101E                           715  
+0000101E                           716  * MATRIX A: the first matrix 
+0000101E= 01 02                    717  MatrixA             DC.B    1,2
+00001020= 03 04                    718                      DC.B    3,4   
+00001022                           719              
+00001022  =00000002                720  MatrixA_Width       EQU     2
+00001022  =00000002                721  MatrixA_Height      EQU     2
+00001022                           722  
+00001022                           723  
+00001022                           724  * MATRIX B: The second matrix
+00001022= 05 06                    725  MatrixB             DC.B    5,6
+00001024= 07 08                    726                      DC.B    7,8
+00001026                           727  
+00001026  =00000002                728  MatrixB_Width       EQU     2
+00001026  =00000002                729  MatrixB_Height      EQU     2
+00001026                           730  
+00001026                           731  
+00001026                           732  * MATRIX OUT: The resultant matrix 
+00001026  =00000002                733  MatrixOut_Width     EQU     MatrixB_Width
+00001026  =00000002                734  MatrixOut_Height    EQU     MatrixA_Height
+00001026                           735  MatrixOut           DS      MatrixOut_Height*MatrixOut_Width*CellSize
+0000102E                           736  
+0000102E                           737  
+0000102E                           738  
+0000102E                           739  *---------------------------------------------------------------------------------------------------------------------
+0000102E                           740  * Program Constants
+0000102E                           741  *---------------------------------------------------------------------------------------------------------------------
+0000102E  =00003000                742  stack               EQU     $3000
+0000102E                           743  
+0000102E                           744  
+0000102E                           745  
+0000102E                           746  *---------------------------------------------------------------------------------------------------------------------
+0000102E                           747  * CHAR(ish) Constants
+0000102E                           748  *---------------------------------------------------------------------------------------------------------------------
+0000102E  =0000007C                749  PIPE    EQU     $7C    
+0000102E  =0000002D                750  DASH    EQU     $2D
+0000102E  =0000000D                751  CR      EQU     $0D
+0000102E  =0000000A                752  LF      EQU     $0A
+0000102E  =00000009                753  TAB     EQU     $09
+0000102E  =00000020                754  SPACE   EQU     $20
+0000102E                           755  
+0000102E= 0D 0A 00                 756  NEWLINE  DC.B    CR,LF,0
+00001031                           757  
+00001031                           758  *---------------------------------------------------------------------------------------------------------------------
+00001031                           759  * String Constants
+00001031                           760  *---------------------------------------------------------------------------------------------------------------------
+00001031= 2A 3D 3D 3D 3D 3D 3D     761  HEADER_LINE     DC.B '*=============================================================================*',CR,LF,0
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 2A 0D 0A 00        
+00001083= 2A 20 4D 61 74 72 69     773  HEADER_1        DC.B '* Matrix Multiplier                                                           *',CR,LF,0
+          78 20 4D 75 6C 74 69  
+          70 6C 69 65 72 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+000010D5= 2A 20 48 57 20 35 2C     785  HEADER_2        DC.B '* HW 5, Q__                                                                   *',CR,LF,0
+          20 51 5F 5F 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+00001127= 2A 20 20 20 20 20 20     797  HEADER_BLANK    DC.B '*                                                                             *',CR,LF,0
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+00001179= 2A 20 20 20 48 6F 77     809  HEADER_3        DC.B '*   Howie Catlin                                                              *',CR,LF,0
+          69 65 20 43 61 74 6C  
+          69 6E 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+000011CB= 2A 20 20 20 43 53 53     821  HEADER_4        DC.B '*   CSS 422, Autumn 2019                                                      *',CR,LF,0
+          20 34 32 32 2C 20 41  
+          75 74 75 6D 6E 20 32  
+          30 31 39 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+0000121D                           833  
+0000121D= 54 68 69 73 20 70 72     834  INSTRUCTIONS_1      DC.B 'This program multiplies two M-by-N matrices. These matrices are defined  ',CR,LF,0
+          6F 67 72 61 6D 20 6D  
+          75 6C 74 69 70 6C 69  
+          65 73 20 74 77 6F 20  
+          4D 2D 62 79 2D 4E 20  
+          6D 61 74 72 69 63 65  
+          73 2E 20 54 68 65 73  
+          65 20 6D 61 74 72 69  
+          63 65 73 20 61 72 65  
+          20 64 65 66 69 6E 65  
+          64 20 20 0D 0A 00     
+00001269= 20 20 69 6E 20 6D 65     845  INSTRUCTIONS_2      DC.B '  in memory, and their only restriction is that column count of the',CR,LF,0
+          6D 6F 72 79 2C 20 61  
+          6E 64 20 74 68 65 69  
+          72 20 6F 6E 6C 79 20  
+          72 65 73 74 72 69 63  
+          74 69 6F 6E 20 69 73  
+          20 74 68 61 74 20 63  
+          6F 6C 75 6D 6E 20 63  
+          6F 75 6E 74 20 6F 66  
+          20 74 68 65 0D 0A 00  
+000012AF= 20 20 66 69 72 73 74     855  INSTRUCTIONS_3      DC.B '  first matrix be equal to the row count of the second matrix.',CR,LF,0
+          20 6D 61 74 72 69 78  
+          20 62 65 20 65 71 75  
+          61 6C 20 74 6F 20 74  
+          68 65 20 72 6F 77 20  
+          63 6F 75 6E 74 20 6F  
+          66 20 74 68 65 20 73  
+          65 63 6F 6E 64 20 6D  
+          61 74 72 69 78 2E 0D  
+          0A 00                 
+000012F0                           865  
+000012F0= 0D 0A 4D 61 74 72 69     866  HEADER_MATRIX_A     DC.B CR,LF,'Matrix A:',CR,LF,0
+          78 20 41 3A 0D 0A 00  
+000012FE= 0D 0A 4D 61 74 72 69     868  HEADER_MATRIX_B     DC.B CR,LF,'Matrix B:',CR,LF,0
+          78 20 42 3A 0D 0A 00  
+0000130C= 0D 0A 52 65 73 75 6C     870  HEADER_MATRIX_OUT   DC.B CR,LF,'Resulting Matrix: ',CR,LF,0
+          74 69 6E 67 20 4D 61  
+          74 72 69 78 3A 20 0D  
+          0A 00                 
+00001323                           874  
+00001323                           875  
+00001323                           876      END    START        
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CELLSIZE            1
+CHECK_CELL          B70
+CHECK_MATRIXA_COMPLETE  B86
+CHECK_MATRIXA_ROW   B90
+COLOFFSET           8
+CR                  D
+DASH                2D
+EXIT                101A
+GETCOLORDEREDOFFSET  AA6
+GETCURSORPOSITION   8EE
+GETOFFSET           AC8
+GETROWORDEREDOFFSET  A84
+HEADER_1            1083
+HEADER_2            10D5
+HEADER_3            1179
+HEADER_4            11CB
+HEADER_BLANK        1127
+HEADER_LINE         1031
+HEADER_MATRIX_A     12F0
+HEADER_MATRIX_B     12FE
+HEADER_MATRIX_OUT   130C
+INITEXIT            B08
+INITIALIZEOUTPUTMATRIX  AE0
+INITLOOP            AFA
+INSTRUCTIONS_1      121D
+INSTRUCTIONS_2      1269
+INSTRUCTIONS_3      12AF
+LF                  A
+MATRIXA             101E
+MATRIXA_HEIGHT      2
+MATRIXA_WIDTH       2
+MATRIXB             1022
+MATRIXB_HEIGHT      2
+MATRIXB_WIDTH       2
+MATRIXMULTIPLYLOOP  B30
+MATRIXOUT           1026
+MATRIXOUT_HEIGHT    2
+MATRIXOUT_WIDTH     2
+MULTIPLYMATRIXA_B   B0E
+NEWLINE             102E
+PIPE                7C
+PMHF_LOOP           9A6
+PM_DATALOOP         9DA
+PM_EXIT             A0C
+PRINTCHAR           886
+PRINTCHARINLINE     896
+PRINTDASH           93E
+PRINTDECIMALINLINE  8BC
+PRINTMATRIX_DATA    9C0
+PRINTMATRIX_HEADERFOOTER  98E
+PRINTNEWLINE        97A
+PRINTPIPE           966
+PRINTSPACE          952
+PRINTTAB            91A
+PRINTTEXT           876
+PRINTWELCOMEINFO    7D0
+PRINT_MATRIXA       A12
+PRINT_MATRIXB       A38
+PRINT_MATRIXOUT     A5E
+ROWOFFSET           8
+SAVECURSORPOSITION  902
+SETCURSORPOSITION   90A
+SPACE               20
+STACK               3000
+START               1000
+TAB                 9
+TOTALOFFSET         8

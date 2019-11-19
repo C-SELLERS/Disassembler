@@ -1,0 +1,481 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 11/18/2019 2:48:27 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : Cumulative Sum, HW5 Q5
+00000000                             3  * Written by : Howie Catlin
+00000000                             4  * Date       : 18-Nov-2019
+00000000                             5  * 
+00000000                             6  * Description:
+00000000                             7  * 
+00000000                             8  *-----------------------------------------------------------
+00000000                             9  
+00000000                            10  
+00000000                            11  *=====================================================================================================================    
+00000000                            12  * Cursor Position Functions
+00000000                            13  *=====================================================================================================================
+00000000                            14  *---------------------------------------------------------------------------------------------------------------------
+00000000                            15  * GetCursorPosition 
+00000000                            16  * 
+00000000                            17  * Reads the console to identify the current cursor position, and stores it in D1.W
+00000000                            18  *   The position is stored in (Col,Row) format, using the D2.W, with the Col occupying the high-bits and Row the 
+00000000                            19  *   low-bits. Col ranges from 0-255; Row ranges from 0-127; origin is the top-left corner at 0,0. 
+00000000                            20  *---------------------------------------------------------------------------------------------------------------------
+00000000                            21  GetCursorPosition
+00000000  48E7 8000                 22      MOVEM.L D0,-(SP)    ; store the context 
+00000004  323C 00FF                 23      MOVE.W  #$00FF,D1   ; apply mask to force "get" functionality from subtask 11
+00000008  103C 000B                 24      MOVE.B  #11,D0      ; load 'get/set cursor position' subtask
+0000000C  4E4F                      25      TRAP    #15         ; execute 'get cursor position' subtask 
+0000000E  4CDF 0001                 26      MOVEM.L (SP)+,D0    ; restore context
+00000012  4E75                      27      RTS
+00000014                            28     
+00000014                            29     
+00000014                            30  *---------------------------------------------------------------------------------------------------------------------
+00000014                            31  * SaveCursorPosition
+00000014                            32  * 
+00000014                            33  * Uses GetCursorPosition to identify the cursor position, then stores it in D2.2 
+00000014                            34  * Assumes: 
+00000014                            35  *   - D2 is available for storage 
+00000014                            36  *---------------------------------------------------------------------------------------------------------------------
+00000014                            37  SaveCursorPosition
+00000014  4EB8 0000                 38      JSR     GetCursorPosition   ; load cursor position into D1.W
+00000018  2401                      39      MOVE.L  D1,D2               ; save the cursor position to D2.W
+0000001A  4E75                      40      RTS
+0000001C                            41  
+0000001C                            42  
+0000001C                            43  *---------------------------------------------------------------------------------------------------------------------
+0000001C                            44  * SetCursorPosition
+0000001C                            45  * 
+0000001C                            46  * Uses Trap Subtask 11 to set the cursor position stored in D1.W
+0000001C                            47  * 
+0000001C                            48  * Assumes: 
+0000001C                            49  *   - D1 contains the cursor position in (Col,Row) format [see GetCursorPosition] 
+0000001C                            50  *---------------------------------------------------------------------------------------------------------------------
+0000001C                            51  SetCursorPosition   
+0000001C  48E7 8000                 52      MOVEM.L D0,-(SP)    ; store the context
+00000020  303C 000B                 53      MOVE.W  #11,D0      ; load 'get/set cursor position' subtask 
+00000024  4E4F                      54      TRAP    #15         ; execute 'set cursor position' subtask 
+00000026  4CDF 0001                 55      MOVEM.L (SP)+,D0    ; restore context 
+0000002A  4E75                      56      RTS
+0000002C                            57  
+0000002C                            58  
+0000002C                            59  *=====================================================================================================================
+0000002C                            60  * Print Functions
+0000002C                            61  *=====================================================================================================================
+0000002C                            62  *---------------------------------------------------------------------------------------------------------------------
+0000002C                            63  * PrintDecimalInline 
+0000002C                            64  * 
+0000002C                            65  * Displays a decimal number to the console on the same line the cursor is already on, and advances the cursor one space
+0000002C                            66  * Assumes: 
+0000002C                            67  *   - D1 contains the target character
+0000002C                            68  *---------------------------------------------------------------------------------------------------------------------
+0000002C                            69  PrintDecimalInline
+0000002C  48E7 FC00                 70      MOVEM.L D0-D5,-(SP)
+00000030  2A01                      71      MOVE.L  D1,D5               ; copy D1 to d5 so it's not overwritten by saveCursor
+00000032                            72      
+00000032  4EB8 0014                 73      JSR     SaveCursorPosition  ; saves the cursor position to D2
+00000036                            74  
+00000036                            75      
+00000036  2205                      76      MOVE.L  D5,D1               ; Recover D1 from d5 local backup
+00000038  2A02                      77      MOVE.L  D2,D5               ; D2 contains the cursor information 
+0000003A                            78      
+0000003A  143C 000A                 79      MOVE.B  #10,D2              ; use 10 as the radix
+0000003E  103C 000F                 80      MOVE.B  #15,D0              * load the 'print number to screen' subtask
+00000042  4E4F                      81      TRAP    #15                 * execute 'print number to screen' subtask
+00000044                            82       
+00000044  2405                      83      MOVE.L  D5,D2               ; restore the cursor information
+00000046                            84      
+00000046  4240                      85      CLR     D0                  ; clear D0 to use as a temp variable
+00000048  5400                      86      ADD.B   #02,D0              ; set the lower-order bits to 2
+0000004A  E140                      87      ASL     #8,D0               ; swap to set the higher-order bits to 2
+0000004C  D440                      88      ADD.W   D0,D2               ; add 2 to the column of the previous position
+0000004E  3202                      89      MOVE.W  D2,D1               ; move the old position into D1 to be applied
+00000050  4EB8 001C                 90      JSR     SetCursorPosition
+00000054  4CDF 003F                 91      MOVEM.L (SP)+,D0-D5
+00000058  4E75                      92      RTS                         * return
+0000005A                            93  
+0000005A                            94  
+0000005A                            95  *---------------------------------------------------------------------------------------------------------------------
+0000005A                            96  * PrintNewline
+0000005A                            97  * 
+0000005A                            98  * Uses PrintText to start a new line via carriage return + line feed 
+0000005A                            99  * 
+0000005A                           100  * Assumes: 
+0000005A                           101  *   - NL is a defined constant ($0D,$0A,0)
+0000005A                           102  *---------------------------------------------------------------------------------------------------------------------
+0000005A                           103  PrintNewline
+0000005A  48E7 0040                104      MOVEM.L A1,-(SP)
+0000005E  43F9 00001014            105      LEA     NEWLINE,A1
+00000064  4EB9 00000070            106      JSR     PrintText
+0000006A  4CDF 0200                107      MOVEM.L (SP)+,A1
+0000006E  4E75                     108      RTS
+00000070                           109  
+00000070                           110      
+00000070                           111  *---------------------------------------------------------------------------------------------------------------------
+00000070                           112  * PrintText
+00000070                           113  * 
+00000070                           114  * Prints a string to console using Trap Subtask #14
+00000070                           115  * Assumes: 
+00000070                           116  *   - A1 -> null-terminated string
+00000070                           117  *---------------------------------------------------------------------------------------------------------------------   
+00000070                           118  PrintText:
+00000070  48E7 8000                119      MOVEM.L D0,-(SP)
+00000074  103C 000E                120      MOVE.B  #14,D0  * load the 'print text to screen' subtask
+00000078  4E4F                     121      TRAP    #15     * execute 'print text to screen' subtask
+0000007A  4CDF 0001                122      MOVEM.L (SP)+,D0
+0000007E  4E75                     123      RTS             * return
+00000080                           124  
+00000080                           125  
+00000080                           126  
+00000080                           127  *---------------------------------------------------------------------------------------------------------------------
+00000080                           128  * PrintWelcomeInfo
+00000080                           129  *
+00000080                           130  *   Prints a series of strings explaining the origin and
+00000080                           131  *   purpose of the program 
+00000080                           132  *---------------------------------------------------------------------------------------------------------------------
+00000080                           133  PrintWelcomeInfo
+00000080  48E7 0040                134          MOVEM.L A1,-(SP)    ; store the context
+00000084  43F9 00001017            135          LEA HEADER_LINE,A1
+0000008A  4EB8 0070                136          JSR PrintText            
+0000008E  43F9 00001069            137          LEA HEADER_1,A1
+00000094  4EB8 0070                138          JSR PrintText            
+00000098  43F9 000010BB            139          LEA HEADER_2,A1
+0000009E  4EB8 0070                140          JSR PrintText
+000000A2  43F9 0000110D            141          LEA HEADER_BLANK,A1
+000000A8  4EB8 0070                142          JSR PrintText           
+000000AC  43F9 0000115F            143          LEA HEADER_3,A1
+000000B2  4EB8 0070                144          JSR PrintText           
+000000B6  43F9 000011B1            145          LEA HEADER_4,A1
+000000BC  4EB8 0070                146          JSR PrintText           
+000000C0  43F9 00001017            147          LEA HEADER_LINE,A1
+000000C6  4EB8 0070                148          JSR PrintText
+000000CA                           149    
+000000CA  43F9 00001014            150          LEA NEWLINE,A1
+000000D0  4EB8 0070                151          JSR PrintText
+000000D4                           152          
+000000D4  43F9 00001203            153          LEA INSTRUCTIONS_1,A1
+000000DA  4EB8 0070                154          JSR PrintText       
+000000DE  43F9 00001249            155          LEA INSTRUCTIONS_2,A1
+000000E4  4EB8 0070                156          JSR PrintText  
+000000E8  43F9 00001291            157          LEA INSTRUCTIONS_3,A1
+000000EE                           158          
+000000EE  4EB8 0070                159          JSR PrintText  
+000000F2  43F9 00001014            160          LEA NEWLINE,A1
+000000F8  4EB8 0070                161          JSR PrintText
+000000FC  43F9 00001014            162          LEA NEWLINE,A1
+00000102  4EB8 0070                163          JSR PrintText
+00000106  4CDF 0200                164          MOVEM.L (SP)+,A1    ; restore the context
+0000010A  4E75                     165          RTS   
+0000010C                           166  
+0000010C                           167  
+0000010C                           168  *=====================================================================================================================
+0000010C                           169  * User Interaction
+0000010C                           170  *=====================================================================================================================
+0000010C                           171  *---------------------------------------------------------------------------------------------------------------------
+0000010C                           172  * ReadDecimalFromKeyboard
+0000010C                           173  * 
+0000010C                           174  * Uses TRAP subtask #4 to read a decimal from keyboard into D1.L
+0000010C                           175  *---------------------------------------------------------------------------------------------------------------------   
+0000010C                           176  ReadDecimalFromKeyboard
+0000010C  48E7 8000                177      MOVEM.L D0,-(SP)        ; store D0 on the stack
+00000110  103C 0004                178      MOVE.B  #04,D0          ; use D0 to load the 'read # from keyboard' subtask 
+00000114  4E4F                     179      TRAP    #15             ; execute the 'read # from keyboard' subtask
+00000116  4CDF 0001                180      MOVEM.L (SP)+,D0        ; restore D0
+0000011A  4E75                     181      RTS                     
+0000011C                           182  
+0000011C                           183  
+0000011C                           184  GetUserInput: 
+0000011C  48E7 00C0                185      MOVEM.L     A0-A1,-(SP)
+00000120  43F9 000012CC            186      LEA         INPUT_BYTE,A1
+00000126  4EB8 0070                187      JSR         PrintText
+0000012A  4EB8 010C                188      JSR         ReadDecimalFromKeyboard
+0000012E  3001                     189      MOVE.W      D1,D0
+00000130                           190      
+00000130  4CDF 0300                191      MOVEM.L     (SP)+,A0-A1
+00000134  4E75                     192      RTS
+00000136                           193  
+00000136                           194  
+00000136                           195  *=====================================================================================================================
+00000136                           196  * Cumulative Sum Functions 
+00000136                           197  *=====================================================================================================================
+00000136                           198  *---------------------------------------------------------------------------------------------------------------------
+00000136                           199  * Print Multiplication Results
+00000136                           200  * 
+00000136                           201  * Prints the result of the multiplication, specifically:
+00000136                           202  *   - The product 
+00000136                           203  *   - Whether the carry bit was set or not
+00000136                           204  *---------------------------------------------------------------------------------------------------------------------   
+00000136                           205  PrintMultiplicationResults:
+00000136  48E7 E0E0                206      MOVEM.L D0-D2/A0-A2,-(SP) ; store the context
+0000013A                           207      
+0000013A  43F9 000012E4            208      LEA RESULT_PRODUCT,A1   ; load the product caption
+00000140  4EB8 0070                209      JSR PrintText           ; print the product caption
+00000144                           210   
+00000144  2A01                     211      MOVE.L  D1,D5       ;backup the carry bit to D5
+00000146  2202                     212      MOVE.L  D2,D1       ; copy the multiplication result to D1 for printing
+00000148  4EB8 002C                213      JSR     PrintDecimalInline ;print the multiplication data
+0000014C  4EB8 005A                214      JSR     PrintNewline
+00000150                           215      
+00000150  43F9 000012F4            216      LEA     RESULT_CARRY,A1 ; load the carry bit caption
+00000156  4EB8 0070                217      JSR     PrintText       ; print the carry bit caption
+0000015A                           218      
+0000015A  B27C 0001                219      CMP     #01,D1          ; check if the carry bit was set
+0000015E  6700 0010                220      BEQ     PR_CarryTrue    ; the carry bit was set, skip to 'carry true' 
+00000162                           221      
+00000162  43F9 0000130F            222      LEA     RESULT_FALSE,A1        ; carry bit was not set, print 'false'
+00000168  4EB8 0070                223      JSR     PrintText           ; print 'false' as result
+0000016C  6000 000C                224      BRA     LetMeHearPercussion ; skip to exit
+00000170                           225  
+00000170                           226  PR_CarryTrue
+00000170  43F9 00001308            227      LEA     RESULT_TRUE,A1  ; carry bit was set, load 'true' result
+00000176  4EB8 0070                228      JSR     PrintText       ; print 'true' result
+0000017A                           229      
+0000017A                           230      
+0000017A                           231  LetMeHearPercussion
+0000017A  4CDF 0707                232      MOVEM.L (SP)+,D0-D2/A0-A2 ; restore the context
+0000017E  4E75                     233      RTS
+00000180                           234  
+00000180                           235  
+00000180                           236  
+00000180                           237  *---------------------------------------------------------------------------------------------------------------------
+00000180                           238  * MultiplyInQuotes
+00000180                           239  * 
+00000180                           240  * "Multiplies" 512 with the byte-value provided by the user
+00000180                           241  *---------------------------------------------------------------------------------------------------------------------   
+00000180                           242  MultiplyInQuotes
+00000180                           243      *MOVEM.L D0-D2,-(SP)     ;save the context
+00000180  B07C 0000                244      CMP     #00,D0              ; check if D0 is zero 
+00000184  6700 001A                245      BEQ     MultiplyReturn      ; quit if true
+00000188                           246      
+00000188  4245                     247      CLR     D5                  ;clear D5 as temp storage for the carry flag
+0000018A                           248          
+0000018A                           249  MultiplyLoop
+0000018A  0682 00000200            250      ADD.L   #512,D2             ; add 512 foreach index
+00000190  6500 000A                251      BCS     SetCarryFlagFlag    ; check if the carry flag was set  
+00000194                           252  MultiplyContinue                ; continue the loop
+00000194  5300                     253      SUBQ.B  #01,D0              ; decrement after each addition
+00000196  6700 0008                254      BEQ     MultiplyReturn      ; 
+0000019A  60EE                     255      BRA     MultiplyLoop        ; if not complete, continue loop 
+0000019C                           256  
+0000019C                           257  SetCarryFlagFlag
+0000019C  7A01                     258      MOVE.L  #01,D5
+0000019E  60F4                     259      BRA     MultiplyContinue    
+000001A0                           260   
+000001A0                           261  MultiplyReturn      
+000001A0                           262      *MOVEM.L (SP)+,D0-D2     ; restore the context 
+000001A0  2205                     263      MOVE.L  D5,D1            ; copy D5 to D1, to set the carry flag-flag
+000001A2  4E75                     264      RTS
+000001A4                           265  
+000001A4                           266  
+000001A4                           267  
+000001A4                           268  *=====================================================================================================================
+000001A4                           269  *=====================================================================================================================
+000001A4                           270  * START
+000001A4                           271  * 
+000001A4                           272  * It puts the lotion on its parameters
+000001A4                           273  *=====================================================================================================================
+000001A4                           274  *=====================================================================================================================
+00001000                           275      ORG    $1000
+00001000                           276  START:                  ; first instruction of program
+00001000  4EB8 0080                277      JSR     PrintWelcomeInfo
+00001004  4EB8 011C                278      JSR     GetUserInput
+00001008  4EB8 0180                279      JSR     MultiplyInQuotes
+0000100C  4EB8 0136                280      JSR     PrintMultiplicationResults
+00001010                           281  
+00001010                           282  
+00001010  FFFF FFFF                283      SIMHALT             ; halt simulator
+00001014                           284  
+00001014                           285  
+00001014                           286  
+00001014                           287  
+00001014                           288  
+00001014                           289  
+00001014                           290  
+00001014                           291  
+00001014                           292  *=====================================================================================================================
+00001014                           293  * Constants
+00001014                           294  *=====================================================================================================================
+00001014                           295  *---------------------------------------------------------------------------------------------------------------------
+00001014                           296  * CHAR(ish) Constants
+00001014                           297  *---------------------------------------------------------------------------------------------------------------------
+00001014  =0000007C                298  PIPE    EQU     $7C    
+00001014  =0000002D                299  DASH    EQU     $2D
+00001014  =0000000D                300  CR      EQU     $0D
+00001014  =0000000A                301  LF      EQU     $0A
+00001014  =00000009                302  TAB     EQU     $09
+00001014  =00000020                303  SPACE   EQU     $20
+00001014                           304  
+00001014= 0D 0A 00                 305  NEWLINE  DC.B    CR,LF,0
+00001017                           306  
+00001017                           307  
+00001017                           308  
+00001017                           309  *---------------------------------------------------------------------------------------------------------------------
+00001017                           310  * String Constants
+00001017                           311  *---------------------------------------------------------------------------------------------------------------------
+00001017= 2A 3D 3D 3D 3D 3D 3D     312  HEADER_LINE     DC.B '*=============================================================================*',CR,LF,0
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 3D 3D 3D 3D 3D 3D  
+          3D 2A 0D 0A 00        
+00001069= 2A 20 35 31 32 20 43     324  HEADER_1        DC.B '* 512 Cumulative Sum                                                          *',CR,LF,0
+          75 6D 75 6C 61 74 69  
+          76 65 20 53 75 6D 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+000010BB= 2A 20 48 57 20 35 2C     336  HEADER_2        DC.B '* HW 5, Q5                                                                    *',CR,LF,0
+          20 51 35 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+0000110D= 2A 20 20 20 20 20 20     348  HEADER_BLANK    DC.B '*                                                                             *',CR,LF,0
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+0000115F= 2A 20 20 20 48 6F 77     360  HEADER_3        DC.B '*   Howie Catlin                                                              *',CR,LF,0
+          69 65 20 43 61 74 6C  
+          69 6E 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+000011B1= 2A 20 20 20 43 53 53     372  HEADER_4        DC.B '*   CSS 422, Autumn 2019                                                      *',CR,LF,0
+          20 34 32 32 2C 20 41  
+          75 74 75 6D 6E 20 32  
+          30 31 39 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 20 20 20 20 20 20  
+          20 2A 0D 0A 00        
+00001203                           384  
+00001203= 54 68 69 73 20 70 72     385  INSTRUCTIONS_1      DC.B 'This program performs pseudo-multiplication by performing iterative',CR,LF,0
+          6F 67 72 61 6D 20 70  
+          65 72 66 6F 72 6D 73  
+          20 70 73 65 75 64 6F  
+          2D 6D 75 6C 74 69 70  
+          6C 69 63 61 74 69 6F  
+          6E 20 62 79 20 70 65  
+          72 66 6F 72 6D 69 6E  
+          67 20 69 74 65 72 61  
+          74 69 76 65 0D 0A 00  
+00001249= 20 20 61 64 64 69 74     395  INSTRUCTIONS_2      DC.B '  addition. It requests a byte-sized number and multiplies it against',CR,LF,0
+          69 6F 6E 2E 20 49 74  
+          20 72 65 71 75 65 73  
+          74 73 20 61 20 62 79  
+          74 65 2D 73 69 7A 65  
+          64 20 6E 75 6D 62 65  
+          72 20 61 6E 64 20 6D  
+          75 6C 74 69 70 6C 69  
+          65 73 20 69 74 20 61  
+          67 61 69 6E 73 74 0D  
+          0A 00                 
+00001291= 20 20 74 68 65 20 6E     406  INSTRUCTIONS_3      DC.B '  the number 512, and reports if the carry flag was set.',CR,LF,0
+          75 6D 62 65 72 20 35  
+          31 32 2C 20 61 6E 64  
+          20 72 65 70 6F 72 74  
+          73 20 69 66 20 74 68  
+          65 20 63 61 72 72 79  
+          20 66 6C 61 67 20 77  
+          61 73 20 73 65 74 2E  
+          0D 0A 00              
+000012CC                           415  
+000012CC= 4D 75 6C 74 69 70 6C     416  INPUT_BYTE          DC.B 'Multiplicand (0-256): ',$09,0
+          69 63 61 6E 64 20 28  
+          30 2D 32 35 36 29 3A  
+          20 09 00              
+000012E4= 50 72 6F 64 75 63 74     420  RESULT_PRODUCT      DC.B 'Product:',$09,$09,$09,$20,$20,$20,$20,0
+          3A 09 09 09 20 20 20  
+          20 00                 
+000012F4= 43 61 72 72 79 20 42     423  RESULT_CARRY        DC.B 'Carry Bit Set?: ',$09,$09,$20,0
+          69 74 20 53 65 74 3F  
+          3A 20 09 09 20 00     
+00001308= 54 72 75 65 0D 0A 00     426  RESULT_TRUE         DC.B 'True',CR,LF,0
+0000130F= 46 61 6C 73 65 0D 0A     427  RESULT_FALSE        DC.B 'False',CR,LF,0
+          00                    
+00001317                           429  
+00001317                           430      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CR                  D
+DASH                2D
+GETCURSORPOSITION   0
+GETUSERINPUT        11C
+HEADER_1            1069
+HEADER_2            10BB
+HEADER_3            115F
+HEADER_4            11B1
+HEADER_BLANK        110D
+HEADER_LINE         1017
+INPUT_BYTE          12CC
+INSTRUCTIONS_1      1203
+INSTRUCTIONS_2      1249
+INSTRUCTIONS_3      1291
+LETMEHEARPERCUSSION  17A
+LF                  A
+MULTIPLYCONTINUE    194
+MULTIPLYINQUOTES    180
+MULTIPLYLOOP        18A
+MULTIPLYRETURN      1A0
+NEWLINE             1014
+PIPE                7C
+PRINTDECIMALINLINE  2C
+PRINTMULTIPLICATIONRESULTS  136
+PRINTNEWLINE        5A
+PRINTTEXT           70
+PRINTWELCOMEINFO    80
+PR_CARRYTRUE        170
+READDECIMALFROMKEYBOARD  10C
+RESULT_CARRY        12F4
+RESULT_FALSE        130F
+RESULT_PRODUCT      12E4
+RESULT_TRUE         1308
+SAVECURSORPOSITION  14
+SETCARRYFLAGFLAG    19C
+SETCURSORPOSITION   1C
+SPACE               20
+START               1000
+TAB                 9
