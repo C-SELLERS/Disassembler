@@ -76,7 +76,9 @@ MAIN_LOOP:
 * Postconditions: (A1) points to ASCII assembly code ending in 0
 *********************************************************************************
 DisassembleOpcode:
-    INCLUDE 'OPCODE.X68'
+    INCLUDE 'Determine_Opcode.X68'
+    INCLUDE 'Breakdown_Opcode.X68'
+    INCLudE 'Addressing.X68'
     RTS
 *********************************************************************************
 * Method Name: yourDisassemblerSecondMethodHere
