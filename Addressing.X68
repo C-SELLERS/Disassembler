@@ -29,6 +29,7 @@ MXn:
     ; mask 210
     ; interpret
     ; append ASCII to A1
+    RTS
 
 * S76 deals with bit values in positions 76
 * Positions 76 contain size values
@@ -36,10 +37,11 @@ MXn:
 *   00      .B
 *   01      .W
 *   10      .L
-S76:
+Size76:
     ; mask 76
     ; check value against 3 possible sizes
     ; append ASCII to A1
+    RTS
 
 * Displacement deals with bit values in positions 76543210
 * This value will be interpreted as a numerical displacement
@@ -49,3 +51,4 @@ Displacement:
     ; check against 00000000
     ; if 0 then get next word
     ; append ASCII to A1
+    RTS

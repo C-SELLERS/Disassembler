@@ -19,7 +19,23 @@ SUB:
 SUBQ:
 MULS:
 ORI:
+    LEA STRINGORI, A1
+    JSR Size76
+    JSR MXn
+    ; if size == byte then fetch next byte
+    ; if size == word then fetch next word
+    ; if size == long then fetch next long
+    BRA Opcode_Finish
+
 CMPI:
+    LEA STRINGCMPI, A1
+    JSR Size76
+    JSR MXn
+    ; if size == byte then fetch next byte
+    ; if size == word then fetch next word
+    ; if size == long then fetch next long
+    BRA Opcode_Finish
+
 BCLR:
 ADDA:
 ADD:
@@ -41,31 +57,38 @@ BRA:
     LEA STRINGBRA, A1
     JSR Displacement
     BRA Opcode_Finish
+
 BCS:
     LEA STRINGBCS, A1
     JSR Displacement
     BRA Opcode_Finish
+
 BGE:
     LEA STRINGBGE, A1
     JSR Displacement
     BRA Opcode_Finish
+
 BLT:
     LEA STRINGBLT, A1
     JSR Displacement
     BRA Opcode_Finish
+
 BVC:
     LEA STRINGBVC, A1
     JSR Displacement
     BRA Opcode_Finish
+
 RTS:
     LEA STRINGRTS, A1
     BRA Opcode_Finish
+
 LEA:
 NEG:
     LEA STRINGNEG, A1
-    JSR S76
+    JSR Size76
     JSR MXn
     BRA Opcode_Finish
+    
 MOVEM:
 JSR:
     LEA STRINGJSR, A1

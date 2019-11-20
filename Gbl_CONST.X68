@@ -46,7 +46,7 @@ STRINGBCS  DC.B    '    BCS '
 STRINGBGE  DC.B    '    BGE '
 STRINGBLT  DC.B    '    BLT '
 STRINGBVC  DC.B    '    BVC '
-
+STRINGORI  DC.B    '    ORI '
    
    
    ; mask 4,3 
