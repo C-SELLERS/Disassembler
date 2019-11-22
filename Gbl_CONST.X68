@@ -37,16 +37,17 @@ ERROR_CODE_FILE_3  DC.W    'File is Read only',0
 
 FILE_ERROR_ARRAY   DC.W    'Success','EOF Encountered','Error','File is Read only',0
 
-STRINGDATA  DC.B    '    DATA '
-STRINGRTS  DC.B    '    RTS'
-STRINGJSR  DC.B    '    JSR '
-STRINGNEG  DC.B    '    NEG'
-STRINGBRA  DC.B    '    BRA '
-STRINGBCS  DC.B    '    BCS '
-STRINGBGE  DC.B    '    BGE '
-STRINGBLT  DC.B    '    BLT '
-STRINGBVC  DC.B    '    BVC '
-STRINGORI  DC.B    '    ORI '
+STRINGDATA  DC.B    '    DATA',0
+STRINGRTS  DC.B    '    RTS',0
+STRINGJSR  DC.B    '    JSR',0
+STRINGNEG  DC.B    '    NEG',0
+STRINGBRA  DC.B    '    BRA',0
+STRINGBCS  DC.B    '    BCS',0
+STRINGBGE  DC.B    '    BGE',0
+STRINGBLT  DC.B    '    BLT',0
+STRINGBVC  DC.B    '    BVC',0
+STRINGORI  DC.B    '    ORI',0
+STRINGSIMHALT DC.B   '    SIMHALT',0
    
    
    ; mask 4,3 
