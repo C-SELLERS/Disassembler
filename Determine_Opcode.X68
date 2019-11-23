@@ -7,16 +7,12 @@
 *       opcode it corresponds to.
 * Preconditions: D6 contains word length opcode
 *-----------------------------------------------------------
-    MOVE #$4E75, D6         ;FOR TESTING : RTS
-    MOVE.W #MASK_OPCODE,D3
+
 Opcode:
     MOVEM.L D2-D3, -(SP)            ; MOVEM all registers used
     
     MOVE.W D6,D2         ; copy current word (D6) into opcode mask register (D2)
     AND.W #MASK_OPCODE,D2   ; apply mask to first 4 bits
-    
-    ;TESTOING
-    AND.W D3,D2   ; apply mask to first 4 bits
 
     CMP.W #$9000,D2      ; compare with 1001
     BEQ SUB              ; if equal jump to SUB
