@@ -295,9 +295,10 @@ MSG2                DC.B 'ADD.B D0,D1',0
 outFilename         DC.B 'Output.txt',0
 byteRead            DS.B 1
 ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
-INCLUDE 'Gbl_CONST.X68'
+    INCLUDE 'Gbl_CONST.X68'
 
    END    START        ; last line of source
+
 
 *~Font name~Courier New~
 *~Font size~10~

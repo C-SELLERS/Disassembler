@@ -7,6 +7,7 @@
 *       opcode it corresponds to.
 * Preconditions: D6 contains word length opcode
 *-----------------------------------------------------------
+    MOVE #$4E75, D6         ;FOR TESTING : RTS
 Opcode:
     MOVEM.L D2-D3, -(SP)            ; MOVEM all registers used
     
@@ -28,7 +29,7 @@ Opcode:
     AND MASK_1110,D3     ; mask bits 11, 10
     CMP.W #$0000,D3      ; compare with 00
     BEQ ORI              ; if equal jump to ORI
-    CMP.W #$0C00         ; compare with 11
+    CMP.W #$0C00,D3         ; compare with 11
     BEQ CMPI             ; if equal jump to CMPI
     CMP.W #$0800         ; compare with 10
     BEQ BCLR             ; if equal jump to BCLR
@@ -145,6 +146,7 @@ Skip_0100:
     BEQ SIMHALT          ; if equal jump to SIMHALT
     
     BRA DATA             ; if no opcodes found jump to DATA
+
 
 
 *~Font name~Courier New~

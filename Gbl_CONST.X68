@@ -51,6 +51,20 @@ STRINGBLT  DC.B    '    BLT',0
 STRINGBVC  DC.B    '    BVC',0
 STRINGORI  DC.B    '    ORI',0
 STRINGSIMHALT DC.B   '    SIMHALT',0
+
+
+
+*********************************************************************************
+* Mask Constants
+*********************************************************************************
+MASK_OPCODE 	EQU 	$F000
+MASK_111098 	EQU 	$0F00
+MASK_1110 		EQU 	$0C00
+MASK_11 		EQU 	$0800
+MASK_876 		EQU 	$01C0
+MASK_8 			EQU 	$0100
+MASK_76 		EQU 	$00C0
+MASK_43 		EQU 	$0018
    
    
    ; mask 4,3 
@@ -78,6 +92,7 @@ STRINGSIMHALT DC.B   '    SIMHALT',0
     ; equals asl 
     ;RTS
     
+
 
 
 *~Font name~Courier New~
