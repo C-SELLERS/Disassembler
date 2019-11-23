@@ -18,7 +18,7 @@
 *---------------------------------------------------------------------------
     ORG    $1000    *Don't change this; see hints and tips above
 *---------------------------------------------------------------------------
-    
+
 MAIN_LOOP:
 
     ; read first word into D6
@@ -268,7 +268,8 @@ byteRead            DS.B 1
 ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
 
-   END    START        ; last line of source
+   END    $1000        ; last line of source
+
 
 
 
