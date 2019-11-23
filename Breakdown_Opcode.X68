@@ -95,7 +95,10 @@ JSR:
     JSR MXn
     BRA Opcode_Finish
 
+SIMHALT:
+    LEA STRINGSIMHALT, A1
+    BRA Opcode_Finish
+
 Opcode_Finish: 
-    ; append a1 with 0
     MOVEM.L (SP)+, D2-D3        ; return registers to their previous state
     RTS                         ; return from function

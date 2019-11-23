@@ -141,6 +141,11 @@ Skip_0110:
     BNE JSR              ; if not equal jump to JSR  
 Skip_0100:
 
+    CMP.W #FFFF,D6       ; compare with FFFF
+    BEQ SIMHALT          ; if equal jump to SIMHALT
+    
+    BRA DATA             ; if no opcodes found jump to DATA
+
 
 *~Font name~Courier New~
 *~Font size~10~
