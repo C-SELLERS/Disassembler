@@ -8,13 +8,12 @@
 * Preconditions: D6 contains word length opcode
 *-----------------------------------------------------------
 
-    MOVE #$FFFF, D6  ; testing 
 Opcode:
     MOVEM.L D2-D3, -(SP)            ; MOVEM all registers used
     
     MOVE.W D6,D2         ; copy current word (D6) into opcode mask register (D2)
-    AND MASK_OPCODE,D2   ; apply mask to first 4 bits
-    
+    AND.W #MASK_OPCODE,D2   ; apply mask to first 4 bits
+
     CMP.W #$9000,D2      ; compare with 1001
     BEQ SUB              ; if equal jump to SUB
     
@@ -147,6 +146,8 @@ Skip_0100:
     BEQ SIMHALT          ; if equal jump to SIMHALT
     
     BRA DATA             ; if no opcodes found jump to DATA
+
+
 
 
 *~Font name~Courier New~

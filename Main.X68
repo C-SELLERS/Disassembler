@@ -26,14 +26,14 @@ START:
     *   (2) how to build a (Callee-Saved) method
     *   (3) how to call that method using JSR (return with RTS)
     ***********************************************************
-    LEA MSG1, A1        ; buffer of chars to write
-    JSR TrapTask13
+    ;LEA MSG1, A1        ; buffer of chars to write
+    ;JSR TrapTask13
     
-    LEA MSG2, A1        ; buffer of chars to write    
-    JSR TrapTask13
+    ;LEA MSG2, A1        ; buffer of chars to write    
+    ;JSR TrapTask13
 
-    LEA ascii_val, A1
-    JSR AsciiToHex     ;  example of how to convert ascii to hex
+    ;LEA ascii_val, A1
+    ;JSR AsciiToHex     ;  example of how to convert ascii to hex
 
     **************************************************
     *Your disassembler code goes here
@@ -44,7 +44,7 @@ START:
     ;Open config.cfg (trap subtasks 50-59)
     
     ;load start and end address as longs
-    INCLUDE 'START.X68'
+    ;INCLUDE 'START.X68'
     
     ;open target .S68 file
     
@@ -298,6 +298,8 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
 
    END    START        ; last line of source
+
+
 
 *~Font name~Courier New~
 *~Font size~10~

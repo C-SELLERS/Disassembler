@@ -47,6 +47,8 @@ MOVEA_B:
 MOVE_B:
 MOVEA_W:
 MOVE_W:
+MOVEA_L:
+MOVE_L:
 ROL:
 ROR:
 LSL:
@@ -102,3 +104,7 @@ SIMHALT:
 Opcode_Finish: 
     MOVEM.L (SP)+, D2-D3        ; return registers to their previous state
     RTS                         ; return from function
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
