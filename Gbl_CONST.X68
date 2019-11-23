@@ -31,6 +31,9 @@ FILE_DEFAULT_READ_BYTES  EQU 1024
 *********************************************************************************
 * String Constants
 *********************************************************************************
+CURRENT_STR_LENGTH  SET     0
+OUTPUT_LENGTH       EQU     40
+OUTPUT              DS.B    OUTPUT_LENGTH
 
 ERROR_CODE_FILE_0  DC.W    'Success',0
 ERROR_CODE_FILE_1  DC.W    'EOF Encountered',0
