@@ -13,8 +13,9 @@
 *   1)  I believe there is issues with CURRENT_STR_LENGTH as it is set to 0
 *       but when loaded into a register comes up as FFFF????
 *       Good thing is that it does work with add operations so using it as a variable is good!
-*       This mostly a note to remember to follow up on it.
-*
+*       
+*   2) Address where it starts writting the next sequence in string, might work fine but has only
+*       been tested with RTS so we need to use a two word opcode or something to know for sure.
 *-----------------------------------------------------------
 SaveItFam REG A1/D1
 
@@ -32,7 +33,7 @@ SaveItFam REG A1/D1
 
     ;Now that we are in position, start appending the string in A2
 APPENDLOOP:
-    ADDI    #1, D1     ;Increment Current Length by 1
+    ADDI    #1, D1                      ;Increment Current Length by 1
     MOVE.B  (A2)+, (A1)+                ;Move the Byte in A2 to our Output
     BNE     APPENDLOOP                  ; If zero has not been reached, Loop Back
 
