@@ -62,6 +62,10 @@ MAIN_LOOP:
             ; add addresses to (A1)
         ; postcondition: A1 points to the null terminated buffer to write
         ; call TrapTask13 to output (A1)
+
+    ; Send output to TrapTask 13
+    LEA OUTPUT, A1
+    JSR TrapTask13 
     
     ; if currentaddress < endaddress then loop
     ; end (print SIMHALT?  close file?)
@@ -76,18 +80,24 @@ MAIN_LOOP:
 * Postconditions: (A1) points to ASCII assembly code ending in 0
 *********************************************************************************
 DisassembleOpcode:
-    INCLUDE 'OPCODE.X68'
+    INCLUDE 'Determine_Opcode.X68'
+    INCLUDE 'Breakdown_Opcode.X68'
+    INCLUDE 'Addressing.X68'
     RTS
+
+
 *********************************************************************************
-* Method Name: yourDisassemblerSecondMethodHere
-* Description:    TBA
+* Method Name: AppendOutput
+* Description: Handles the appending of our output strings
 *
 * Preconditions:  TBA
 * Postconditions: TBA
 *********************************************************************************
-method2:
-        NOP
-        RTS
+AppendOutput:
+    INCLUDE 'AppendOutput.X68'
+    RTS
+
+
 *********************************************************************************
 * Method Name: TrapTask13
 * Description: Creates a file if none exists, and appends bytes to that file
@@ -285,15 +295,9 @@ MSG2                DC.B 'ADD.B D0,D1',0
 outFilename         DC.B 'Output.txt',0
 byteRead            DS.B 1
 ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
-
+    INCLUDE 'Gbl_CONST.X68'
 
    END    START        ; last line of source
-
-
-
-
-
-
 
 *~Font name~Courier New~
 *~Font size~10~

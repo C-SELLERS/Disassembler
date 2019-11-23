@@ -23,12 +23,17 @@ BYTE_LENGTH     EQU     2
 WORD_LENGTH     EQU     4
 LONG_LENGTH     EQU     8 
 
+TAB     EQU     $09
+
 FILE_DEFAULT_READ_BYTES  EQU 1024
 
 
 *********************************************************************************
 * String Constants
 *********************************************************************************
+CURRENT_STR_LENGTH  SET     0
+OUTPUT_LENGTH       EQU     40
+OUTPUT              DS.B    OUTPUT_LENGTH
 
 ERROR_CODE_FILE_0  DC.W    'Success',0
 ERROR_CODE_FILE_1  DC.W    'EOF Encountered',0
@@ -37,6 +42,18 @@ ERROR_CODE_FILE_3  DC.W    'File is Read only',0
 
 FILE_ERROR_ARRAY   DC.W    'Success','EOF Encountered','Error','File is Read only',0
 
+STRINGDATA  DC.B    TAB,'DATA',0
+STRINGRTS  DC.B    TAB,'RTS',0
+STRINGJSR  DC.B    TAB,'JSR',0
+STRINGNEG  DC.B    TAB,'NEG',0
+STRINGBRA  DC.B    TAB,'BRA',0
+STRINGBCS  DC.B    TAB,'BCS',0
+STRINGBGE  DC.B    TAB,'BGE',0
+STRINGBLT  DC.B    TAB,'BLT',0
+STRINGBVC  DC.B    TAB,'BVC',0
+STRINGORI  DC.B    TAB,'ORI',0
+STRINGCMPI  DC.B    TAB,'CMPI',0
+STRINGSIMHALT DC.B   TAB,'SIMHALT',0
    
    
    ; mask 4,3 
