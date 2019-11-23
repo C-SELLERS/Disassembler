@@ -5,13 +5,14 @@
 * Description:  This file will be included in Main.X68 disassembler program
 *       Once the Determine_Opcode has run, it will break to one of these subroutines
 *       corresponding to each of the valid opcodes.  These subroutines will put the 
-*       correct ASCII values in (A1) for each opcode and address.
+*       correct ASCII values in (A2)
 * Preconditions: D6 contains word length opcode
 *                string constants are in Gbl_CONST.X68
 *-----------------------------------------------------------
 
 DATA:
-    LEA STRINGDATA, A1
+    LEA STRINGDATA, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     ; print ASCII value of opcode in D6
     BRA Opcode_Finish
 
@@ -19,7 +20,8 @@ SUB:
 SUBQ:
 MULS:
 ORI:
-    LEA STRINGORI, A1
+    LEA STRINGORI, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     JSR MXn
     ; if size == byte then fetch next byte
@@ -28,7 +30,8 @@ ORI:
     BRA Opcode_Finish
 
 CMPI:
-    LEA STRINGCMPI, A1
+    LEA STRINGCMPI, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     JSR MXn
     ; if size == byte then fetch next byte
@@ -56,54 +59,66 @@ LSR:
 ASL:
 ASR:
 BRA:
-    LEA STRINGBRA, A1
+    LEA STRINGBRA, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BCS:
-    LEA STRINGBCS, A1
+    LEA STRINGBCS, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BGE:
-    LEA STRINGBGE, A1
+    LEA STRINGBGE, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BLT:
-    LEA STRINGBLT, A1
+    LEA STRINGBLT, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BVC:
-    LEA STRINGBVC, A1
+    LEA STRINGBVC, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 RTS:
-    LEA STRINGRTS, A1
+    LEA STRINGRTS, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     BRA Opcode_Finish
 
 LEA:
 NEG:
-    LEA STRINGNEG, A1
+    LEA STRINGNEG, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     JSR MXn
     BRA Opcode_Finish
     
 MOVEM:
 JSR:
-    LEA STRINGJSR, A1
+    LEA STRINGJSR, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     JSR MXn
     BRA Opcode_Finish
 
 SIMHALT:
-    LEA STRINGSIMHALT, A1
+    LEA STRINGSIMHALT, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
     BRA Opcode_Finish
 
 Opcode_Finish: 
+    LEA OUTPUT, A1              ; Load Output into A1
+    JSR TrapTask13              ; Send it to the printer
     MOVEM.L (SP)+, D2-D3        ; return registers to their previous state
     RTS                         ; return from function
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

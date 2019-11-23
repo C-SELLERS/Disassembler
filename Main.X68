@@ -18,35 +18,6 @@
 *---------------------------------------------------------------------------
     ORG    $1000    *Don't change this; see hints and tips above
 *---------------------------------------------------------------------------
-START:
-    ***********************************************************
-    * Code demo for printing strings to console & file is here
-    * Pay close attention to:
-    *   (1) the detailed comments, 
-    *   (2) how to build a (Callee-Saved) method
-    *   (3) how to call that method using JSR (return with RTS)
-    ***********************************************************
-    ;LEA MSG1, A1        ; buffer of chars to write
-    ;JSR TrapTask13
-    
-    ;LEA MSG2, A1        ; buffer of chars to write    
-    ;JSR TrapTask13
-
-    ;LEA ascii_val, A1
-    ;JSR AsciiToHex     ;  example of how to convert ascii to hex
-
-    **************************************************
-    *Your disassembler code goes here
-    **************************************************
-    
-    
-    * pseudocode outline:
-    ;Open config.cfg (trap subtasks 50-59)
-    
-    ;load start and end address as longs
-    ;INCLUDE 'START.X68'
-    
-    ;open target .S68 file
     
 MAIN_LOOP:
 
@@ -64,8 +35,8 @@ MAIN_LOOP:
         ; call TrapTask13 to output (A1)
 
     ; Send output to TrapTask 13
-    LEA OUTPUT, A1
-    JSR TrapTask13 
+
+
     
     ; if currentaddress < endaddress then loop
     ; end (print SIMHALT?  close file?)
