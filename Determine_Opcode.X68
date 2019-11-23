@@ -26,13 +26,22 @@ Opcode:
     CMP.W #$0000,D2      ; compare with 0000
     BNE Skip_0000        ; if not equal then skip
     MOVE.W D6,D3         ; move current word into working register (D3)
-    AND #MASK_1110,D3     ; mask bits 11, 10
-    CMP.W #$0000,D3      ; compare with 00
-    BEQ ORI              ; if equal jump to ORI
-    CMP.W #$0C00,D3         ; compare with 11
-    BEQ CMPI             ; if equal jump to CMPI
-    CMP.W #$0800,D3         ; compare with 10
+    AND #MASK_1110876,D3    ; mask bits 11,10,8,7,6
+    CMP.W #$0880,D3      ; compare with 10010
     BEQ BCLR             ; if equal jump to BCLR
+    MOVE.W D6,D3         ; reset current word in D3
+    AND #MASK_8,D3       ; mask bit 8
+    CMP.W #$0100,D3      ; compare with 1
+    BEQ BCLR             ; if equal jump to BCLR
+    MOVE.W D6,D3         ; reset current word in D3
+    AND #MASK_11,D3      ; mask bit 11
+    CMP.W #$0800,D3      ; compare with 1
+    BEQ CMPI             ; if equal jump to CMPI
+    MOVE.W D6,D3         ; reset current word in D3
+    AND #MASK_11108      ; mask bit 11, 10,8
+    CMP.W #$0000,D3      ; compare with 000
+    BEQ ORI              ; if equal jump to ORI
+    BRA DATA             ; checks failed, default to DATA
 Skip_0000:
     
     CMP.W #$D000,D2      ; compare with 1101
