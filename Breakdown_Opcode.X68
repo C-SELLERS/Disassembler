@@ -123,9 +123,11 @@ SIMHALT:
 Opcode_Finish: 
     LEA OUTPUT, A1              ; Load Output into A1
     JSR TrapTask13              ; Send it to the printer
-    SUB CURRENT_STR_LENGTH,CURRENT_STR_LENGTH   ;Set current string length back to zero to be written over
+    MOVE #0, CURRENT_STR_LENGTH   ;Set current string length back to zero to be written over
     MOVEM.L (SP)+, D2-D3        ; return registers to their previous state
     RTS                         ; return from function
+
+
 
 *~Font name~Courier New~
 *~Font size~10~
