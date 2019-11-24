@@ -49,17 +49,7 @@ MAIN_LOOP:
     MOVE    A4, A2
     JSR     AppendOutput
 
-
-    ; disassemble word in D6:
-    JSR DisassembleOpcode
-        ; read opcode
-            ; branch to 13 different opcode bins
-            ; determine instruction and add string to ouput buffer
-        ; read addresses
-            ; determine addressing scheme
-            ; add addresses to output buffer
-        ; postcondition: A1 points to the null terminated output buffer to write
-        ; call TRAPTask13 to output (A1)
+    JSR DisassembleOpcode   ; disassemble and print word in D6
 
     ; Increment Address
     ADDQ.W      #WORD_LENGTH,A3        * Increment pointer
