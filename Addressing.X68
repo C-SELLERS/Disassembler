@@ -52,3 +52,13 @@ Displacement:
     ; if 0 then get next word
     ; append ASCII to A1
     RTS
+
+
+Dn:
+    MOVE.W  D6,D3           ; move word into D3
+    AND.W   MASK_11109, D3  ; mask bits 11, 10, 9 
+    ROL.W   #7,D3           ; rotate so bits are in least significant spot
+    MULU.W  #2,D3           ; multiply by 2 so offset is measured in words not bytes
+    MOVE.W (EA_StrArray_Dn,D3),A2   ; move string value from StrArray with offset D3 into A2
+    JSR     AppendOutput    ; print string in A2
+    RTS

@@ -17,6 +17,24 @@ DATA:
     BRA Opcode_Finish
 
 SUB:
+    LEA STRINGSUB, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
+    JSR Size76
+    MOVE.W  D6,D3               ; move word value into D3
+    AND #MASK_8, D3             ; mask bit 8
+    CMP.W #$0000,D3             ; compare with 0
+    BNE SUB_EA_DN_EA
+SUB_DN_EA_DN:                   ; case  Dn + <ea> -> Dn
+    JSR MXn
+    JSR Comma
+    JSR Dn
+    BRA Opcode_Finish
+SUB_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
+    JSR Dn
+    JSR Comma
+    JSR MXn
+    BRA Opcode_Finish
+
 SUBQ:
 MULS:
 ORI:
