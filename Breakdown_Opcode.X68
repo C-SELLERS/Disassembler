@@ -40,6 +40,7 @@ CMPI:
     BRA Opcode_Finish
 
 BCLR:
+BCLR_I:
 ADDA:
 ADD:
 DIVS:
@@ -58,7 +59,13 @@ LSL:
 LSR:
 ASL:
 ASR:
-BRA:
+ROL_I:
+ROR_I:
+LSL_I:
+LSR_I:
+ASL_I:
+ASR_I:
+BRA_I:
     LEA STRINGBRA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
