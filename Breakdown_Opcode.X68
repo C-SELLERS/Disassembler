@@ -88,7 +88,7 @@ BRA_I:
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
-
+BRA:
 BCS:
     LEA STRINGBCS, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
