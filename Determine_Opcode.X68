@@ -38,7 +38,7 @@ Opcode:
     CMP.W #$0800,D3      ; compare with 1
     BEQ CMPI             ; if equal jump to CMPI
     MOVE.W D6,D3         ; reset current word in D3
-    AND #MASK_11108      ; mask bit 11, 10,8
+    AND #MASK_11108,D3      ; mask bit 11, 10,8
     CMP.W #$0000,D3      ; compare with 000
     BEQ ORI              ; if equal jump to ORI
 Skip_0000:
@@ -104,7 +104,7 @@ Skip_0010:
     CMP.W #$00C0,D3      ; compare with 11
     BNE 0110_Branch      ; branch to second half of check if not equal
     MOVE.W D6,D3         ; reset the word value in D3
-    AND #MASK_1098       ; mask bits 10, 9, 8
+    AND #MASK_1098,D3       ; mask bits 10, 9, 8
     CMP.W #$0600,D3      ; compare with 110
     BEQ ROL              ; if equal jump to ROL
     CMP.W #$0700,D3      ; compare with 111
@@ -174,6 +174,9 @@ Skip_0100:
     BEQ SIMHALT          ; if equal jump to SIMHALT
     
     BRA DATA             ; if no opcodes found jump to DATA
+
+
+
 
 
 
