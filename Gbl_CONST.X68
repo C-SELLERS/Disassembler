@@ -42,6 +42,8 @@ ERROR_CODE_FILE_3  DC.W    'File is Read only',0
 
 FILE_ERROR_ARRAY   DC.W    'Success','EOF Encountered','Error','File is Read only',0
 
+STRCOMMA    DC.B    ', ',0    
+
 STRINGDATA  DC.B    TAB,'DATA',0
 STRINGRTS  DC.B    TAB,'RTS',0
 STRINGJSR  DC.B    TAB,'JSR',0

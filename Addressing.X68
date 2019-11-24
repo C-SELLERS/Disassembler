@@ -59,6 +59,20 @@ Dn:
     AND.W   MASK_11109, D3  ; mask bits 11, 10, 9 
     ROL.W   #7,D3           ; rotate so bits are in least significant spot
     MULU.W  #2,D3           ; multiply by 2 so offset is measured in words not bytes
-    MOVE.W (EA_StrArray_Dn,D3),A2   ; move string value from StrArray with offset D3 into A2
+    MOVE.W  (EA_StrArray_Dn,D3),A2   ; move string value from StrArray_Dn with offset D3 into A2
+    JSR     AppendOutput    ; print string in A2
+    RTS
+
+An:
+    MOVE.W  D6,D3           ; move word into D3
+    AND.W   MASK_11109, D3  ; mask bits 11, 10, 9 
+    ROL.W   #7,D3           ; rotate so bits are in least significant spot
+    MULU.W  #2,D3           ; multiply by 2 so offset is measured in words not bytes
+    MOVE.W  (EA_StrArray_An,D3),A2   ; move string value from StrArray_An with offset D3 into A2
+    JSR     AppendOutput    ; print string in A2
+    RTS
+
+Comma:
+    MOVE.W STRCOMMA, A2     ; move string comma into A2
     JSR     AppendOutput    ; print string in A2
     RTS
