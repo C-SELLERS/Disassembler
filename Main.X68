@@ -19,26 +19,55 @@
     ORG    $1000    *Don't change this; see hints and tips above
 *---------------------------------------------------------------------------
 
+    ; Read in from config.cfg
+    LEA     inFile, A1       ;in file name
+    MOVE    #51, D0          ;open in file
+    TRAP    #15
+
+    ;Setup for Read
+    MOVE    #WORD_LENGTH, D2        ;# bytes to read
+    MOVE    #53,d0                  ;read from file
+
+    ; Read & store begin address in BEGIN_ADDRESS
+    LEA     BEGIN_ADDRESS, A1
+    TRAP    #15
+    JSR     AsciiToHex
+    MOVE    D7, A3
+    
+    ; Read & store end address in END_ADDRESS
+    LEA     END_ADDRESS, A1
+    TRAP    #15
+    JSR     AsciiToHex
+    MOVE    D7, A4
+
 MAIN_LOOP:
 
-    ; read first word into D6
-    
+    ; read word into D6 from current address
+    MOVE.W  (A4), D6
+
+    ; Append String with address of this operation by loading address value into A2?
+    MOVE    A4, A2
+    JSR     AppendOutput
+
+
     ; disassemble word in D6:
     JSR DisassembleOpcode
         ; read opcode
             ; branch to 13 different opcode bins
-            ; determine instruction and add string to (A1)
+            ; determine instruction and add string to ouput buffer
         ; read addresses
             ; determine addressing scheme
-            ; add addresses to (A1)
-        ; postcondition: A1 points to the null terminated buffer to write
-        ; call TrapTask13 to output (A1)
+            ; add addresses to output buffer
+        ; postcondition: A1 points to the null terminated output buffer to write
+        ; call TRAPTask13 to output (A1)
 
-    ; Send output to TrapTask 13
+    ; Increment Address
+    ADDQ.W      #WORD_LENGTH,A3        * Increment pointer
 
-
+    ; Compare current address to end address
+    CMP         A4,A3           ; Are we done yet?
+    BLE         MAIN_LOOP       ; Branch if less than or equal too MAIN_LOOP
     
-    ; if currentaddress < endaddress then loop
     ; end (print SIMHALT?  close file?)
 
     SIMHALT
@@ -58,11 +87,14 @@ DisassembleOpcode:
 
 
 *********************************************************************************
-* Method Name: AppendOutput
-* Description: Handles the appending of our output strings
+* Method Name:  AppendOutput
+* Description:  This file will be included in Main.X68 disassembler program
+*       When opcodes is being broken down we will be actively appending the
+*       output string to prepare for TRAPTask13
 *
-* Preconditions:  TBA
-* Postconditions: TBA
+* Preconditions: Appending String is in A2 and must end in null
+*                string constants are in Gbl_CONST.X68
+*
 *********************************************************************************
 AppendOutput:
     INCLUDE 'AppendOutput.X68'
@@ -101,8 +133,8 @@ TrapTask13:
     MOVEA.L A1, A2 ; save this buffer to write
     LEA outFilename, A3  ; save this for later, too
       
-    move #50,d0   
-    trap #15 ; close all files, suggested to begin any IO 
+    MOVE #50,d0   
+    TRAP #15 ; close all files, suggested to begin any IO 
     *******************************************************************
     * End Method Init
     *******************************************************************
@@ -124,11 +156,11 @@ findNullLoopDone:
     ;check if file exists, and open with task 51 if so, otherwise 52
     ;(precondition here is A1 points to the null-terminated filename )
     MOVE.B #51, D0      ;open file (task 51 is existing, 52 is new)
-    trap #15
+    TRAP #15
       
     if.w D0 <NE> #0 then.s         ; if file error (404, not found)
         MOVE.B #52, D0             ; open new file (52 is new)
-        trap #15
+        TRAP #15
     endi
     
     ********************************************************************************************************* 
@@ -140,8 +172,8 @@ findNullLoopDone:
     LEA byteRead, A1
     
 countLoop:
-    MOVE.B #53, D0 ; try to read one byte (TODO: move out of loop)
-    trap #15
+    MOVE.B #53, D0 ; try to read one byte (TODO: MOVE out of loop)
+    TRAP #15
     
     CMPI.W #1,D0  ;1 == EOF
     BEQ countDone
@@ -150,18 +182,18 @@ countLoop:
     
 countDone:    
     * close this file
-     move #56,d0  
-     trap #15 
+     MOVE #56,d0  
+     TRAP #15 
      
      * reopen the target file
      MOVE.L A3,A1
      MOVE #51, D0
-     trap #15
+     TRAP #15
      
     * seek to right position, then continue with writing
-    MOVE.L D3, D2 ; move the number of bytes found in the file to D2
+    MOVE.L D3, D2 ; MOVE the number of bytes found in the file to D2
     MOVE #55, D0  ; position file task
-    trap #15
+    TRAP #15
 
     ******************************************************************************
     * Actually write the buffer to the file, after caculating the number of bytes 
@@ -173,22 +205,22 @@ countDone:
     MOVEA.L A2, A1 ; load the address of the buffer we want to write to disk
     ; assumes file ID is still stored in D1.L  
     MOVE.B #54, D0 ; subtask 54 is write to open file (append, or?), assumes D2 holds # of bytes
-    trap #15
+    TRAP #15
 
     ; add a newline to the file output
     LEA NEWLINE, A1
     MOVE.B #54, D0 
     MOVE.B #2,D2  ; kills # of bytes to write from input param
-    trap #15
+    TRAP #15
     
     ; finally, close only this file
     MOVE.B #56, D0 ; close file task
-    trap #15
+    TRAP #15
   
     ; report to screen
     MOVEA.L A2, A1 ; load the address of the buffer we want to write to disk & screen
     MOVE.B #13, D0
-    trap #15
+    TRAP #15
       
     ; restore context
     MOVEM.L (SP)+, toSave
@@ -215,7 +247,7 @@ countDone:
 AsciiToHexRegList REG D0,D6
 AsciiToHex     
     MOVEM.L asciiToHexRegList, -(SP)  *save context
-    CLR.L D7 * clear our return value
+    CLR.L D7 * cLEAr our return value
     MOVE.L #8, D6 ; and set up our loop counter
 
 chrLoop
@@ -236,7 +268,7 @@ chrDone
 
 **********************************************************************
 * SUBROUTINE: strip_ascii
-* remove the ascii code from the digits 0-9,a-f, or A-F
+* reMOVE the ascii code from the digits 0-9,a-f, or A-F
 * Input Parameters: <D0> = ascii code
 *
 * Return parameters: D0.B = number 0...F, returned as 00...0F
