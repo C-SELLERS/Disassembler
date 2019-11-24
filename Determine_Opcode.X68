@@ -102,7 +102,7 @@ Skip_0010:
     MOVE.W D6,D3         ; move current word into working register (D3)
     AND #MASK_76,D3      ; mask bits 7, 6
     CMP.W #$00C0,D3      ; compare with 11
-    BNE 0110_Branch      ; branch to second half of check if not equal
+    BNE Branch_0110      ; branch to second half of check if not equal
     MOVE.W D6,D3         ; reset the word value in D3
     AND #MASK_1098,D3       ; mask bits 10, 9, 8
     CMP.W #$0600,D3      ; compare with 110
@@ -118,7 +118,7 @@ Skip_0010:
     CMP.W #$0000,D3      ; compare with 000
     BEQ ASR              ; if equal jump to ASR
     BRA Skip_1110        ; no valid opcodes found, skip ahead
-0110_Branch:
+Branch_0110:
     MOVE.W D6,D3         ; reset the word value in D3
     AND #MASK_843,D3     ; mask bits 8, 4, 3
     CMP.W #$0118,D3      ; compare with 111
