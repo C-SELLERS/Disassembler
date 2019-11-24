@@ -11,7 +11,7 @@
 *-----------------------------------------------------------
 
 
-* MXn deals with bit values in positions 543210
+* MXn deals with bit values in positions 5,4,3,2,1,0
 * Positions 543 contain addressing methods
 * Positions 210 contain register number or hard coded value
 *   543     Addr. Method    Xn
@@ -31,7 +31,7 @@ MXn:
     ; append ASCII to A1
     RTS
 
-* S76 deals with bit values in positions 76
+* Size76 deals with bit values in positions 7,6
 * Positions 76 contain size values
 *   76      Size
 *   00      .B
@@ -53,7 +53,9 @@ Displacement:
     ; append ASCII to A1
     RTS
 
-
+* Dn deals with bit values in positions 11,10,9
+* Value in this position will correspond to a D register
+* Value 000 is D0, value 001 is D1, etc
 Dn:
     MOVE.W  D6,D3           ; move word into D3
     AND.W   #MASK_11109, D3  ; mask bits 11, 10, 9 
@@ -64,6 +66,9 @@ Dn:
     JSR     AppendOutput    ; print string in A2
     RTS
 
+* An deals with bit values in positions 11,10,9
+* Value in this position will correspond to a A register
+* Value 000 is A0, value 001 is A1, etc
 An:
     MOVE.W  D6,D3           ; move word into D3
     AND.W   #MASK_11109, D3  ; mask bits 11, 10, 9 
@@ -74,6 +79,7 @@ An:
     JSR     AppendOutput    ; print string in A2
     RTS
 
+* The comma function appends a comma and a space ', ' to the output
 Comma:
     MOVE.W STRCOMMA, A2     ; move string comma into A2
     JSR     AppendOutput    ; print string in A2
