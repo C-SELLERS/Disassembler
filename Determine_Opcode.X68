@@ -28,7 +28,7 @@ Opcode:
     MOVE.W D6,D3         ; move current word into working register (D3)
     AND #MASK_1110876,D3    ; mask bits 11,10,8,7,6
     CMP.W #$0880,D3      ; compare with 10010
-    BEQ BCLR             ; if equal jump to BCLR
+    BEQ BCLR_I             ; if equal jump to BCLR
     MOVE.W D6,D3         ; reset current word in D3
     AND #MASK_8,D3       ; mask bit 8
     CMP.W #$0100,D3      ; compare with 1
@@ -41,7 +41,6 @@ Opcode:
     AND #MASK_11108      ; mask bit 11, 10,8
     CMP.W #$0000,D3      ; compare with 000
     BEQ ORI              ; if equal jump to ORI
-    BRA DATA             ; checks failed, default to DATA
 Skip_0000:
     
     CMP.W #$D000,D2      ; compare with 1101
@@ -101,19 +100,39 @@ Skip_0010:
     CMP.W #$E000,D2      ; compare with 1110
     BNE Skip_1110        ; if not equal then skip
     MOVE.W D6,D3         ; move current word into working register (D3)
-    AND #MASK_843,D3      ; mask bits 8, 4, 3
-    CMP.W #$0118,D3      ; compare with 111
+    AND #MASK_76,D3      ; mask bits 7, 6
+    CMP.W #$00C0,D3      ; compare with 11
+    BNE 0110_Branch      ; branch to second half of check if not equal
+    MOVE.W D6,D3         ; reset the word value in D3
+    AND #MASK_1098       ; mask bits 10, 9, 8
+    CMP.W #$0600,D3      ; compare with 110
     BEQ ROL              ; if equal jump to ROL
-    CMP.W #$0018,D3      ; compare with 011
+    CMP.W #$0700,D3      ; compare with 111
     BEQ ROR              ; if equal jump to ROR
-    CMP.W #$0108,D3      ; compare with 101
+    CMP.W #$0300,D3      ; compare with 011
     BEQ LSL              ; if equal jump to LSL
-    CMP.W #$0008,D3      ; compare with 001
+    CMP.W #$0200,D3      ; compare with 010
     BEQ LSR              ; if equal jump to LSR
-    CMP.W #$0100,D3      ; compare with 100
+    CMP.W #$0100,D3      ; compare with 001
     BEQ ASL              ; if equal jump to ASL
     CMP.W #$0000,D3      ; compare with 000
     BEQ ASR              ; if equal jump to ASR
+    BRA Skip_1110        ; no valid opcodes found, skip ahead
+0110_Branch:
+    MOVE.W D6,D3         ; reset the word value in D3
+    AND #MASK_843,D3     ; mask bits 8, 4, 3
+    CMP.W #$0118,D3      ; compare with 111
+    BEQ ROL_I              ; if equal jump to ROL
+    CMP.W #$0018,D3      ; compare with 011
+    BEQ ROR_I              ; if equal jump to ROR
+    CMP.W #$0108,D3      ; compare with 101
+    BEQ LSL_I              ; if equal jump to LSL
+    CMP.W #$0008,D3      ; compare with 001
+    BEQ LSR_I              ; if equal jump to LSR
+    CMP.W #$0100,D3      ; compare with 100
+    BEQ ASL_I              ; if equal jump to ASL
+    CMP.W #$0000,D3      ; compare with 000
+    BEQ ASR_I              ; if equal jump to ASR
 Skip_1110:
 
     CMP.W #$6000,D2      ; compare with 0110
@@ -151,7 +170,7 @@ Skip_0110:
     BNE JSR              ; if not equal jump to JSR  
 Skip_0100:
 
-    CMP.W #$FFFFFFFF,D6  ; compare with FFFFFFFF
+    CMP.W #$FFFF,D6      ; compare with FFFF
     BEQ SIMHALT          ; if equal jump to SIMHALT
     
     BRA DATA             ; if no opcodes found jump to DATA
