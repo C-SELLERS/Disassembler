@@ -104,6 +104,7 @@ ADDA:
 ADD:
     LEA STRINGADD, A2
     JSR AppendOutput            ; write ADD to the output string
+    JSR Size76
     MOVE.W  D6,D3               ; move word value into D3
     AND #MASK_8, D3             ; mask bit 8
     CMP.W #$0000,D3             ; compare with 0
@@ -156,8 +157,8 @@ CMP:
     BRA Opcode_Finish
 
 EOR: 
-    LEA STRINGCMP, A2
-    JSR AppendOutput            ; write CMP to the output string
+    LEA STRINGEOR, A2
+    JSR AppendOutput            ; write EOR to the output string
     JSR Size76
     JSR Dn
     JSR Comma

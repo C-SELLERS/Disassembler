@@ -61,6 +61,28 @@ Size76:
     ; mask 76
     ; check value against 3 possible sizes
     ; append ASCII to A1
+    MOVE.W   D6, D3       ; move current word into working register
+    AND.W    #MASK_76, D3 ; mask bits 7, 6
+    CMP.W   #$0000, D3    ; compare with 00
+    BEQ     Size76_B      ; if equal goto B 
+    CMP.W   #$0040, D3    ; compare with 01
+    BEQ     Size76_W      ; if equal goto W
+    CMP.W   #$0080, D3    ; compare with 10
+    BEQ     Size76_L      ; if equal goto L
+                          ; if bytes are 11 there is an error, not handling this currently
+Size76_B:
+    LEA STRING_B, A2
+    JSR AppendOutput            ; write '.B' to the output string
+    RTS
+
+Size76_W:
+    LEA STRING_W, A2
+    JSR AppendOutput            ; write '.W' to the output string
+    RTS
+
+Size76_L:
+    LEA STRING_L, A2
+    JSR AppendOutput            ; write '.L' to the output string
     RTS
 
 * Displacement deals with bit values in positions 76543210
