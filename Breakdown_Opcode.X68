@@ -13,6 +13,7 @@
 DATA:
     LEA STRINGDATA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
+    ;todo
     ; print ASCII value of opcode in D6
     BRA Opcode_Finish
 
@@ -57,6 +58,7 @@ ORI:
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     JSR MXn
+    ;todo
     ; if size == byte then fetch next byte
     ; if size == word then fetch next word
     ; if size == long then fetch next long
@@ -67,14 +69,28 @@ CMPI:
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     JSR MXn
+    ;todo
     ; if size == byte then fetch next byte
     ; if size == word then fetch next word
     ; if size == long then fetch next long
     BRA Opcode_Finish
 
 BCLR:
+    LEA STRINGBCLR, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
+    JSR Dn 
+    JSR Comma
+    JSR MXn
+    BRA Opcode_Finish
 
 BCLR_I:
+    LEA STRINGBCLR, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
+    ;todo
+    ; jsr get_immedate_in_next_byte
+    JSR Comma
+    JSR MXn
+    BRA Opcode_Finish
 
 ADDA:
     LEA STRINGADDA, A2
@@ -346,12 +362,6 @@ ASR_I_DN:                       ; case of data register input
     JSR Dn210
     BRA Opcode_Finish
 
-BRA_I:
-    LEA STRINGBRA, A2
-    JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR Displacement
-    BRA Opcode_Finish
-
 BRA:
     LEA STRINGBRA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
@@ -388,6 +398,12 @@ RTS:
     BRA Opcode_Finish
 
 LEA:
+    LEA STRINGLEA, A2
+    JSR AppendOutput            ; write the current string in A2 to the output string
+    JSR MXn
+    JSR Comma
+    JSR An
+    BRA Opcode_Finish
 
 NEG:
     LEA STRINGNEG, A2
@@ -397,6 +413,7 @@ NEG:
     BRA Opcode_Finish
     
 MOVEM:
+    ;todo
 
 JSR:
     LEA STRINGJSR, A2
