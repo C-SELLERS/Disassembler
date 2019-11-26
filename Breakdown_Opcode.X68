@@ -36,7 +36,22 @@ SUB_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
     BRA Opcode_Finish
 
 SUBQ:
+    LEA STRINGSUBQ, A2
+    JSR AppendOutput            ; write SUBQ to the output string
+    JSR Size76
+    JSR Data11109
+    JSR Comma
+    JSR MXn
+    BRA Opcode_Finish
+
 MULS:
+    LEA STRINGMULS, A2
+    JSR AppendOutput            ; write MULS to the output string
+    JSR MXn
+    JSR Comma
+    JSR Dn
+    BRA Opcode_Finish
+
 ORI:
     LEA STRINGORI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
@@ -59,12 +74,79 @@ CMPI:
 
 BCLR:
 BCLR_I:
+
 ADDA:
+    LEA STRINGADDA, A2
+    JSR AppendOutput            ; write ADDA to the output string
+    JSR Size8
+    JSR MXn
+    JSR Comma
+    JSR An
+    BRA Opcode_Finish
+
 ADD:
+    LEA STRINGADD, A2
+    JSR AppendOutput            ; write ADD to the output string
+    MOVE.W  D6,D3               ; move word value into D3
+    AND #MASK_8, D3             ; mask bit 8
+    CMP.W #$0000,D3             ; compare with 0
+    BNE ADD_EA_DN_EA
+ADD_DN_EA_DN:                   ; case  Dn + <ea> -> Dn
+    JSR MXn
+    JSR Comma
+    JSR Dn
+    BRA Opcode_Finish
+ADD_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
+    JSR Dn
+    JSR Comma
+    JSR MXn
+    BRA Opcode_Finish
+
 DIVS:
+    LEA STRINGDIVS, A2
+    JSR AppendOutput            ; write DIVS to the output string
+    JSR MXn
+    JSR Comma
+    JSR Dn
+    BRA Opcode_Finish
+
 OR: 
+    LEA STRINGOR, A2
+    JSR AppendOutput            ; write OR to the output string
+    JSR Size76
+    MOVE.W  D6,D3               ; move word value into D3
+    AND #MASK_8, D3             ; mask bit 8
+    CMP.W #$0000,D3             ; compare with 0
+    BNE OR_EA_DN_EA
+OR_DN_EA_DN:                   ; case  Dn + <ea> -> Dn
+    JSR MXn
+    JSR Comma
+    JSR Dn
+    BRA Opcode_Finish
+OR_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
+    JSR Dn
+    JSR Comma
+    JSR MXn
+    BRA Opcode_Finish
+
 CMP:
-EOR:  
+    LEA STRINGCMP, A2
+    JSR AppendOutput            ; write CMP to the output string
+    JSR Size76
+    JSR MXn
+    JSR Comma
+    JSR Dn
+    BRA Opcode_Finish
+
+EOR: 
+    LEA STRINGCMP, A2
+    JSR AppendOutput            ; write CMP to the output string
+    JSR Size76
+    JSR Dn
+    JSR Comma
+    JSR MXn
+    BRA Opcode_Finish
+
 MOVEA_B:
 MOVE_B:
 MOVEA_W:

@@ -84,3 +84,16 @@ Comma:
     MOVE.W STRCOMMA, A2     ; move string comma into A2
     JSR     AppendOutput    ; print string in A2
     RTS
+
+Data11109:
+    ; mask bits 11, 10, 9
+    ; convert to decimal?  (possible values are 1-8)
+    ; output '#'
+    ; output numeric value
+    RTS
+
+Size8:
+    ; mask bit 8
+    ; if bit 8 == 1 output .L
+    ; if bit 8 == 0 output .W
+    RTS
