@@ -25,7 +25,7 @@
     TRAP    #15
 
     ;Setup for Read
-    MOVE    #WORD_LENGTH, D2        ;# bytes to read
+    MOVE    #LONG_LENGTH, D2        ;# bytes to read
     MOVE    #53,d0                  ;read from file
 
     ; Read & store begin address in BEGIN_ADDRESS
@@ -43,10 +43,10 @@
 MAIN_LOOP:
 
     ; read word into D6 from current address
-    MOVE.W  (A4), D6
+    MOVE.W  (A3), D6
 
     ; Append String with address of this operation by loading address value into A2?
-    MOVE    A4, A2
+    MOVE    A3, (A2)
     JSR     AppendOutput
 
     JSR DisassembleOpcode   ; disassemble and print word in D6
