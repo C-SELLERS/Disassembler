@@ -33,7 +33,6 @@ TAB     EQU     $09
 
 FILE_DEFAULT_READ_BYTES  EQU 1024
 
-
 *********************************************************************************
 * String Constants
 *********************************************************************************
@@ -90,8 +89,6 @@ STRINGBCLR      DC.B    TAB,'BCLR',TAB,0
 STRINGLEA       DC.B    TAB,'LEA',TAB,0
 STRINGSIMHALT   DC.B    TAB,'SIMHALT',TAB,0
 
-
-
 *********************************************************************************
 * Mask Constants
 *********************************************************************************
@@ -113,35 +110,6 @@ MASK_5          EQU     $0020
 MASK_43 		EQU 	$0018
 MASK_210        EQU     $0007
 
-   
-   
-   ; mask 4,3 
-   ; compare 01 
-   ; BEQ LSX subroutine 
-   ; BLT ASX subroutine 
-   ; BRA ROX subroutine 
-   ;RTS 
-   
-    ; LSX subroutine
-    ;mask 8
-    ;if equals 0 lsr
-    ; equals lsl 
-    ;RTS
-    
-    ; ROX subroutine
-    ;mask 8
-    ;if equals 0 rsr
-    ; equals rsl 
-    ;RTS
-    
-    ; ASX subroutine
-    ;mask 8
-    ;if equals 0 asr
-    ; equals asl 
-    ;RTS
-    
-    
-    
 *********************************************************************************
 * Effective Addressing Constants
 *********************************************************************************
@@ -181,7 +149,6 @@ EA_Str_1D    DC.B    TAB,'(A7)+',0
 EA_Str_1E    DC.B    TAB,'(A7)+',0
 EA_Str_1F    DC.B    TAB,'(A7)+',0
 
-
 EA_Str_20    DC.B    TAB,'-(A0)',0
 EA_Str_21    DC.B    TAB,'-(A1)',0
 EA_Str_22    DC.B    TAB,'-(A2)',0
@@ -210,10 +177,6 @@ EA_ModeArray_AnInd      DC.W    $10,$11,$12,$13,$14,$15,$16,$17
 EA_ModeArray_AnPostInc  DC.W    $18,$19,$1A,$1B,$1C,$1D,$1E,$1F
 EA_ModeArray_AnPreDec   DC.W    $20,$21,$22,$23,$24,$25,$26,$27
 EA_ModeArray_Else       DC.W    $3C,$39,$38
-
-
-
-
 
 *~Font name~Courier New~
 *~Font size~11~

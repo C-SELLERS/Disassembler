@@ -10,7 +10,6 @@
 *                string constants are in Gbl_CONST.X68
 *-----------------------------------------------------------
 
-
 * MXn deals with bit values in positions 5,4,3,2,1,0
 * Positions 543 contain addressing methods
 * Positions 210 contain register number or hard coded value

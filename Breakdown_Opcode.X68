@@ -434,8 +434,6 @@ Opcode_Finish:
     MOVEM.L (SP)+, D2-D3/A4     ; return registers to their previous state
     RTS                         ; return from function
 
-
-
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
