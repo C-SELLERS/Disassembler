@@ -28,7 +28,27 @@ MXn:
     ; check value against 8 possible addressing methods
     ; mask 210
     ; interpret
-    ; append ASCII to A1
+    ; append ASCII to output string
+    RTS
+
+* XnM deals with bit values in positions 11,10,9,8,7,6
+* Positions 876 contain addressing methods
+* Positions 11109 contain register number or hard coded value
+*   876     Addr. Method    Xn
+*   000     Dn              Register #
+*   001     An              Register #
+*   010     (An)            Register #
+*   011     (An)+           Register #
+*   100     -(An)           Register #
+*   111     #               100
+*   111     .L              001
+*   111     .W              000
+XnM:
+    ; mask 876
+    ; check value against 8 possible addressing methods
+    ; mask 11109
+    ; interpret
+    ; append ASCII to output string
     RTS
 
 * Size76 deals with bit values in positions 7,6
@@ -66,6 +86,18 @@ Dn:
     JSR     AppendOutput    ; print string in A2
     RTS
 
+* Dn210 deals with bit values in positions 2,1,0
+* Value in this position will correspond to a D register
+* Value 000 is D0, value 001 is D1, etc
+Dn210:
+    MOVE.W  D6,D3           ; move word into D3
+    AND.W   #MASK_210, D3   ; mask bits 2, 1, 0
+    MULU.W  #2,D3           ; multiply by 2 so offset is measured in words not bytes
+    LEA     EA_StrArray_Dn, A4       
+    MOVE.W  (A4,D3),A2   ; move string value from StrArray_Dn with offset D3 into A2
+    JSR     AppendOutput    ; print string in A2
+    RTS
+
 * An deals with bit values in positions 11,10,9
 * Value in this position will correspond to a A register
 * Value 000 is A0, value 001 is A1, etc
@@ -85,6 +117,9 @@ Comma:
     JSR     AppendOutput    ; print string in A2
     RTS
 
+* Data11109 checks the bits 11, 10, 9 and interprets them as a immediate value
+* Possible output values are 1-8 (001 = 1, 010 = 2 ... 000 = 8)
+* Value will be appended with '#' and appended to the output string
 Data11109:
     ; mask bits 11, 10, 9
     ; convert to decimal?  (possible values are 1-8)
@@ -92,6 +127,8 @@ Data11109:
     ; output numeric value
     RTS
 
+* Size8 checks bit 8 and interprets it as a Word or Long
+* Corresponding ASCII value will be appended to the output string
 Size8:
     ; mask bit 8
     ; if bit 8 == 1 output .L
