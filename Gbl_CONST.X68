@@ -50,9 +50,9 @@ FILE_ERROR_ARRAY   DC.W    'Success','EOF Encountered','Error','File is Read onl
 
 STRCOMMA    DC.B    ', ',0    
 
-STRING_B        DC.B    TAB,'.B',TAB,0
-STRING_W        DC.B    TAB,'.W',TAB,0
-STRING_L        DC.B    TAB,'.L',TAB,0
+STRING_B        DC.B    '.B',TAB,0
+STRING_W        DC.B    '.W',TAB,0
+STRING_L        DC.B    '.L',TAB,0
 
 STRINGDATA      DC.B    TAB,'DATA',TAB,0
 STRINGRTS       DC.B    TAB,'RTS',TAB,0

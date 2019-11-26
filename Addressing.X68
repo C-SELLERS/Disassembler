@@ -58,9 +58,6 @@ XnM:
 *   01      .W
 *   10      .L
 Size76:
-    ; mask 76
-    ; check value against 3 possible sizes
-    ; append ASCII to A1
     MOVE.W   D6, D3       ; move current word into working register
     AND.W    #MASK_76, D3 ; mask bits 7, 6
     CMP.W   #$0000, D3    ; compare with 00
@@ -83,6 +80,23 @@ Size76_W:
 Size76_L:
     LEA STRING_L, A2
     JSR AppendOutput            ; write '.L' to the output string
+    RTS
+
+* Size8 checks bit 8 and interprets it as a Word or Long
+* Corresponding ASCII value will be appended to the output string
+Size8:
+    MOVE.W  D6, D3      ; move current word into working register
+    AND.W   #MASK_8, D3 ; mask bit 8
+    CMP.W   #$0000, D3  ; compare with D3
+    BEQ     Size8_W     ; if equal goto W
+Size8_L:                ; if not equal fall through to L
+    LEA STRING_L, A2
+    JSR AppendOutput    ; write '.L' to the output string
+    RTS
+
+Size8_W:                
+    LEA STRING_W, A2
+    JSR AppendOutput    ; write '.W' to the output string
     RTS
 
 * Displacement deals with bit values in positions 76543210
@@ -147,12 +161,4 @@ Data11109:
     ; convert to decimal?  (possible values are 1-8)
     ; output '#'
     ; output numeric value
-    RTS
-
-* Size8 checks bit 8 and interprets it as a Word or Long
-* Corresponding ASCII value will be appended to the output string
-Size8:
-    ; mask bit 8
-    ; if bit 8 == 1 output .L
-    ; if bit 8 == 0 output .W
     RTS
