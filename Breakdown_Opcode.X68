@@ -136,12 +136,12 @@ OR:
     AND #MASK_8, D3             ; mask bit 8
     CMP.W #$0000,D3             ; compare with 0
     BNE OR_EA_DN_EA
-OR_DN_EA_DN:                   ; case  Dn + <ea> -> Dn
+OR_DN_EA_DN:                    ; case  Dn + <ea> -> Dn
     JSR MXn
     JSR Comma
     JSR Dn
     BRA Opcode_Finish
-OR_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
+OR_EA_DN_EA:                    ; case <ea> + Dn -> <ea>
     JSR Dn
     JSR Comma
     JSR MXn
@@ -430,8 +430,8 @@ SIMHALT:
 Opcode_Finish: 
     LEA OUTPUT, A1              ; Load Output into A1
     JSR TrapTask13              ; Send it to the printer
-    MOVE #0, CURRENT_STR_LENGTH   ;Set current string length back to zero to be written over
-    MOVEM.L (SP)+, D2-D3/A4        ; return registers to their previous state
+    MOVE #0, CURRENT_STR_LENGTH ;Set current string length back to zero to be written over
+    MOVEM.L (SP)+, D2-D3/A4     ; return registers to their previous state
     RTS                         ; return from function
 
 
