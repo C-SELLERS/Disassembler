@@ -34,6 +34,15 @@
     JSR     AsciiToHex
     MOVE    D7, A3
     
+    ; Move File position to where the next line should be
+    MOVE #10,D2 
+    MOVE #55,D0
+    TRAP #15
+    
+    ;Setup for Read again
+    MOVE    #LONG_LENGTH, D2        ;# bytes to read
+    MOVE    #53,d0                  ;read from file
+    
     ; Read & store end address in END_ADDRESS
     LEA     END_ADDRESS, A1
     TRAP    #15
@@ -291,6 +300,7 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
 
    END    $1000        ; last line of source
+
 
 *~Font name~Courier New~
 *~Font size~10~
