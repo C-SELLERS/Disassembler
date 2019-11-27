@@ -1,8 +1,15 @@
 *-----------------------------------------------------------
-* Title      :
-* Written by :
-* Date       :
+* Title      : File Functions 
+* Written by : The CSS 422 "Best Group" 
+*               (Howie Catlin, Kyle Dukart, Colton Seller)
+* 
+* Date       : 12-Nov-2019
+* 
 * Description:
+*   A collection of functions that simulate the "File" 
+*   class in order to manipulate portions of the file 
+*   system. 
+* 
 *-----------------------------------------------------------
 
 
@@ -121,12 +128,14 @@ File_WasRead
 * 
 * Known Issues: <TBA>
 *********************************************************************************   
-File_ReadErrorCode
-    LEA     FileErrorArray,A1
-    MULU    #WORD_LENGTH,D0
-    LEA     (A1,D0.W),A1
-    MOVE.B  #14,D0
-    TRAP    #15
+* File_ReadErrorCode
+*    LEA     FileErrorArray,A1
+*    MULU    #WORD_LENGTH,D0
+*    LEA     (A1,D0.W),A1
+*    MOVE.B  #14,D0
+*    TRAP    #15
+
+
 
 *~Font name~Courier New~
 *~Font size~10~
