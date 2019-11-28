@@ -23,6 +23,101 @@
 *   111     .L              001
 *   111     .W              000
 MXn:
+    MOVEM.L  D0-D5/A0,-(SP)
+    MOVE.L  D6,-(SP)
+    
+    AND.L   #MASK_543,D6
+    
+    CMP     #$0000,D6
+    BEQ     MXn_SetDn
+    
+    CMP     #$0008,D6
+    BEQ     MXn_SetAn
+    
+    CMP     #$0010,D6
+    BEQ     MXn_SetAnInd 
+    
+    CMP     #$0018,D6
+    BEQ     MXn_SetAnPostInc
+        
+    CMP     #$0020,D6
+    BEQ     MXn_SetAnPreDec
+
+    CMP     #$0038,D6
+    BEQ     MXn_SetElse   
+ 
+MXn_SetDn    
+    LEA     EA_StrArray_Dn,A0
+    BRA     MXn_GetRegister
+  
+MXn_SetAn    
+    LEA     EA_StrArray_An,A0
+    BRA     MXn_GetRegister
+    
+MXn_SetAnInd   
+    LEA     EA_StrArray_AnInd,A0
+    BRA     MXn_GetRegister
+
+MXn_SetAnPreDec
+    LEA     EA_StrArray_AnPreDec,A0
+    BRA     MXn_GetRegister
+
+MXn_SetAnPostInc    
+    LEA     EA_StrArray_AnPostInc,A0
+    BRA     MXn_GetRegister
+
+MXn_SetElse    
+    LEA     EA_StrArray_Else,A0
+    BRA     MXn_GetImmOrAbs
+
+
+MXn_GetRegister
+    MOVE.L  (SP),D6
+    AND.L   #MASK_210,D6
+    MULU    #02,D6          ; multiply by 2 because the string arrays are word-ordered
+    MOVE.W  (A0,D6),D6      ; D6 stores destination EA String
+    MOVE.L  #$FFFFFFFF,D7       ; set the destination value to null 
+    BRA     MXn_Return
+
+MXn_GetImmOrAbs
+    CLR.L        D7                  ; clear D7 to make way for what's about to happen
+    MOVE.L      (SP),D6
+    AND.L       #MASK_210,D6
+ 
+   
+    CMP         #$0004,D6
+    BEQ         MXn_GetImmediate
+    
+    CMP         #$0001,D6
+    BEQ         MXn_GetLong
+
+
+    
+    MOVE.W      4(A0),D6            ; move the '#$' value into D6
+    MOVE.W      2(A3),D7            ; store the next word in D7
+    ADDA        #02,A3              ; increment A3 to skip the word we just processed
+    BRA         MXn_Return
+    
+    
+MXn_GetLong
+    MOVE.W      2(A0),D6            ; move the '#$' value into D6 
+    MOVE.L      2(A3),D7            ; store the next long in D7
+    ADDA        #04,A3              ; increment A3 to skip the long we just processed
+    BRA         MXn_Return
+  
+MXn_GetImmediate
+    MOVE.W      (A0),D6             ; move the '#' value into D6
+    MOVE.W      2(A3),D7            ; move the next word into D7
+    AND.W       #$0F,D7             ; mask the word in D7 to a byte       
+    ADDA        #02,A3              ; increment A3 to skip the word we just processed
+    BRA         MXn_Return
+        
+MXn_Return
+    ADDA        #04,SP
+    MOVEM.L     (SP)+,D0-D5/A0
+    RTS
+
+
     ; mask 543
     ; check value against 8 possible addressing methods
     ; mask 210
@@ -161,3 +256,7 @@ Data11109:
     ; output '#'
     ; output numeric value
     RTS
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~

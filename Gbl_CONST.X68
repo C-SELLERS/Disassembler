@@ -17,8 +17,8 @@
 * File Constants
 *********************************************************************************
 inFile          DC.B 'Config.cfg',0
-BEGIN_ADDRESS   DS.B 4
-END_ADDRESS     DS.B 4
+BEGIN_ADDRESS   DS.B 8
+END_ADDRESS     DS.B 8
 
 *********************************************************************************
 * Numeric Constants
@@ -125,6 +125,7 @@ MASK_76 		EQU 	$00C0
 MASK_5          EQU     $0020
 MASK_43 		EQU 	$0018
 MASK_210        EQU     $0007
+MASK_543        EQU     $0038
 
 *********************************************************************************
 * Effective Addressing Constants
@@ -193,6 +194,8 @@ EA_ModeArray_AnInd      DC.W    $10,$11,$12,$13,$14,$15,$16,$17
 EA_ModeArray_AnPostInc  DC.W    $18,$19,$1A,$1B,$1C,$1D,$1E,$1F
 EA_ModeArray_AnPreDec   DC.W    $20,$21,$22,$23,$24,$25,$26,$27
 EA_ModeArray_Else       DC.W    $3C,$39,$38
+
+
 
 
 *~Font name~Courier New~

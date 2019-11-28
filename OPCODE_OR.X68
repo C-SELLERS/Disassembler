@@ -12,13 +12,32 @@
     ; D7 = Dest EA value
 
 
+    LEA         STR_JSR, A2
+    JSR         AppendOutput
+    
+    MOVEM.L     D0-D7/A0-A6,-(SP)
+    
+    JSR         MXn                     ; Sets D4 & 5 to Src Name & Value; Sets D6 & 7 to Dest Name & Value
+    
+    MOVE.L      D6,A2
+    JSR         AppendOutput
+    
+    CMP.L       #$FFFFFFFF,D7
+    BEQ         SkipDestValue
+    
+    MOVE.L      D7,A2
+    JSR         AppendOutput
+      
+    
+    
+    
+
+
 OR_GetOPCODE 
     MOVEM.L D0-D5/D7/A0-A7,-(SP)
     MOVE.L  D6,-(SP)
     
-  
    
-    
     MOVE.L  (SP),D3       ; move the word value into D3
     AND.L   MASK_76,D3  
     
@@ -29,45 +48,49 @@ OR_GetOPCODE
     BEQ     OR_Store_Word
     
     MOVE.L  STR_OR_L,D3         ; store 'OR.L' in D3
-    BRA     Get_EffectiveAddressing 
+    BRA     OR_GetAddressing 
 
 OR_Store_Byte
     MOVE.L  STR_OR_B,D3         ; store 'OR.B' in D3
-    BRA     Get_EffectiveAddressing  
+    BRA     OR_GetAddressing  
  
 OR_Store_Word
     MOVE.L  STR_OR_W,D3         ; store 'OR.W' in D3
-    BRA     Get_EffectiveAddressing  
+    BRA     OR_GetAddressing  
    
 
-OR_Return
+OR_GetAddressing
+    MOVEM.L (SP)+,D0-D2/A0-A7
     MOVE.L  (SP)+,D6
-    MOVEM.L (SP)+,D0-D5/D7/A0-A7
     
+    JSR         Get_EffectiveAddressing     ; loads the EA in D6 (dest name) & D7 (dest value)
 
-   MOVE.L   (SP),D3         ;move the word value into D3
-   AND.L    MASK_8,D3
-   
-   CMP      #$0000,D3       ; 
-   BEQ      
-   
-
-   
-   
-   ; if(b.8 == 1) { EA = dest} 
-   ; if(b.8 == 0) { EA = dest, Src = Imm}
-   ; else 
-   
-
-
-OR_SkipSrcSwap
+    MOVE.L      (SP),D3                     ;move the word value into D3
+    AND.L       MASK_8,D3
        
+    CMP         #$0010,D3                   ; if(b.8 == 1) { Src = Dn, Dest = EA }
+    BEQ         OR_SwapSrc                  ; if(b.8 == 0) { Src = EA, Dest = Dn }
    
-    
+OR_SwapSrc
+    MOVE.L      D6,D3                       ; move EA string from D6 (dest) to D3 (src)
+    MOVE.L      D7,D4                       ; move EA value from D7 (dest value) to D4 (src value)
+
+OR_SkipSrcSwap    
+    LEA         EA_StrArray_Dn,A0           ; A0 -> to the Dn string list 
+    MOVE.L      (SP),D3                     ; copy to word value to D3 
+    AND.L       #MASK_11109,D3              ; mask the source 
+    ASR         #8,D3   
+    ASR         #1,D3
+    MOVE.L      (A0,D3),D3      
+  
+   
+OR_Return
+    ADDA        #02,SP                  ; clear backup 'd6' off the stack
+    MOVEM.L     (SP)+,D0-D2/A0-A7       ; restore temps to registers
     RTS
 
 
-* sets the value in D6 point to address of the EA Type string
+* Sets D6(dest str) -> EA string
 Get_EffectiveAddressing
     MOVE.L  (SP),D6
     
@@ -87,7 +110,6 @@ Get_EffectiveAddressing
         
     CMP     #$0020,D6
     BEQ     Get_EA_An_AnPreDec
-
 
     CMP     #$0038,D6
     BEQ     Get_EA_Else   
@@ -125,7 +147,8 @@ Get_Register
     MOVE.L  (SP),D6
     AND.L   #MASK_210,D6
     MULU    #02,D6          ; multiply by 2 because the string arrays are word-ordered
-    MOVE.L  (A0,D6),D6
+    MOVE.L  (A0,D6),D6      ; D6 stores destination EA String
+    MOVE.L  #$FFFF,D7       ; set the destination value to null 
     BRA     GetEA_Return
 
 Get_ImmOrAbsolute
@@ -138,16 +161,16 @@ Get_ImmOrAbsolute
     CMP     #$0001,D6
     BEQ     Get_Word
 
-    MOVE.L  (A0,2),D6   ; move the '#$' value into D6
-    BRA 
+    MOVE.L  2(A0),D6   ; move the '#$' value into D6
+    BRA     GetEA_Return
     
 Get_Immediate
-    MOVE.L  (A0,0),D6   ; move the '#' value into D6
-    BRA 
+    MOVE.L  (A0),D6   ; move the '#' value into D6
+    BRA     GetEA_Return
     
 Get_Word
-    MOVE.L  (A0,1),D6   ; move the '#$' value into D6       
-    BRA
+    MOVE.L  1(A0),D6   ; move the '#$' value into D6       
+    BRA     GetEA_Return
 
 GetEA_Return
     RTS
@@ -155,17 +178,20 @@ GetEA_Return
     
     
     
-    ;LEA STR_OR, A2
-    JSR AppendOutput            ; write OR to the output string
-    JSR Size76
-    MOVE.W  D6,D3               ; move word value into D3
-    AND #MASK_8, D3             ; mask bit 8
-    CMP.W #$0000,D3             ; compare with 0
-    BNE OR_EA_DN_EA
+;    LEA STR_OR, A2
+;    JSR AppendOutput            ; write OR to the output string
+;    JSR Size76
+;    MOVE.W  D6,D3               ; move word value into D3
+;    AND #MASK_8, D3             ; mask bit 8
+;    CMP.W #$0000,D3             ; compare with 0
+;    BNE OR_EA_DN_EA
     
     
-    MOVEM.L D0-D7/A0-A7,-(SP)
+;    MOVEM.L D0-D7/A0-A7,-(SP)
     
+
+
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

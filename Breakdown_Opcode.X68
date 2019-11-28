@@ -92,6 +92,7 @@ BCLR_I:
     JSR MXn
     BRA Opcode_Finish
 
+
 ADDA:
     LEA STR_ADDA, A2
     JSR AppendOutput            ; write ADDA to the output string
@@ -129,20 +130,43 @@ DIVS:
     BRA Opcode_Finish
 
 OR: 
-    JSR  Read_OR
-    ;LEA STR_OR, A2
+    JSR  OR_GetOPCODE
+    LEA STR_OR, A2
     JSR AppendOutput            ; write OR to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into D3
+    
+    MOVEM.L     D0-D7/A0-A6,-(SP)
+    JSR MXn
+
     AND #MASK_8, D3             ; mask bit 8
-    CMP.W #$0000,D3             ; compare with 0
-    BNE OR_EA_DN_EA
+    ;CMP.W #$0000,D3             ; compare with 0
+    ;BNE OR_EA_DN_EA       
     
+    CMP.W #$0010,D3             ; compare with 0
+    BEQ OR_DN_EA_DN
     
-    
+    MOVE.L      D6,D3                       ; move EA string from D6 (dest) to D3 (src)
+    MOVE.L      D7,D4                       ; move EA value from D7 (dest value) to D4 (src value)    
+  
     
 OR_DN_EA_DN:                    ; case  Dn + <ea> -> Dn
-    JSR MXn
+    
+    LEA         EA_StrArray_Dn,A0           ; A0 -> to the Dn string list 
+    MOVE.L      (SP),D3                     ; copy to word value to D3 
+    AND.L       #MASK_11109,D3              ; mask the source 
+    ASR         #8,D3   
+    ASR         #1,D3
+    MOVE.L      (A0,D3),D3      
+  
+    ADDA        #02,SP                  ; clear backup 'd6' off the stack
+    MOVEM.L     (SP)+,D0-D2/A0-A7       ; restore temps to registers
+    
+    
+    ;JSR MXn
+    MOVE.L      D6,A2
+    JSR         AppendOutput
+    
     JSR Comma
     JSR Dn
     BRA Opcode_Finish
@@ -422,10 +446,29 @@ MOVEM:
     ;todo
 
 JSR:
-    LEA STR_JSR, A2
-    JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR MXn
-    BRA Opcode_Finish
+    LEA         STR_JSR, A2
+    JSR         AppendOutput
+    
+    MOVEM.L     D0-D7/A0-A6,-(SP)
+    
+    JSR         MXn                     ; Sets D4 & 5 to Src Name & Value; Sets D6 & 7 to Dest Name & Value
+    
+    MOVE.L      D6,A2
+    JSR         AppendOutput
+    
+    CMP.L       #$FFFFFFFF,D7
+    BEQ         SkipDestValue
+    
+    MOVE.L      D7,A2
+    JSR         AppendOutput
+      
+SkipDestValue
+    
+    ;JSR AppendOutput            ; write the current string in A2 to the output string
+    ;JSR MXn
+    
+    MOVEM.L     (SP)+,D0-D7/A0-A6
+    BRA         Opcode_Finish
 
 SIMHALT:
     LEA STR_SIMHALT, A2
@@ -440,6 +483,10 @@ Opcode_Finish:
     RTS                         ; return from function
 
 
+
+
+;VALUE_SRC   DS.B    4
+;VALUE_DEST  DS.B    4
 
 *~Font name~Courier New~
 *~Font size~10~
