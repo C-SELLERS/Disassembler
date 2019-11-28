@@ -17,7 +17,7 @@
 *   2) Address where it starts writting the next sequence in string, might work fine but has only
 *       been tested with RTS so we need to use a two word opcode or something to know for sure.
 *-----------------------------------------------------------
-SaveItFam REG A1/D1
+SaveItFam REG A1/D1-D2
 
     ;Save context
     MOVEM.L SaveItFam, -(SP)
@@ -28,8 +28,12 @@ SaveItFam REG A1/D1
     ;Counter D1, Must be set to -1 to deal with incrementing before moving bytes!
     MOVE    #-1, D1
 
+    ;LOOK FOR END OF CURRENT STRING BY LOOPING THROUGH UNTIL NULL
+    ;Set D2 as Current Str Length
+    MOVE    CURRENT_STR_LENGTH, D2
+
     ;Get to the current position of the string 
-    ADD     CURRENT_STR_LENGTH, A1
+    ADD     D2, A1
 
     ;Now that we are in position, start appending the string in A2
 APPENDLOOP:
@@ -37,8 +41,6 @@ APPENDLOOP:
     MOVE.B  (A2)+, (A1)+                ;Move the Byte in A2 to our Output
     BNE     APPENDLOOP                  ; If zero has not been reached, Loop Back
 
-    ;Update Current String Length with our counter
-    ADD     D1, CURRENT_STR_LENGTH
 
     ; restore context
     MOVEM.L (SP)+, SaveItFam
