@@ -11,14 +11,14 @@
 *-----------------------------------------------------------
 
 DATA:
-    LEA STRINGDATA, A2
+    LEA STR_DATA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     ;todo
     ; print ASCII value of opcode in D6
     BRA Opcode_Finish
 
 SUB:
-    LEA STRINGSUB, A2
+    LEA STR_SUB, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into D3
@@ -37,7 +37,7 @@ SUB_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
     BRA Opcode_Finish
 
 SUBQ:
-    LEA STRINGSUBQ, A2
+    LEA STR_SUBQ, A2
     JSR AppendOutput            ; write SUBQ to the output string
     JSR Size76
     JSR Data11109
@@ -46,7 +46,7 @@ SUBQ:
     BRA Opcode_Finish
 
 MULS:
-    LEA STRINGMULS, A2
+    LEA STR_MULS, A2
     JSR AppendOutput            ; write MULS to the output string
     JSR MXn
     JSR Comma
@@ -54,7 +54,7 @@ MULS:
     BRA Opcode_Finish
 
 ORI:
-    LEA STRINGORI, A2
+    LEA STR_ORI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     JSR MXn
@@ -65,7 +65,7 @@ ORI:
     BRA Opcode_Finish
 
 CMPI:
-    LEA STRINGCMPI, A2
+    LEA STR_CMPI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     JSR MXn
@@ -76,7 +76,7 @@ CMPI:
     BRA Opcode_Finish
 
 BCLR:
-    LEA STRINGBCLR, A2
+    LEA STR_BCLR, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Dn 
     JSR Comma
@@ -84,7 +84,7 @@ BCLR:
     BRA Opcode_Finish
 
 BCLR_I:
-    LEA STRINGBCLR, A2
+    LEA STR_BCLR, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     ;todo
     ; jsr get_immedate_in_next_byte
@@ -93,7 +93,7 @@ BCLR_I:
     BRA Opcode_Finish
 
 ADDA:
-    LEA STRINGADDA, A2
+    LEA STR_ADDA, A2
     JSR AppendOutput            ; write ADDA to the output string
     JSR Size8
     JSR MXn
@@ -102,7 +102,7 @@ ADDA:
     BRA Opcode_Finish
 
 ADD:
-    LEA STRINGADD, A2
+    LEA STR_ADD, A2
     JSR AppendOutput            ; write ADD to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into D3
@@ -121,7 +121,7 @@ ADD_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
     BRA Opcode_Finish
 
 DIVS:
-    LEA STRINGDIVS, A2
+    LEA STR_DIVS, A2
     JSR AppendOutput            ; write DIVS to the output string
     JSR MXn
     JSR Comma
@@ -129,13 +129,18 @@ DIVS:
     BRA Opcode_Finish
 
 OR: 
-    LEA STRINGOR, A2
+    JSR  Read_OR
+    ;LEA STR_OR, A2
     JSR AppendOutput            ; write OR to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into D3
     AND #MASK_8, D3             ; mask bit 8
     CMP.W #$0000,D3             ; compare with 0
     BNE OR_EA_DN_EA
+    
+    
+    
+    
 OR_DN_EA_DN:                    ; case  Dn + <ea> -> Dn
     JSR MXn
     JSR Comma
@@ -148,7 +153,7 @@ OR_EA_DN_EA:                    ; case <ea> + Dn -> <ea>
     BRA Opcode_Finish
 
 CMP:
-    LEA STRINGCMP, A2
+    LEA STR_CMP, A2
     JSR AppendOutput            ; write CMP to the output string
     JSR Size76
     JSR MXn
@@ -157,7 +162,7 @@ CMP:
     BRA Opcode_Finish
 
 EOR: 
-    LEA STRINGEOR, A2
+    LEA STR_EOR, A2
     JSR AppendOutput            ; write EOR to the output string
     JSR Size76
     JSR Dn
@@ -166,7 +171,7 @@ EOR:
     BRA Opcode_Finish
 
 MOVEA_B:
-    LEA STRINGMOVEA_B, A2
+    LEA STR_MOVEA_B, A2
     JSR AppendOutput            ; write MOVEA.B to the output string
     JSR MXn
     JSR Comma
@@ -174,7 +179,7 @@ MOVEA_B:
     BRA Opcode_Finish
 
 MOVE_B:
-    LEA STRINGMOVE_B, A2
+    LEA STR_MOVE_B, A2
     JSR AppendOutput            ; write MOVE.B to the output string
     JSR MXn
     JSR Comma
@@ -182,7 +187,7 @@ MOVE_B:
     BRA Opcode_Finish
 
 MOVEA_W:
-    LEA STRINGMOVEA_W, A2
+    LEA STR_MOVEA_W, A2
     JSR AppendOutput            ; write MOVEA.W to the output string
     JSR MXn
     JSR Comma
@@ -190,7 +195,7 @@ MOVEA_W:
     BRA Opcode_Finish
 
 MOVE_W:
-    LEA STRINGMOVE_W, A2
+    LEA STR_MOVE_W, A2
     JSR AppendOutput            ; write MOVE.W to the output string
     JSR MXn
     JSR Comma
@@ -198,7 +203,7 @@ MOVE_W:
     BRA Opcode_Finish
 
 MOVEA_L:
-    LEA STRINGMOVEA_L, A2
+    LEA STR_MOVEA_L, A2
     JSR AppendOutput            ; write MOVEA.L to the output string
     JSR MXn
     JSR Comma
@@ -206,7 +211,7 @@ MOVEA_L:
     BRA Opcode_Finish
 
 MOVE_L:
-    LEA STRINGMOVE_L, A2
+    LEA STR_MOVE_L, A2
     JSR AppendOutput            ; write MOVE.L to the output string
     JSR MXn
     JSR Comma
@@ -214,43 +219,43 @@ MOVE_L:
     BRA Opcode_Finish
 
 ROL:
-    LEA STRINGROL, A2
+    ;LEA STR_ROL, A2
     JSR AppendOutput            ; write ROL to the output string
     JSR MXn
     BRA Opcode_Finish
 
 ROR:
-    LEA STRINGROR, A2
+    ;LEA STR_ROR, A2
     JSR AppendOutput            ; write ROR to the output string
     JSR MXn
     BRA Opcode_Finish
 
 LSL:
-    LEA STRINGLSL, A2
+    ;LEA STR_LSL, A2
     JSR AppendOutput            ; write LSL to the output string
     JSR MXn
     BRA Opcode_Finish
 
 LSR:
-    LEA STRINGLSR, A2
+    ;LEA STRINGLSR, A2
     JSR AppendOutput            ; write LSR to the output string
     JSR MXn
     BRA Opcode_Finish
 
 ASL:
-    LEA STRINGASL, A2
+    ;LEA STR_ASL, A2
     JSR AppendOutput            ; write ASL to the output string
     JSR MXn
     BRA Opcode_Finish
 
 ASR:
-    LEA STRINGASR, A2
+    ;LEA STR_ASR, A2
     JSR AppendOutput            ; write ASR to the output string
     JSR MXn
     BRA Opcode_Finish
 
 ROL_I:
-    LEA STRINGROL, A2
+    ;LEA STR_ROL, A2
     JSR AppendOutput            ; write ROL to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into working register D3
@@ -269,7 +274,7 @@ ROL_I_DN:                       ; case of data register input
     BRA Opcode_Finish
 
 ROR_I:
-    LEA STRINGROR, A2
+    ;LEA STR_ROR, A2
     JSR AppendOutput            ; write ROR to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into working register D3
@@ -288,7 +293,7 @@ ROR_I_DN:                       ; case of data register input
     BRA Opcode_Finish
 
 LSL_I:
-    LEA STRINGLSL, A2
+    ;LEA STR_LSL, A2
     JSR AppendOutput            ; write LSL to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into working register D3
@@ -307,7 +312,7 @@ LSL_I_DN:                       ; case of data register input
     BRA Opcode_Finish
 
 LSR_I:
-    LEA STRINGLSR, A2
+    ;LEA STR_LSR, A2
     JSR AppendOutput            ; write LSR to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into working register D3
@@ -326,7 +331,7 @@ LSR_I_DN:                       ; case of data register input
     BRA Opcode_Finish
 
 ASL_I:
-    LEA STRINGASL, A2
+    ;LEA STR_ASL, A2
     JSR AppendOutput            ; write ASL to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into working register D3
@@ -345,7 +350,7 @@ ASL_I_DN:                       ; case of data register input
     BRA Opcode_Finish
 
 ASR_I:
-    LEA STRINGASR, A2
+    ;LEA STR_ASR, A2
     JSR AppendOutput            ; write ASR to the output string
     JSR Size76
     MOVE.W  D6,D3               ; move word value into working register D3
@@ -364,42 +369,42 @@ ASR_I_DN:                       ; case of data register input
     BRA Opcode_Finish
 
 BRA:
-    LEA STRINGBRA, A2
+    LEA STR_BRA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BCS:
-    LEA STRINGBCS, A2
+    LEA STR_BCS, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BGE:
-    LEA STRINGBGE, A2
+    LEA STR_BGE, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BLT:
-    LEA STRINGBLT, A2
+    LEA STR_BLT, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BVC:
-    LEA STRINGBVC, A2
+    LEA STR_BVC, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 RTS:
-    LEA STRINGRTS, A2
+    LEA STR_RTS, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     BRA Opcode_Finish
 
 LEA:
-    LEA STRINGLEA, A2
+    LEA STR_LEA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR MXn
     JSR Comma
@@ -407,7 +412,7 @@ LEA:
     BRA Opcode_Finish
 
 NEG:
-    LEA STRINGNEG, A2
+    LEA STR_NEG, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
     JSR MXn
@@ -417,13 +422,13 @@ MOVEM:
     ;todo
 
 JSR:
-    LEA STRINGJSR, A2
+    LEA STR_JSR, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR MXn
     BRA Opcode_Finish
 
 SIMHALT:
-    LEA STRINGSIMHALT, A2
+    LEA STR_SIMHALT, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     BRA Opcode_Finish
 
@@ -433,6 +438,8 @@ Opcode_Finish:
     MOVE #0, CURRENT_STR_LENGTH ;Set current string length back to zero to be written over
     MOVEM.L (SP)+, D2-D3/A4     ; return registers to their previous state
     RTS                         ; return from function
+
+
 
 *~Font name~Courier New~
 *~Font size~10~

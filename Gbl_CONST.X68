@@ -25,9 +25,9 @@ END_ADDRESS     DS.B 4
 *********************************************************************************
 EMPTY_ADDRESS   EQU    $00000000
 
-BYTE_LENGTH     EQU     2
-WORD_LENGTH     EQU     4
-LONG_LENGTH     EQU     8 
+BYTE_LENGTH     EQU     1
+WORD_LENGTH     EQU     2
+LONG_LENGTH     EQU     4 
 
 TAB     EQU     $09
 
@@ -53,41 +53,57 @@ STRING_B        DC.B    '.B',TAB,0
 STRING_W        DC.B    '.W',TAB,0
 STRING_L        DC.B    '.L',TAB,0
 
-STRINGDATA      DC.B    TAB,'DATA',TAB,0
-STRINGRTS       DC.B    TAB,'RTS',TAB,0
-STRINGJSR       DC.B    TAB,'JSR',TAB,0
-STRINGNEG       DC.B    TAB,'NEG',0
-STRINGBRA       DC.B    TAB,'BRA',TAB,0
-STRINGBCS       DC.B    TAB,'BCS',TAB,0
-STRINGBGE       DC.B    TAB,'BGE',TAB,0
-STRINGBLT       DC.B    TAB,'BLT',TAB,0
-STRINGBVC       DC.B    TAB,'BVC',TAB,0
-STRINGORI       DC.B    TAB,'ORI',0
-STRINGCMPI      DC.B    TAB,'CMPI',0
-STRINGSUB       DC.B    TAB,'SUB',0
-STRINGSUBQ      DC.B    TAB,'SUBQ',0
-STRINGMULS      DC.B    TAB,'MULS',TAB,0
-STRINGADDA      DC.B    TAB,'ADDA',0
-STRINGADD       DC.B    TAB,'ADD',0
-STRINGDIVS      DC.B    TAB,'DIVS',TAB,0
-STRINGOR        DC.B    TAB,'OR',0
-STRINGCMP       DC.B    TAB,'CMP',0
-STRINGEOR       DC.B    TAB,'EOR',0
-STRINGMOVEA_B   DC.B    TAB,'MOVEA.B',TAB,0
-STRINGMOVEA_W   DC.B    TAB,'MOVEA.W',TAB,0
-STRINGMOVEA_L   DC.B    TAB,'MOVEA.L',TAB,0
-STRINGMOVE_B    DC.B    TAB,'MOVE.B',TAB,0
-STRINGMOVE_W    DC.B    TAB,'MOVE.W',TAB,0
-STRINGMOVE_L    DC.B    TAB,'MOVE.L',TAB,0
-STRINGROR       DC.B    TAB,'ROR',TAB,0
-STRINGROL       DC.B    TAB,'ROL',TAB,0
-STRINGLSL       DC.B    TAB,'LSL',TAB,0
-STRINGLSR       DC.B    TAB,'LSR',TAB,0
-STRINGASL       DC.B    TAB,'ASL',TAB,0
-STRINGASR       DC.B    TAB,'ASR',TAB,0
-STRINGBCLR      DC.B    TAB,'BCLR',TAB,0
-STRINGLEA       DC.B    TAB,'LEA',TAB,0
-STRINGSIMHALT   DC.B    TAB,'SIMHALT',TAB,0
+STR_DATA        DC.B    TAB,'DATA',TAB,0
+STR_RTS         DC.B    TAB,'RTS',TAB,0
+STR_JSR         DC.B    TAB,'JSR',TAB,0
+STR_NEG         DC.B    TAB,'NEG',0
+STR_BRA         DC.B    TAB,'BRA',TAB,0
+STR_BCS         DC.B    TAB,'BCS',TAB,0
+STR_BGE         DC.B    TAB,'BGE',TAB,0
+STR_BLT         DC.B    TAB,'BLT',TAB,0
+STR_BVC         DC.B    TAB,'BVC',TAB,0
+STR_ORI         DC.B    TAB,'ORI',0
+STR_CMPI        DC.B    TAB,'CMPI',0
+STR_SUB         DC.B    TAB,'SUB',0
+STR_SUBQ        DC.B    TAB,'SUBQ',0
+STR_MULS        DC.B    TAB,'MULS',TAB,0
+STR_ADDA        DC.B    TAB,'ADDA',0
+STR_ADD         DC.B    TAB,'ADD',0
+STR_DIVS        DC.B    TAB,'DIVS',TAB,0
+STR_OR_B        DC.B    TAB,'OR.B',0
+STR_OR_W        DC.B    TAB,'OR.W',0
+STR_OR_L        DC.B    TAB,'OR.L',0
+STR_CMP         DC.B    TAB,'CMP',0
+STR_EOR         DC.B    TAB,'EOR',0
+STR_MOVE_B      DC.B    TAB,'MOVE.B',TAB,0
+STR_MOVE_W      DC.B    TAB,'MOVE.W',TAB,0
+STR_MOVE_L      DC.B    TAB,'MOVE.L',TAB,0
+STR_MOVEA_B     DC.B    TAB,'MOVEA.B',TAB,0
+STR_MOVEA_W     DC.B    TAB,'MOVEA.W',TAB,0
+STR_MOVEA_L     DC.B    TAB,'MOVEA.L',TAB,0
+STR_MOVEM_W     DC.B    TAB,'MOVEM.W',TAB,0
+STR_MOVEM_L     DC.B    TAB,'MOVEM.L',TAB,0
+STR_ROR_B       DC.B    TAB,'ROR.B',TAB,0
+STR_ROL_B       DC.B    TAB,'ROL.B',TAB,0
+STR_ROR_W       DC.B    TAB,'ROR.W',TAB,0
+STR_ROL_W       DC.B    TAB,'ROL.W',TAB,0
+STR_ROR_L       DC.B    TAB,'ROR.L',TAB,0
+STR_ROL_L       DC.B    TAB,'ROL.L',TAB,0
+STR_LSR_B       DC.B    TAB,'LSR.B',TAB,0
+STR_LSL_B       DC.B    TAB,'LSL.B',TAB,0
+STR_LSR_W       DC.B    TAB,'LSR.W',TAB,0
+STR_LSL_W       DC.B    TAB,'LSL.W',TAB,0
+STR_LSR_L       DC.B    TAB,'LSR.L',TAB,0
+STR_LSL_L       DC.B    TAB,'LSL.L',TAB,0
+STR_ASL_B       DC.B    TAB,'ASL.B',TAB,0
+STR_ASR_B       DC.B    TAB,'ASR.B',TAB,0
+STR_ASL_W       DC.B    TAB,'ASL.W',TAB,0
+STR_ASR_W       DC.B    TAB,'ASR.W',TAB,0
+STR_ASL_L       DC.B    TAB,'ASL.L',TAB,0
+STR_ASR_L       DC.B    TAB,'ASR.L',TAB,0
+STR_BCLR        DC.B    TAB,'BCLR',TAB,0
+STR_LEA         DC.B    TAB,'LEA',TAB,0
+STR_SIMHALT     DC.B    TAB,'SIMHALT',TAB,0
 
 *********************************************************************************
 * Mask Constants
@@ -177,6 +193,7 @@ EA_ModeArray_AnInd      DC.W    $10,$11,$12,$13,$14,$15,$16,$17
 EA_ModeArray_AnPostInc  DC.W    $18,$19,$1A,$1B,$1C,$1D,$1E,$1F
 EA_ModeArray_AnPreDec   DC.W    $20,$21,$22,$23,$24,$25,$26,$27
 EA_ModeArray_Else       DC.W    $3C,$39,$38
+
 
 *~Font name~Courier New~
 *~Font size~11~
