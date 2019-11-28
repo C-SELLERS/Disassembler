@@ -19,6 +19,7 @@
     ORG    $1000    *Don't change this; see hints and tips above
 *---------------------------------------------------------------------------
 
+
     ; Read in from config.cfg
     LEA     inFile, A1       ;in file name
     MOVE    #51, D0          ;open in file
@@ -51,17 +52,19 @@
 
 MAIN_LOOP:
 
+CURRENT_STR_LENGTH  SET     0
     ; read word into D6 from current address
     MOVE.W  (A3), D6
 
-    ; Append String with address of this operation by loading address value into A2?
-    MOVE    A3, (A2)
-    JSR     AppendOutput
+    ; Append String with address
+    ;MOVE   A3
+    ;JSR    AppendAddress
+    
 
     JSR DisassembleOpcode   ; disassemble and print word in D6
 
     ; Increment Address
-    ADDQ.W      #WORD_LENGTH,A3        * Increment pointer
+    ADD        #2,A3        * Increment pointer
 
     ; Compare current address to end address
     CMP         A4,A3           ; Are we done yet?
@@ -99,6 +102,9 @@ AppendOutput:
     INCLUDE 'AppendOutput.X68'
     RTS
 
+AppendAddress:
+    INCLUDE 'AppendAddress.X68'
+    RTS
 
 *********************************************************************************
 * Method Name: TrapTask13
@@ -298,8 +304,11 @@ outFilename         DC.B 'Output.txt',0
 byteRead            DS.B 1
 ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
+    
 
    END    $1000        ; last line of source
+
+
 
 
 
