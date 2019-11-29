@@ -22,28 +22,29 @@
 *   111     #               100
 *   111     .L              001
 *   111     .W              000
-MXn:
+EA_AppendMXn:
     MOVEM.L  D0-D5/A0,-(SP)
     MOVE.L  D6,-(SP)
     
     AND.L   #MASK_543,D6
     
-    CMP     #$0000,D6
+    
+    CMP     #MODE_Dn,D6           ; check if mode = Dn, data reg direct
     BEQ     MXn_SetDn
     
-    CMP     #$0008,D6
+    CMP     #Mode_An,D6           ; check if mode = An, address reg direct
     BEQ     MXn_SetAn
     
-    CMP     #$0010,D6
+    CMP     #Mode_AnInd,D6           ; check if mode = (An), address reg indirect
     BEQ     MXn_SetAnInd 
     
-    CMP     #$0018,D6
+    CMP     #Mode_AnPostInc,D6           ; check if mode = -(An), address reg post increment
     BEQ     MXn_SetAnPostInc
         
-    CMP     #$0020,D6
+    CMP     #Mode_AnPreDec,D6           ; chec if mode = (An)+, address reg pre decrement
     BEQ     MXn_SetAnPreDec
 
-    CMP     #$0038,D6
+    CMP     #Mode_Else,D6           ; check if mode = Immediate or Absolute word or long
     BEQ     MXn_SetElse   
  
 MXn_SetDn    
@@ -72,47 +73,59 @@ MXn_SetElse
 
 
 MXn_GetRegister
-    MOVE.L  (SP),D6
-    AND.L   #MASK_210,D6
-    MULU    #02,D6          ; multiply by 2 because the string arrays are word-ordered
-    MOVE.W  (A0,D6),D6      ; D6 stores destination EA String
-    MOVE.L  #$FFFFFFFF,D7       ; set the destination value to null 
-    BRA     MXn_Return
-
-MXn_GetImmOrAbs
-    CLR.L        D7                  ; clear D7 to make way for what's about to happen
     MOVE.L      (SP),D6
     AND.L       #MASK_210,D6
- 
-   
-    CMP         #$0004,D6
-    BEQ         MXn_GetImmediate
+    MULU        #02,D6          ; multiply by 2 because the string arrays are word-ordered
+    MOVE.W      (A0,D6),A2      ; A2 stores destination EA String
+    JSR         AppendOutput        ; AppendOutput prints the MXn result 
     
-    CMP         #$0001,D6
+    BRA         MXn_Return
+
+MXn_GetImmOrAbs
+    CLR.L        D7                 ; clear D7 to make way for what's about to happen
+    MOVE.L      (SP),D6             ; copy address into D6 for processing
+    AND.L       #MASK_210,D6        ; mask to read addressin type
+    
+    CMP         #MODE_Imm,D6        ; check if address = Immediate (#)
+    BEQ         MXn_GetImmediate
+  
+  
+    CMP         #MODE_AbsLong,D6    ; check if address = Absolute Long (xxx.L)
     BEQ         MXn_GetLong
 
 
+                                    ; address = Absolute Word (xxx.W)
+    MOVE.W      4(A0),A2            ; move the '#$' value into A2
+    JSR         AppendOutput        ; print 
     
-    MOVE.W      4(A0),D6            ; move the '#$' value into D6
-    MOVE.W      2(A3),D7            ; store the next word in D7
+    MOVE.W      2(A3),D6            ; store the next word in D7
+    JSR         PrintASCIIWord 
+           
     ADDA        #02,A3              ; increment A3 to skip the word we just processed
     BRA         MXn_Return
     
     
 MXn_GetLong
-    MOVE.W      2(A0),D6            ; move the '#$' value into D6 
-    MOVE.L      2(A3),D7            ; store the next long in D7
+    MOVE.W      2(A0),A2            ; move the '#$' value into A2 
+    JSR         AppendOutput    
+    MOVE.L      2(A3),D6            ; pull the next long in D7
+    JSR         PrintASCIILong
+    
     ADDA        #04,A3              ; increment A3 to skip the long we just processed
     BRA         MXn_Return
   
 MXn_GetImmediate
-    MOVE.W      (A0),D6             ; move the '#' value into D6
-    MOVE.W      2(A3),D7            ; move the next word into D7
+    MOVE.W      (A0),A2             ; move the '#' value into D6
+    JSR         AppendOutput
+    
+    MOVE.W      2(A3),D6            ; pull the next word into D6
     AND.W       #$0F,D7             ; mask the word in D7 to a byte       
+    JSR         PrintASCIIWord
+    
     ADDA        #02,A3              ; increment A3 to skip the word we just processed
     BRA         MXn_Return
         
-MXn_Return
+MXn_Return    
     ADDA        #04,SP
     MOVEM.L     (SP)+,D0-D5/A0
     RTS
@@ -123,7 +136,7 @@ MXn_Return
     ; mask 210
     ; interpret
     ; append ASCII to output string
-    RTS
+    ;RTS
 
 * XnM deals with bit values in positions 11,10,9,8,7,6
 * Positions 876 contain addressing methods
@@ -145,33 +158,33 @@ XnM:
     ; append ASCII to output string
     RTS
 
-* Size76 deals with bit values in positions 7,6
+* Opcode_GetSizeSuffix deals with bit values in positions 7,6
 * Positions 76 contain size values
 *   76      Size
 *   00      .B
 *   01      .W
 *   10      .L
-Size76:
+Opcode_AppendSizeSuffix:
     MOVE.W   D6, D3             ; move current word into working register
     AND.W    #MASK_76, D3       ; mask bits 7, 6
     CMP.W   #$0000, D3          ; compare with 00
-    BEQ     Size76_B            ; if equal goto B 
+    BEQ     Opcode_AppendSizeSuffix_B            ; if equal goto B 
     CMP.W   #$0040, D3          ; compare with 01
-    BEQ     Size76_W            ; if equal goto W
+    BEQ     Opcode_AppendSizeSuffix_W            ; if equal goto W
     CMP.W   #$0080, D3          ; compare with 10
-    BEQ     Size76_L            ; if equal goto L
+    BEQ     Opcode_AppendSizeSuffix_L            ; if equal goto L
                                 ; if bytes are 11 there is an error, not handling this currently
-Size76_B:
+Opcode_AppendSizeSuffix_B:
     LEA STRING_B, A2
     JSR AppendOutput            ; write '.B' to the output string
     RTS
 
-Size76_W:
+Opcode_AppendSizeSuffix_W:
     LEA STRING_W, A2
     JSR AppendOutput            ; write '.W' to the output string
     RTS
 
-Size76_L:
+Opcode_AppendSizeSuffix_L:
     LEA STRING_L, A2
     JSR AppendOutput            ; write '.L' to the output string
     RTS
@@ -242,7 +255,7 @@ An:
     RTS
 
 * The comma function appends a comma and a space ', ' to the output
-Comma:
+AppendComma:
     MOVE.W  STRINGCOMMA, A2     ; move string comma into A2
     JSR     AppendOutput        ; print string in A2
     RTS
@@ -256,6 +269,7 @@ Data11109:
     ; output '#'
     ; output numeric value
     RTS
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
