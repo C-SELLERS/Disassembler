@@ -105,9 +105,11 @@ MASK_876 		EQU 	$01C0
 MASK_843        EQU     $0118
 MASK_8 			EQU 	$0100
 MASK_76543210   EQU     $00FF
+MASK_7654       EQU     $00F0
 MASK_76 		EQU 	$00C0
 MASK_5          EQU     $0020
 MASK_43 		EQU 	$0018
+MASK_3210       EQU     $000F
 MASK_210        EQU     $0007
 
 *********************************************************************************
@@ -177,6 +179,26 @@ EA_ModeArray_AnInd      DC.W    $10,$11,$12,$13,$14,$15,$16,$17
 EA_ModeArray_AnPostInc  DC.W    $18,$19,$1A,$1B,$1C,$1D,$1E,$1F
 EA_ModeArray_AnPreDec   DC.W    $20,$21,$22,$23,$24,$25,$26,$27
 EA_ModeArray_Else       DC.W    $3C,$39,$38
+
+Hex_Str_00              DC.W    '0',0
+Hex_Str_01              DC.W    '1',0
+Hex_Str_02              DC.W    '2',0
+Hex_Str_03              DC.W    '3',0
+Hex_Str_04              DC.W    '4',0
+Hex_Str_05              DC.W    '5',0
+Hex_Str_06              DC.W    '6',0
+Hex_Str_07              DC.W    '7',0
+Hex_Str_08              DC.W    '8',0
+Hex_Str_09              DC.W    '9',0
+Hex_Str_10              DC.W    'A',0
+Hex_Str_11              DC.W    'B',0
+Hex_Str_12              DC.W    'C',0
+Hex_Str_13              DC.W    'D',0
+Hex_Str_14              DC.W    'E',0
+Hex_Str_15              DC.W    'F',0
+
+Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07,
+                                Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
 
 *~Font name~Courier New~
 *~Font size~11~
