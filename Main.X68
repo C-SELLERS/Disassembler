@@ -83,7 +83,7 @@ Get_Next_Long_D7:
     MOVE.L  (A3), D7
 
     ; Increment Address
-    ADD        #04,A3        * Increment pointer by four bytes
+    ADD        #4,A3        * Increment pointer by four bytes
 
     RTS
 
