@@ -37,7 +37,7 @@ SaveItFam REG A1-A3/D1-D2
     MOVE.B   (A3), D2
 
     ;Get to the current position of the string 
-    ADD.B     D2, A1
+    ADD     D2, A1
 
     ;Now that we are in position, start appending the string in A2
 APPENDLOOP:
@@ -53,6 +53,7 @@ APPENDLOOP:
     MOVEM.L (SP)+, SaveItFam
     
     RTS
+
 
 *~Font name~Courier New~
 *~Font size~10~

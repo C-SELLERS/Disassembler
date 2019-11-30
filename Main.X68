@@ -51,7 +51,7 @@ Get_Next_Word_D6:
     MOVE.W  (A3), D6
 
     ; Increment Address
-    ADD.B        #2,A3        * Increment pointer by two bytes
+    ADD        #2,A3        * Increment pointer by two bytes
 
     RTS
 
@@ -67,7 +67,7 @@ Get_Next_Word_D7:
     MOVE.W  (A3), D7
 
     ; Increment Address
-    ADD.B        #2,A3        * Increment pointer by two bytes
+    ADD        #2,A3        * Increment pointer by two bytes
 
     RTS
 
@@ -83,7 +83,7 @@ Get_Next_Long_D7:
     MOVE.L  (A3), D7
 
     ; Increment Address
-    ADD.B        #4,A3        * Increment pointer by four bytes
+    ADD        #4,A3        * Increment pointer by four bytes
 
     RTS
 
@@ -378,6 +378,7 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     
 
    END    $1000        ; last line of source
+
 
 
 
