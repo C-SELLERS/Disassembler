@@ -201,8 +201,23 @@ Size8_L:                        ; if not equal fall through to L
     LEA STRING_L, A2
     JSR AppendOutput            ; write '.L' to the output string
     RTS
-
 Size8_W:                
+    LEA STRING_W, A2
+    JSR AppendOutput            ; write '.W' to the output string
+    RTS
+
+* Size6 checks bit 6 and interprets it as a Word or Long
+* Corresponding ASCII value will be appended to the output string
+Size6:
+    MOVE.W  D6, D3              ; move current word into working register
+    AND.W   #MASK_6, D3         ; mask bit 8
+    CMP.W   #$0000, D3          ; compare with D3
+    BEQ     Size6_W             ; if equal goto W
+Size6_L:                        ; if not equal fall through to L
+    LEA STRING_L, A2
+    JSR AppendOutput            ; write '.L' to the output string
+    RTS
+Size6_W:                
     LEA STRING_W, A2
     JSR AppendOutput            ; write '.W' to the output string
     RTS
@@ -211,10 +226,18 @@ Size8_W:
 * This value will be interpreted as a numerical displacement
 * If this value is 00000000, then the next word will be the numerical displacement
 Displacement:
-    ; mask 76543210
-    ; check against 00000000
-    ; if 0 then get next word
-    ; append ASCII to A1
+    MOVE.W  D6, D3              ; move current word into working register
+    AND.W   #MASK_76543210, D3  ; mask so only the bottom byte is available
+    CMP.W   #$0000, D3          ; compare with 0
+    BEQ Displacement_Fetch_Word
+    MOVE.L      D6,-(SP)        ; move D6 to stack for preservation
+    MOVE.W      D3, D6          ; move masked value into D6 for printing
+    JSR PrintASCIIWord          
+    MOVE.L      (SP)+,D6        ; pop D6 from stack
+    RTS
+Displacement_Fetch_Word:
+    ; get next word from file
+    ; convert to ASCII and print
     RTS
 
 * Dn deals with bit values in positions 11,10,9
@@ -265,14 +288,18 @@ AppendComma:
 * Possible output values are 1-8 (001 = 1, 010 = 2 ... 000 = 8)
 * Value will be appended with '#' and appended to the output string
 Data11109:
-    ; mask bits 11, 10, 9
-    ; convert to decimal?  (possible values are 1-8)
-    ; output '#'
-    ; output numeric value
+    MOVE.W  D6, D3              ; move current word into working register
+    AND     MASK_11109, D3      ; mask bits 11, 10, 9
+    MOVEA   Immediate_StrArray, A4    ; Move the base array into A4
+    LEA     OUTPUT, A2          ; move address of output into A2
+    ROL     #7, D3              ; rotate left 7 so bits are in least significant position
+    MULS    #2, D3              ; multiply by 2 for correct array offset
+    MOVE.W  (A4,D3), (A2)       ; move ASCII char into A2
+    JSR AppendOutput
     RTS
 
-
-*~Font name~Courier New~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
+RegisterList:
+    ; get next word
+    ; interpret next word as list of registers
+    ; print ASCII list of registers
+    RTS

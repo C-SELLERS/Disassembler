@@ -53,6 +53,7 @@ STRING_B        DC.B    '.B',TAB,0
 STRING_W        DC.B    '.W',TAB,0
 STRING_L        DC.B    '.L',TAB,0
 
+<<<<<<< HEAD
 STR_DATA        DC.B    TAB,'DATA',TAB,0
 STR_RTS         DC.B    TAB,'RTS',TAB,0
 STR_JSR         DC.B    TAB,'JSR',TAB,0
@@ -105,6 +106,44 @@ STR_ASR_L       DC.B    TAB,'ASR.L',TAB,0
 STR_BCLR        DC.B    TAB,'BCLR',TAB,0
 STR_LEA         DC.B    TAB,'LEA',TAB,0
 STR_SIMHALT     DC.B    TAB,'SIMHALT',TAB,0
+=======
+STRINGADD       DC.B    TAB,'ADD',0
+STRINGADDA      DC.B    TAB,'ADDA',0
+STRINGASL       DC.B    TAB,'ASL',TAB,0
+STRINGASR       DC.B    TAB,'ASR',TAB,0
+STRINGBCLR      DC.B    TAB,'BCLR',TAB,0
+STRINGBCS       DC.B    TAB,'BCS',TAB,0
+STRINGBGE       DC.B    TAB,'BGE',TAB,0
+STRINGBLT       DC.B    TAB,'BLT',TAB,0
+STRINGBRA       DC.B    TAB,'BRA',TAB,0
+STRINGBVC       DC.B    TAB,'BVC',TAB,0
+STRINGCMP       DC.B    TAB,'CMP',0
+STRINGCMPI      DC.B    TAB,'CMPI',0
+STRINGDATA      DC.B    TAB,'DATA',TAB,0
+STRINGDIVS      DC.B    TAB,'DIVS',TAB,0
+STRINGEOR       DC.B    TAB,'EOR',0
+STRINGJSR       DC.B    TAB,'JSR',TAB,0
+STRINGLEA       DC.B    TAB,'LEA',TAB,0
+STRINGLSL       DC.B    TAB,'LSL',TAB,0
+STRINGLSR       DC.B    TAB,'LSR',TAB,0
+STRINGMOVEA_B   DC.B    TAB,'MOVEA.B',TAB,0
+STRINGMOVEA_L   DC.B    TAB,'MOVEA.L',TAB,0
+STRINGMOVEA_W   DC.B    TAB,'MOVEA.W',TAB,0
+STRINGMOVEM     DC.B    TAB,'MOVEM',0
+STRINGMOVE_B    DC.B    TAB,'MOVE.B',TAB,0
+STRINGMOVE_L    DC.B    TAB,'MOVE.L',TAB,0
+STRINGMOVE_W    DC.B    TAB,'MOVE.W',TAB,0
+STRINGMULS      DC.B    TAB,'MULS',TAB,0
+STRINGNEG       DC.B    TAB,'NEG',0
+STRINGOR        DC.B    TAB,'OR',0
+STRINGORI       DC.B    TAB,'ORI',0
+STRINGROL       DC.B    TAB,'ROL',TAB,0
+STRINGROR       DC.B    TAB,'ROR',TAB,0
+STRINGRTS       DC.B    TAB,'RTS',TAB,0
+STRINGSIMHALT   DC.B    TAB,'SIMHALT',TAB,0
+STRINGSUB       DC.B    TAB,'SUB',0
+STRINGSUBQ      DC.B    TAB,'SUBQ',0
+>>>>>>> 94ff7de3b392d601967a9b7419fd0cd2ff9a0c99
 
 *********************************************************************************
 * Mask Constants
@@ -117,6 +156,7 @@ MASK_11109      EQU     $0E00
 MASK_11108      EQU     $0D00
 MASK_11 		EQU 	$0800
 MASK_1098       EQU     $0700
+MASK_10         EQU     $0400
 MASK_9          EQU     $0200
 MASK_876 		EQU 	$01C0
 MASK_843        EQU     $0118
@@ -124,6 +164,7 @@ MASK_8 			EQU 	$0100
 MASK_76543210   EQU     $00FF
 MASK_7654       EQU     $00F0
 MASK_76 		EQU 	$00C0
+MASK_6          EQU     $0040
 MASK_5          EQU     $0020
 MASK_43 		EQU 	$0018
 MASK_3210       EQU     $000F
@@ -209,26 +250,36 @@ EA_ModeArray_AnPostInc  DC.W    $18,$19,$1A,$1B,$1C,$1D,$1E,$1F
 EA_ModeArray_AnPreDec   DC.W    $20,$21,$22,$23,$24,$25,$26,$27
 EA_ModeArray_Else       DC.W    $3C,$39,$38
 
-Hex_Str_00              DC.W    '0',0
-Hex_Str_01              DC.W    '1',0
-Hex_Str_02              DC.W    '2',0
-Hex_Str_03              DC.W    '3',0
-Hex_Str_04              DC.W    '4',0
-Hex_Str_05              DC.W    '5',0
-Hex_Str_06              DC.W    '6',0
-Hex_Str_07              DC.W    '7',0
-Hex_Str_08              DC.W    '8',0
-Hex_Str_09              DC.W    '9',0
-Hex_Str_10              DC.W    'A',0
-Hex_Str_11              DC.W    'B',0
-Hex_Str_12              DC.W    'C',0
-Hex_Str_13              DC.W    'D',0
-Hex_Str_14              DC.W    'E',0
-Hex_Str_15              DC.W    'F',0
+Hex_Str_00              DC.B    '0',0
+Hex_Str_01              DC.B    '1',0
+Hex_Str_02              DC.B    '2',0
+Hex_Str_03              DC.B    '3',0
+Hex_Str_04              DC.B    '4',0
+Hex_Str_05              DC.B    '5',0
+Hex_Str_06              DC.B    '6',0
+Hex_Str_07              DC.B    '7',0
+Hex_Str_08              DC.B    '8',0
+Hex_Str_09              DC.B    '9',0
+Hex_Str_10              DC.B    'A',0
+Hex_Str_11              DC.B    'B',0
+Hex_Str_12              DC.B    'C',0
+Hex_Str_13              DC.B    'D',0
+Hex_Str_14              DC.B    'E',0
+Hex_Str_15              DC.B    'F',0
 
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
 
+Imm_Str_0              DC.B     '#8',0
+Imm_Str_1              DC.B     '#1',0
+Imm_Str_2              DC.B     '#2',0
+Imm_Str_3              DC.B     '#3',0
+Imm_Str_4              DC.B     '#4',0
+Imm_Str_5              DC.B     '#5',0
+Imm_Str_6              DC.B     '#6',0
+Imm_Str_7              DC.B     '#7',0
+
+Immediate_StrArray  DC.W        Imm_Str_0, Imm_Str_1, Imm_Str_2, Imm_Str_3, Imm_Str_4, Imm_Str_5, Imm_Str_6, Imm_Str_7
 
 *~Font name~Courier New~
 *~Font size~11~
