@@ -19,45 +19,16 @@
     ORG    $1000    *Don't change this; see hints and tips above
 *---------------------------------------------------------------------------
 
+    INCLUDE 'Disassembler_Setup.X68'
 
-    ; Read in from config.cfg
-    LEA     inFile, A1       ;in file name
-    MOVE    #51, D0          ;open in file
-    TRAP    #15
-
-    ;Setup for Read
-    MOVE    #LONG_LENGTH, D2        ;# bytes to read
-    MOVE    #53,D0                  ;read from file
-
-    ; Read & store begin address in BEGIN_ADDRESS
-    LEA     BEGIN_ADDRESS, A1
-    TRAP    #15
-    JSR     AsciiToHex
-    MOVE    D7, A3
-    
-    ; Move File position to where the next line should be
-    MOVE    #10,D2 
-    MOVE    #55,D0
-    TRAP    #15
-    
-    ;Setup for Read again
-    MOVE    #LONG_LENGTH, D2        ;# bytes to read
-    MOVE    #53,D0                  ;read from file
-    
-    ; Read & store end address in END_ADDRESS
-    LEA     END_ADDRESS, A1
-    TRAP    #15
-    JSR     AsciiToHex
-    MOVE    D7, A4
 
 MAIN_LOOP:
+    ; Append String with address
+    ;MOVE   A3, D6
+    ;JSR    PrintASCIILong
+    
     ; read word into D6 from current address
     MOVE.W  (A3), D6
-
-    ; Append String with address
-    ;MOVE   A3
-    ;JSR    AppendAddress
-    
 
     JSR DisassembleOpcode   ; disassemble and print word in D6
 
@@ -362,6 +333,8 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     
 
    END    $1000        ; last line of source
+
+
 
 
 
