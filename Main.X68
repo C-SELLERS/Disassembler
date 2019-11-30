@@ -114,37 +114,39 @@ AppendOutput:
 *
 *********************************************************************************
 PrintASCIIWord:
-    MOVEM.L D2-D3/A4, -(SP)     ; MOVEM all registers used
-    MOVEA   Hex_StrArray, A4    ; Move the base array into A4
-
-    MOVE.W D6,D3                ; move word into temp register
-    AND #MASK_OPCODE, D3        ; mask first 4 bits
-    ROL #4, D3                  ; rotate left 4 so bits are in least significant position
-    MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), A2         ; move ASCII char into A2
-    JSR AppendOutput
+    MOVEM.L     D2-D3/A4, -(SP)     ; MOVEM all registers used
+    MOVEA       Hex_StrArray, A4    ; Move the base array into A4
+    LEA         OUTPUT, A2    ; Move the base array into A4
     
-    MOVE.W  D6, D3              ; move word into temp register
-    AND #MASK_111098, D3        ; mask second 4 bits
-    ROL     #8, D3              ; rotate right 8 so bits are in least significant position
-    MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), A2         ; move ASCII char into A2
-    JSR AppendOutput
 
-    MOVE.W D6, D3               ; move word into temp register
-    AND    #MASK_7654, D3       ; mask third 4 bits
-    ROR     #4, D3              ; rotate right 4 so bits are in least significant position
-    MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), A2         ; move ASCII char into A2
-    JSR AppendOutput
+    MOVE.W      D6,D3                ; move word into temp register
+    AND         #MASK_OPCODE, D3        ; mask first 4 bits
+    ROL         #4, D3                  ; rotate left 4 so bits are in least significant position
+    MULS        #2, D3              ; multiply by 2 for correct array offset
+    MOVE.W      (A4,D3), (A2)         ; move ASCII char into A2
+    JSR         AppendOutput
     
-    MOVE.W D6, D3               ; move word into temp register
-    AND    #MASK_3210, D3       ; mask last 4 bits
-    MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), A2         ; move ASCII char into A2
-    JSR AppendOutput
+    MOVE.W      D6, D3              ; move word into temp register
+    AND         #MASK_111098, D3        ; mask second 4 bits
+    ROL         #8, D3              ; rotate right 8 so bits are in least significant position
+    MULS        #2, D3              ; multiply by 2 for correct array offset
+    MOVE.W      (A4,D3), (A2)         ; move ASCII char into A2
+    JSR         AppendOutput
 
-    MOVEM.L (SP)+, D2-D3/A4     ; return registers to their previous state
+    MOVE.W      D6, D3               ; move word into temp register
+    AND         #MASK_7654, D3       ; mask third 4 bits
+    ROR         #4, D3              ; rotate right 4 so bits are in least significant position
+    MULS        #2, D3              ; multiply by 2 for correct array offset
+    MOVE.W      (A4,D3), (A2)         ; move ASCII char into A2
+    JSR         AppendOutput
+    
+    MOVE.W      D6, D3               ; move word into temp register
+    AND         #MASK_3210, D3       ; mask last 4 bits
+    MULS        #2, D3              ; multiply by 2 for correct array offset
+    MOVE.W      (A4,D3), (A2)          ; move ASCII char into A2
+    JSR         AppendOutput
+
+    MOVEM.L     (SP)+, D2-D3/A4     ; return registers to their previous state
     RTS
 
 *********************************************************************************
@@ -364,8 +366,11 @@ byteRead            DS.B 1
 ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
 
-    ORG $00020000
+    ORG $00002000
 TMP_DATA
+    JSR $1234
+    JSR $1234
+    
     RTS
     JSR (A0)
     JSR (A1)
@@ -376,10 +381,9 @@ TMP_DATA
     JSR (A6)
     JSR (A7)
           
-    JSR $1234
-    JSR $1234
 
    END    $1000        ; last line of source
+
 
 
 

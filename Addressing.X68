@@ -23,111 +23,112 @@
 *   111     .L              001
 *   111     .W              000
 EA_AppendMXn:
-    MOVEM.L  D0-D5/A0,-(SP)
+    MOVEM.L  D0-D5/A1,-(SP)
     MOVE.L  D6,-(SP)
     
-    AND.L   #MASK_543,D6
+    MOVE.L  D6,D3                   ; copy the current address into d3 for processing
+    AND.L   #MASK_543,D3
     
     
-    CMP     #MODE_Dn,D6           ; check if mode = Dn, data reg direct
+    CMP     #MODE_Dn,D3             ; check if mode = Dn, data reg direct
     BEQ     MXn_SetDn
     
-    CMP     #Mode_An,D6           ; check if mode = An, address reg direct
+    CMP     #Mode_An,D3             ; check if mode = An, address reg direct
     BEQ     MXn_SetAn
     
-    CMP     #Mode_AnInd,D6           ; check if mode = (An), address reg indirect
+    CMP     #Mode_AnInd,D3          ; check if mode = (An), address reg indirect
     BEQ     MXn_SetAnInd 
     
-    CMP     #Mode_AnPostInc,D6           ; check if mode = -(An), address reg post increment
+    CMP     #Mode_AnPostInc,D3      ; check if mode = -(An), address reg post increment
     BEQ     MXn_SetAnPostInc
         
-    CMP     #Mode_AnPreDec,D6           ; chec if mode = (An)+, address reg pre decrement
+    CMP     #Mode_AnPreDec,D3       ; chec if mode = (An)+, address reg pre decrement
     BEQ     MXn_SetAnPreDec
 
-    CMP     #Mode_Else,D6           ; check if mode = Immediate or Absolute word or long
+    CMP     #Mode_Else,D3           ; check if mode = Immediate or Absolute word or long
     BEQ     MXn_SetElse   
  
 MXn_SetDn    
-    LEA     EA_StrArray_Dn,A0
+    LEA     EA_StrArray_Dn,A2
     BRA     MXn_GetRegister
   
 MXn_SetAn    
-    LEA     EA_StrArray_An,A0
+    LEA     EA_StrArray_An,A2
     BRA     MXn_GetRegister
     
 MXn_SetAnInd   
-    LEA     EA_StrArray_AnInd,A0
+    LEA     EA_StrArray_AnInd,A2
     BRA     MXn_GetRegister
 
 MXn_SetAnPreDec
-    LEA     EA_StrArray_AnPreDec,A0
+    LEA     EA_StrArray_AnPreDec,A2
     BRA     MXn_GetRegister
 
 MXn_SetAnPostInc    
-    LEA     EA_StrArray_AnPostInc,A0
+    LEA     EA_StrArray_AnPostInc,A2
     BRA     MXn_GetRegister
 
 MXn_SetElse    
-    LEA     EA_StrArray_Else,A0
+    LEA     EA_StrArray_Else,A2
     BRA     MXn_GetImmOrAbs
 
 
 MXn_GetRegister
-    MOVE.L      (SP),D6
-    AND.L       #MASK_210,D6
-    MULU        #02,D6          ; multiply by 2 because the string arrays are word-ordered
-    MOVE.W      (A0,D6),A2      ; A2 stores destination EA String
+    MOVE.L      (SP),D3
+    AND.L       #MASK_210,D3
+    MULU        #02,D3              ; multiply by 2 because the string arrays are word-ordered
+    MOVE.W      (A2,D3),A2          ; A2 stores destination EA String
     JSR         AppendOutput        ; AppendOutput prints the MXn result 
     
     BRA         MXn_Return
 
 MXn_GetImmOrAbs
-    CLR.L        D7                 ; clear D7 to make way for what's about to happen
-    MOVE.L      (SP),D6             ; copy address into D6 for processing
-    AND.L       #MASK_210,D6        ; mask to read addressin type
+    CLR.L        D3                 ; clear D3 to prep for masking rightmost bits
+    MOVE.L      (SP),D3             ; copy address into D3 for processing
+    AND.L       #MASK_210,D3        ; mask to read addressin type
     
-    CMP         #MODE_Imm,D6        ; check if address = Immediate (#)
+    CMP         #MODE_Imm,D3        ; check if address = Immediate (#)
     BEQ         MXn_GetImmediate
   
   
-    CMP         #MODE_AbsLong,D6    ; check if address = Absolute Long (xxx.L)
+    CMP         #MODE_AbsLong,D3    ; check if address = Absolute Long (xxx.L)
     BEQ         MXn_GetLong
 
 
                                     ; address = Absolute Word (xxx.W)
-    MOVE.W      4(A0),A2            ; move the '#$' value into A2
+    MOVE.W      4(A2),A2            ; move the '#$' value into A2
     JSR         AppendOutput        ; print 
     
-    MOVE.W      2(A3),D6            ; store the next word in D7
-    JSR         PrintASCIIWord 
+    MOVE.W      2(A3),D6            ; store the next word in D6
+    JSR         PrintASCIIWord      ; PrintAsciiWord uses d6 as input
            
     ADDA        #02,A3              ; increment A3 to skip the word we just processed
     BRA         MXn_Return
     
     
 MXn_GetLong
-    MOVE.W      2(A0),A2            ; move the '#$' value into A2 
+    MOVE.W      2(A2),A2            ; move the '#$' value into A2 
     JSR         AppendOutput    
-    MOVE.L      2(A3),D6            ; pull the next long in D7
-    JSR         PrintASCIILong
+    MOVE.L      2(A3),D6            ; pull the next long in D6
+    JSR         PrintASCIILong      ; PrintAsciiWord uses d6 as input
     
     ADDA        #04,A3              ; increment A3 to skip the long we just processed
     BRA         MXn_Return
   
 MXn_GetImmediate
-    MOVE.W      (A0),A2             ; move the '#' value into D6
+    MOVE.W      (A2),A2             ; move the '#' value into A2
     JSR         AppendOutput
     
-    MOVE.W      2(A3),D6            ; pull the next word into D6
-    AND.W       #$0F,D7             ; mask the word in D7 to a byte       
-    JSR         PrintASCIIWord
+    MOVE.W      2(A3),D3            ; pull the next word into D3
+    AND.W       #$0F,D6             ; mask the word in D6 to a byte       
+    JSR         PrintASCIIWord      ; PrintAsciiWord uses d6 as input
     
     ADDA        #02,A3              ; increment A3 to skip the word we just processed
     BRA         MXn_Return
         
 MXn_Return    
     ADDA        #04,SP
-    MOVEM.L     (SP)+,D0-D5/A0
+    MOVEM.L     (SP)+,D0-D5/A1
     RTS
 
 
@@ -269,6 +270,7 @@ Data11109:
     ; output '#'
     ; output numeric value
     RTS
+
 
 *~Font name~Courier New~
 *~Font size~10~
