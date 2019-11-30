@@ -17,8 +17,8 @@
 * File Constants
 *********************************************************************************
 inFile          DC.B 'Config.cfg',0
-BEGIN_ADDRESS   DS.B 4
-END_ADDRESS     DS.B 4
+BEGIN_ADDRESS_STR   DS.B 8
+END_ADDRESS_STR     DS.B 8
 
 *********************************************************************************
 * Numeric Constants
@@ -36,7 +36,7 @@ FILE_DEFAULT_READ_BYTES  EQU 1024
 *********************************************************************************
 * String Constants
 *********************************************************************************
-CURRENT_STR_LENGTH  SET     0
+CURRENT_STR_LENGTH  DS.B    1
 OUTPUT_LENGTH       EQU     40
 OUTPUT              DS.B    OUTPUT_LENGTH
 
