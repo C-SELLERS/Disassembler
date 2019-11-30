@@ -55,7 +55,7 @@ MULS:
 ORI:
     LEA STR_ORI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     CMP.W   #$0000, D4
     BEQ ORI_B                   ; if size == byte then fetch next byte
     CMP.W   #$0001, D4          
@@ -79,14 +79,14 @@ ORI_W:
     BRA ORI_END
 ORI_END:
     MOVE.W  D4, D6              ; revert word to D6
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 CMPI:
     LEA STR_CMPI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     CMP.W   #$0000, D4
     BEQ CMPI_B                  ; if size == byte then fetch next byte
     CMP.W   #$0001, D4          
@@ -110,8 +110,8 @@ CMPI_W:
     BRA CMPI_END
 CMPI_END:
     MOVE.W  D4, D6              ; revert word to D6
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 BCLR:
@@ -132,8 +132,8 @@ BCLR_I:
     MOVE.W  D7, D6              ; move word immediate into D6
     JSR PrintASCIIWord
     MOVE.W  D4, D6              ; revert word to D6
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 
@@ -524,6 +524,7 @@ Opcode_Finish:
     CLR.B   (A2)                ; Set Current String Length Back to Zero
     MOVEM.L (SP)+, D2-D4/A4     ; return registers to their previous state
     RTS                         ; return from function
+
 
 *~Font name~Courier New~
 *~Font size~10~

@@ -168,7 +168,7 @@ XnM:
 *   00      .B      00
 *   01      .W      01
 *   10      .L      10
-Size76:
+Opcode_AppendSizeSuffix:
     MOVE.W   D6, D3             ; move current word into working register
     AND.W    #MASK_76, D3       ; mask bits 7, 6
     CMP.W   #$0000, D3          ; compare with 00
@@ -285,7 +285,7 @@ An:
     RTS
 
 * The comma function appends a comma and a space ', ' to the output
-Comma:
+AppendComma:
     LEA     STRINGCOMMA, A2     ; move string comma into A2
     JSR     AppendOutput        ; print string in A2
     RTS
@@ -309,6 +309,7 @@ RegisterList:
     ; interpret next word as list of registers
     ; print ASCII list of registers
     RTS
+
 
 *~Font name~Courier New~
 *~Font size~10~
