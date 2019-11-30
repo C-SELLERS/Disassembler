@@ -61,7 +61,7 @@ ORI:
     CMP.W   #$0001, D4          
     BEQ ORI_W                   ; if size == word then fetch next word
 ORI_L:                          ; if size == long then fetch next long
-    JSR GetNextLongD7
+    JSR Get_Next_Long_D7
     LEA STRINGPOUNDHEX, A2
     JSR AppendOutput            ; print "#$"
     MOVE.W  D6, D4              ; temp store word in D4
@@ -70,7 +70,7 @@ ORI_L:                          ; if size == long then fetch next long
     BRA ORI_END
 ORI_B:
 ORI_W:
-    JSR GetNextWordD7
+    JSR Get_Next_Word_D7
     LEA STRINGPOUNDHEX, A2
     JSR AppendOutput            ; print "#$"
     MOVE.W  D6, D4              ; temp store word in D4
@@ -92,7 +92,7 @@ CMPI:
     CMP.W   #$0001, D4          
     BEQ CMPI_W                  ; if size == word then fetch next word
 CMPI_L:                         ; if size == long then fetch next long
-    JSR GetNextLongD7
+    JSR Get_Next_Long_D7
     LEA STRINGPOUNDHEX, A2
     JSR AppendOutput            ; print "#$"
     MOVE.W  D6, D4              ; temp store word in D4
@@ -101,7 +101,7 @@ CMPI_L:                         ; if size == long then fetch next long
     BRA CMPI_END
 CMPI_B:
 CMPI_W:
-    JSR GetNextWordD7
+    JSR Get_Next_Word_D7
     LEA STRINGPOUNDHEX, A2
     JSR AppendOutput            ; print "#$"
     MOVE.W  D6, D4              ; temp store word in D4
@@ -125,7 +125,7 @@ BCLR:
 BCLR_I:
     LEA STRINGBCLR, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR GetNextWordD7
+    JSR Get_Next_Word_D7
     LEA STRINGPOUNDHEX, A2
     JSR AppendOutput            ; print "#$"
     MOVE.W  D6, D4              ; temp store word in D4
