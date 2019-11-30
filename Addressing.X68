@@ -313,7 +313,6 @@ RegisterList:
     ; print ASCII list of registers
     RTS
 
-
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

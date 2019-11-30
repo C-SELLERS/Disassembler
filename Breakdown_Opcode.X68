@@ -81,16 +81,25 @@ ORI_END:
     MOVE.W  D4, D6              ; revert word to D6
 <<<<<<< HEAD
     JSR Comma
+    JSR MXn
+=======
+<<<<<<< HEAD
+    JSR Comma
 =======
     JSR AppendComma
 >>>>>>> 416e1c0e9233be291dad90a9410cb76dc652fe88
     JSR EA_AppendMXn
+>>>>>>> 1c21b0f1782c7b2f205afce8bea16049ba8ed1a9
     BRA Opcode_Finish
 
 CMPI:
     LEA STR_CMPI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
+<<<<<<< HEAD
+    JSR Size76
+=======
     JSR Opcode_AppendSizeSuffix
+>>>>>>> 1c21b0f1782c7b2f205afce8bea16049ba8ed1a9
     CMP.W   #$0000, D4
     BEQ CMPI_B                  ; if size == byte then fetch next byte
     CMP.W   #$0001, D4          
@@ -116,10 +125,15 @@ CMPI_END:
     MOVE.W  D4, D6              ; revert word to D6
 <<<<<<< HEAD
     JSR Comma
+    JSR MXn
+=======
+<<<<<<< HEAD
+    JSR Comma
 =======
     JSR AppendComma
 >>>>>>> 416e1c0e9233be291dad90a9410cb76dc652fe88
     JSR EA_AppendMXn
+>>>>>>> 1c21b0f1782c7b2f205afce8bea16049ba8ed1a9
     BRA Opcode_Finish
 
 BCLR:
@@ -141,6 +155,9 @@ BCLR_I:
     JSR PrintASCIIWord
     MOVE.W  D4, D6              ; revert word to D6
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1c21b0f1782c7b2f205afce8bea16049ba8ed1a9
     JSR Comma
 =======
     JSR AppendComma
