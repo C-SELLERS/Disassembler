@@ -242,8 +242,11 @@ Displacement:
     MOVE.L      (SP)+,D6        ; pop D6 from stack
     RTS
 Displacement_Fetch_Word:
-    ; get next word from file
-    ; convert to ASCII and print
+    JSR Get_Next_Word_D7
+    MOVE.W      D6,-(SP)        ; move D6 to stack for preservation
+    MOVE.W      D7, D6          ; move value into D6 for printing
+    JSR PrintASCIIWord
+    MOVE.W      (SP)+,D6        ; pop D6 from stack
     RTS
 
 * Dn deals with bit values in positions 11,10,9
