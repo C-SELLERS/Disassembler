@@ -24,7 +24,8 @@
 
 MAIN_LOOP:
     ; Append String with address
-    JSR     AppendAddress
+    MOVE    A3, D6
+    JSR     PrintASCIILong
     
     JSR     Get_Next_Word_D6
 
