@@ -31,7 +31,7 @@ MAIN_LOOP:
     JSR     DisassembleOpcode   ; disassemble and print word in D6
 
     ; Compare current address to end address
-    CMP         A4,A3           ; Are we done yet?
+    CMP.L         A4,A3           ; Are we done yet?
     BLE         MAIN_LOOP       ; Branch if less than or equal too MAIN_LOOP
     
     ; end (print SIMHALT?  close file?)
@@ -98,6 +98,7 @@ DisassembleOpcode:
     INCLUDE 'Determine_Opcode.X68'
     INCLUDE 'Breakdown_Opcode.X68'
     INCLUDE 'Addressing.X68'
+    ;INCLUDE 'OPCODE_OR.x68'
     RTS
 
 
@@ -126,7 +127,7 @@ AppendOutput:
 PrintASCIIWord:
     MOVEM.L D2-D3/A4, -(SP)     ; MOVEM all registers used
     MOVEA   Hex_StrArray, A4    ; Move the base array into A4
-    LEA     OUTPUT, A2          ; move address of output into A2
+    LEA     OUTPUT_TEMP, A2          ; move address of output into A2
 
     MOVE.W D6,D3                ; move word into temp register
     AND #MASK_OPCODE, D3        ; mask first 4 bits
@@ -155,7 +156,7 @@ PrintASCIIWord:
     MOVE.B  (A4,D3), (A2)       ; move ASCII char into A2
     JSR AppendOutput
 
-    MOVEM.L (SP)+, D2-D3/A4     ; return registers to their previous state
+    MOVEM.L     (SP)+, D2-D3/A4     ; return registers to their previous state
     RTS
 
 *********************************************************************************
@@ -376,7 +377,24 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
     
 
+    ORG $00002000
+TMP_DATA
+    JSR $1234
+    JSR $1234
+    
+    RTS
+    JSR (A0)
+    JSR (A1)
+    JSR (A2)
+    JSR (A3)
+    JSR (A4)
+    JSR (A5)
+    JSR (A6)
+    JSR (A7)
+          
+
    END    $1000        ; last line of source
+
 
 
 
