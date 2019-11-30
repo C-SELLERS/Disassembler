@@ -51,8 +51,6 @@
     MOVE    D7, A4
 
 MAIN_LOOP:
-
-CURRENT_STR_LENGTH  SET     0
     ; read word into D6 from current address
     MOVE.W  (A3), D6
 
