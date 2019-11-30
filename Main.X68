@@ -100,10 +100,6 @@ AppendOutput:
     INCLUDE 'AppendOutput.X68'
     RTS
 
-<<<<<<< HEAD
-AppendAddress:
-    INCLUDE 'AppendAddress.X68'
-=======
 *********************************************************************************
 * Method Name:  PrintASCIIWord
 * Description:  This function will take a 16 bit word as input and convert it to 
@@ -163,7 +159,6 @@ PrintASCIILong:
     ROL.L       D7,D6
     JSR         PrintASCIIWord 
     MOVE.L      (SP)+,D7
->>>>>>> 94ff7de3b392d601967a9b7419fd0cd2ff9a0c99
     RTS
 
 *********************************************************************************
