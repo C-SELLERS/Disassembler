@@ -80,7 +80,7 @@ ORI_W:
 ORI_END:
     MOVE.W  D4, D6              ; revert word to D6
     JSR Comma
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 CMPI:
@@ -111,7 +111,7 @@ CMPI_W:
 CMPI_END:
     MOVE.W  D4, D6              ; revert word to D6
     JSR Comma
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 BCLR:
@@ -133,7 +133,7 @@ BCLR_I:
     JSR PrintASCIIWord
     MOVE.W  D4, D6              ; revert word to D6
     JSR Comma
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 
