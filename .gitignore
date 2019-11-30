@@ -1,6 +1,6 @@
 *.L68
 *.S68
-
+Config.cfg
 Output.txt
 
 !Test_002.*
