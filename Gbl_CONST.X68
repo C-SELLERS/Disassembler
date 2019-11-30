@@ -202,6 +202,17 @@ Hex_Str_15              DC.B    'F',0
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
 
+Imm_Str_0              DC.B     '#8',0
+Imm_Str_1              DC.B     '#1',0
+Imm_Str_2              DC.B     '#2',0
+Imm_Str_3              DC.B     '#3',0
+Imm_Str_4              DC.B     '#4',0
+Imm_Str_5              DC.B     '#5',0
+Imm_Str_6              DC.B     '#6',0
+Imm_Str_7              DC.B     '#7',0
+
+Immediate_StrArray  DC.W        Imm_Str_0, Imm_Str_1, Imm_Str_2, Imm_Str_3, Imm_Str_4, Imm_Str_5, Imm_Str_6, Imm_Str_7
+
 *~Font name~Courier New~
 *~Font size~11~
 *~Tab type~1~

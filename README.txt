@@ -9,6 +9,9 @@ documentation:
     add mask 10
     add mask 6
 
+main:
+    print '$' before ASCII in PrintASCIIWord ?
+
 breakdown_opcode:
 	bclr - handle fetching of next byte
 	cmpi, ori - handle fetching of next byte
@@ -16,8 +19,7 @@ breakdown_opcode:
 addressing:
 	MXn
 	XnM
-	Displacement
-	Data11109
+	Displacement - fetch next word
     RegisterList
 
 Main:
