@@ -441,7 +441,7 @@ NEG:
     BRA         Opcode_Finish
     
 MOVEM:
-    LEA STRINGMOVEM, A2
+    LEA STR_MOVEM, A2
     JSR AppendOutput            ; write the current string in A2
     JSR Size6                   
     MOVE.W  D6,D3               ; move word value into working register D3
@@ -450,12 +450,12 @@ MOVEM:
     BNE MOVEM_EA_RL
 MOVEM_RL_EA:                    ; case of registers to memory
     JSR RegisterList
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 MOVEM_EA_RL:                    ; case of memory to registers
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR RegisterList
     BRA Opcode_Finish
 
@@ -478,6 +478,7 @@ Opcode_Finish:
     MOVE        #0, CURRENT_STR_LENGTH          ;Set current string length back to zero to be written over
     MOVEM.L     (SP)+, D2-D3/A4                 ; return registers to their previous state
     RTS                                         ; return from function
+
 
 
 

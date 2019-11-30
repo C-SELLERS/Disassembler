@@ -10,6 +10,8 @@
 *                string constants are in Gbl_CONST.X68
 *-----------------------------------------------------------
 
+
+
 * MXn deals with bit values in positions 5,4,3,2,1,0
 * Positions 543 contain addressing methods
 * Positions 210 contain register number or hard coded value
@@ -23,6 +25,7 @@
 *   111     .L              001
 *   111     .W              000
 EA_AppendMXn:
+    
     MOVEM.L  D0-D5/A1,-(SP)
     MOVE.L  D6,-(SP)
     
@@ -290,7 +293,7 @@ AppendComma:
 Data11109:
     MOVE.W  D6, D3              ; move current word into working register
     AND     MASK_11109, D3      ; mask bits 11, 10, 9
-    MOVEA   Immediate_StrArray, A4    ; Move the base array into A4
+    MOVEA   Hex_StrArray, A4    ; Move the base array into A4
     LEA     OUTPUT, A2          ; move address of output into A2
     ROL     #7, D3              ; rotate left 7 so bits are in least significant position
     MULS    #2, D3              ; multiply by 2 for correct array offset
@@ -303,3 +306,8 @@ RegisterList:
     ; interpret next word as list of registers
     ; print ASCII list of registers
     RTS
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
