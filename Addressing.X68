@@ -51,11 +51,11 @@ XnM:
     RTS
 
 * Size76 deals with bit values in positions 7,6
-* Positions 76 contain size values
-*   76      Size
-*   00      .B
-*   01      .W
-*   10      .L
+* Positions 76 contain size values, function will set D4
+*   76      Size    D4
+*   00      .B      00
+*   01      .W      01
+*   10      .L      10
 Size76:
     MOVE.W   D6, D3             ; move current word into working register
     AND.W    #MASK_76, D3       ; mask bits 7, 6
@@ -69,16 +69,19 @@ Size76:
 Size76_B:
     LEA STRING_B, A2
     JSR AppendOutput            ; write '.B' to the output string
+    MOVE.W  #$0000, D4          ; set D4 to 00
     RTS
 
 Size76_W:
     LEA STRING_W, A2
     JSR AppendOutput            ; write '.W' to the output string
+    MOVE.W  #$0001, D4          ; set D4 to 01
     RTS
 
 Size76_L:
     LEA STRING_L, A2
     JSR AppendOutput            ; write '.L' to the output string
+    MOVE.W  #$0002, D4          ; set D4 to 10
     RTS
 
 * Size8 checks bit 8 and interprets it as a Word or Long
@@ -171,7 +174,7 @@ An:
 
 * The comma function appends a comma and a space ', ' to the output
 Comma:
-    MOVE.W  STRINGCOMMA, A2     ; move string comma into A2
+    LEA     STRINGCOMMA, A2     ; move string comma into A2
     JSR     AppendOutput        ; print string in A2
     RTS
 

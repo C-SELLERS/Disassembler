@@ -9,7 +9,7 @@
 *-----------------------------------------------------------
 
 Opcode:
-    MOVEM.L D2-D3/A4, -(SP) ; MOVEM all registers used
+    MOVEM.L D2-D4/A4, -(SP) ; MOVEM all registers used
     
     MOVE.W D6,D2         ; copy current word (D6) into opcode mask register (D2)
     AND #MASK_OPCODE,D2  ; apply mask to first 4 bits

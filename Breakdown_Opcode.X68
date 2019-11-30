@@ -56,22 +56,62 @@ ORI:
     LEA STRINGORI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
+    CMP.W   #$0000, D4
+    BEQ ORI_B                   ; if size == byte then fetch next byte
+    CMP.W   #$0001, D4          
+    BEQ ORI_W                   ; if size == word then fetch next word
+ORI_L:                          ; if size == long then fetch next long
+    JSR GetNextLongD7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.L  D7, D6              ; move long immediate into D6
+    JSR PrintASCIILong
+    BRA ORI_END
+ORI_B:
+ORI_W:
+    JSR GetNextWordD7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.W  D7, D6              ; move word immediate into D6
+    JSR PrintASCIIWord
+    BRA ORI_END
+ORI_END:
+    MOVE.W  D4, D6              ; revert word to D6
+    JSR Comma
     JSR MXn
-    ;todo
-    ; if size == byte then fetch next byte
-    ; if size == word then fetch next word
-    ; if size == long then fetch next long
     BRA Opcode_Finish
 
 CMPI:
     LEA STRINGCMPI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
+    CMP.W   #$0000, D4
+    BEQ CMPI_B                  ; if size == byte then fetch next byte
+    CMP.W   #$0001, D4          
+    BEQ CMPI_W                  ; if size == word then fetch next word
+CMPI_L:                         ; if size == long then fetch next long
+    JSR GetNextLongD7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.L  D7, D6              ; move long immediate into D6
+    JSR PrintASCIILong
+    BRA CMPI_END
+CMPI_B:
+CMPI_W:
+    JSR GetNextWordD7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.W  D7, D6              ; move word immediate into D6
+    JSR PrintASCIIWord
+    BRA CMPI_END
+CMPI_END:
+    MOVE.W  D4, D6              ; revert word to D6
+    JSR Comma
     JSR MXn
-    ;todo
-    ; if size == byte then fetch next byte
-    ; if size == word then fetch next word
-    ; if size == long then fetch next long
     BRA Opcode_Finish
 
 BCLR:
@@ -85,8 +125,13 @@ BCLR:
 BCLR_I:
     LEA STRINGBCLR, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-    ;todo
-    ; jsr get_immedate_in_next_byte
+    JSR GetNextWordD7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.W  D7, D6              ; move word immediate into D6
+    JSR PrintASCIIWord
+    MOVE.W  D4, D6              ; revert word to D6
     JSR Comma
     JSR MXn
     BRA Opcode_Finish
@@ -445,14 +490,9 @@ SIMHALT:
 Opcode_Finish: 
     LEA OUTPUT, A1              ; Load Output into A1
     JSR TrapTask13              ; Send it to the printer
-
-
-    ;Set Current String Length Back to Zero
     LEA     CURRENT_STR_LENGTH, A2
-    CLR.B   (A2)
-
-
-    MOVEM.L (SP)+, D2-D3/A4     ; return registers to their previous state
+    CLR.B   (A2)                ; Set Current String Length Back to Zero
+    MOVEM.L (SP)+, D2-D4/A4     ; return registers to their previous state
     RTS                         ; return from function
 
 *~Font name~Courier New~
