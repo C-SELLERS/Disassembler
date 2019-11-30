@@ -127,7 +127,7 @@ AppendOutput:
 PrintASCIIWord:
     MOVEM.L D2-D3/A4, -(SP)     ; MOVEM all registers used
     MOVEA   Hex_StrArray, A4    ; Move the base array into A4
-    LEA     OUTPUT, A2          ; move address of output into A2
+    LEA     OUTPUT_TEMP, A2          ; move address of output into A2
 
     MOVE.W D6,D3                ; move word into temp register
     AND #MASK_OPCODE, D3        ; mask first 4 bits
