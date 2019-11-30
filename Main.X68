@@ -110,32 +110,33 @@ AppendOutput:
 PrintASCIIWord:
     MOVEM.L D2-D3/A4, -(SP)     ; MOVEM all registers used
     MOVEA   Hex_StrArray, A4    ; Move the base array into A4
+    LEA     OUTPUT, A2          ; move address of output into A2
 
     MOVE.W D6,D3                ; move word into temp register
     AND #MASK_OPCODE, D3        ; mask first 4 bits
     ROL #4, D3                  ; rotate left 4 so bits are in least significant position
     MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), A2         ; move ASCII char into A2
+    MOVE.W  (A4,D3), (A2)       ; move ASCII char into A2
     JSR AppendOutput
     
     MOVE.W  D6, D3              ; move word into temp register
     AND #MASK_111098, D3        ; mask second 4 bits
     ROL     #8, D3              ; rotate right 8 so bits are in least significant position
     MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), A2         ; move ASCII char into A2
+    MOVE.W  (A4,D3), (A2)       ; move ASCII char into A2
     JSR AppendOutput
 
     MOVE.W D6, D3               ; move word into temp register
     AND    #MASK_7654, D3       ; mask third 4 bits
     ROR     #4, D3              ; rotate right 4 so bits are in least significant position
     MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), A2         ; move ASCII char into A2
+    MOVE.W  (A4,D3), (A2)       ; move ASCII char into A2
     JSR AppendOutput
     
     MOVE.W D6, D3               ; move word into temp register
     AND    #MASK_3210, D3       ; mask last 4 bits
     MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), A2         ; move ASCII char into A2
+    MOVE.W  (A4,D3), (A2)       ; move ASCII char into A2
     JSR AppendOutput
 
     MOVEM.L (SP)+, D2-D3/A4     ; return registers to their previous state
@@ -154,7 +155,7 @@ PrintASCIILong:
     MOVE.L      D7,-(SP)
     JSR         PrintASCIIWord 
     MOVE.B      #16,D7
-    ROL         D7,D6
+    ROL.L       D7,D6
     JSR         PrintASCIIWord 
     MOVE.L      (SP)+,D7
     RTS

@@ -92,8 +92,23 @@ Size8_L:                        ; if not equal fall through to L
     LEA STRING_L, A2
     JSR AppendOutput            ; write '.L' to the output string
     RTS
-
 Size8_W:                
+    LEA STRING_W, A2
+    JSR AppendOutput            ; write '.W' to the output string
+    RTS
+
+* Size6 checks bit 6 and interprets it as a Word or Long
+* Corresponding ASCII value will be appended to the output string
+Size6:
+    MOVE.W  D6, D3              ; move current word into working register
+    AND.W   #MASK_6, D3         ; mask bit 8
+    CMP.W   #$0000, D3          ; compare with D3
+    BEQ     Size6_W             ; if equal goto W
+Size6_L:                        ; if not equal fall through to L
+    LEA STRING_L, A2
+    JSR AppendOutput            ; write '.L' to the output string
+    RTS
+Size6_W:                
     LEA STRING_W, A2
     JSR AppendOutput            ; write '.W' to the output string
     RTS
@@ -160,4 +175,10 @@ Data11109:
     ; convert to decimal?  (possible values are 1-8)
     ; output '#'
     ; output numeric value
+    RTS
+
+RegisterList:
+    ; get next word
+    ; interpret next word as list of registers
+    ; print ASCII list of registers
     RTS

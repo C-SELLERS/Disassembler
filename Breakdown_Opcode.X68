@@ -13,8 +13,7 @@
 DATA:
     LEA STRINGDATA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-    ;todo
-    ; print ASCII value of opcode in D6
+    JSR PrintASCIIWord          ; print the input word to output
     BRA Opcode_Finish
 
 SUB:
@@ -414,7 +413,23 @@ NEG:
     BRA Opcode_Finish
     
 MOVEM:
-    ;todo
+    LEA STRINGMOVEM, A2
+    JSR AppendOutput            ; write the current string in A2
+    JSR Size6                   
+    MOVE.W  D6,D3               ; move word value into working register D3
+    AND #MASK_10, D3            ; mask bit 5
+    CMP.W #$0000,D3             ; compare with 0
+    BNE MOVEM_EA_RL
+MOVEM_RL_EA:                    ; case of registers to memory
+    JSR RegisterList
+    JSR Comma
+    JSR MXn
+    BRA Opcode_Finish
+MOVEM_EA_RL:                    ; case of memory to registers
+    JSR MXn
+    JSR Comma
+    JSR RegisterList
+    BRA Opcode_Finish
 
 JSR:
     LEA STRINGJSR, A2

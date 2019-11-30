@@ -100,6 +100,7 @@ MASK_11109      EQU     $0E00
 MASK_11108      EQU     $0D00
 MASK_11 		EQU 	$0800
 MASK_1098       EQU     $0700
+MASK_10         EQU     $0400
 MASK_9          EQU     $0200
 MASK_876 		EQU 	$01C0
 MASK_843        EQU     $0118
@@ -107,6 +108,7 @@ MASK_8 			EQU 	$0100
 MASK_76543210   EQU     $00FF
 MASK_7654       EQU     $00F0
 MASK_76 		EQU 	$00C0
+MASK_6          EQU     $0040
 MASK_5          EQU     $0020
 MASK_43 		EQU 	$0018
 MASK_3210       EQU     $000F
@@ -197,8 +199,8 @@ Hex_Str_13              DC.B    'D',0
 Hex_Str_14              DC.B    'E',0
 Hex_Str_15              DC.B    'F',0
 
-Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07,
-                                Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
+Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
+                     DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
 
 *~Font name~Courier New~
 *~Font size~11~
