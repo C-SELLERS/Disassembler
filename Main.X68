@@ -27,13 +27,9 @@ MAIN_LOOP:
     ;MOVE   A3, D6
     ;JSR    PrintASCIILong
     
-    ; read word into D6 from current address
-    MOVE.W  (A3), D6
+    JSR Get_Next_Word_D6
 
     JSR DisassembleOpcode   ; disassemble and print word in D6
-
-    ; Increment Address
-    ADD        #2,A3        * Increment pointer
 
     ; Compare current address to end address
     CMP         A4,A3           ; Are we done yet?
@@ -42,6 +38,55 @@ MAIN_LOOP:
     ; end (print SIMHALT?  close file?)
 
     SIMHALT
+
+*********************************************************************************
+* Method Name: Get_Next_Word_D6
+* Description: This method collects the next word at A3 and increments the pointer
+*           to the next word.
+* Preconditions: (A3) points to the current address we are looking at
+* Postconditions: D6 contains the new word
+*********************************************************************************
+Get_Next_Word_D6:
+    ; read word into D6 from current address
+    MOVE.W  (A3), D6
+
+    ; Increment Address
+    ADD        #2,A3        * Increment pointer by two bytes
+
+    RTS
+
+*********************************************************************************
+* Method Name: Get_Next_Word_D7
+* Description: This method collects the next word at A3 and increments the pointer
+*           to the next word.
+* Preconditions: (A3) points to the current address we are looking at
+* Postconditions: D7 contains the new word
+*********************************************************************************
+Get_Next_Word_D7:
+    ; read word into D7 from current address
+    MOVE.W  (A3), D7
+
+    ; Increment Address
+    ADD        #2,A3        * Increment pointer by two bytes
+
+    RTS
+
+*********************************************************************************
+* Method Name: Get_Next_Long_D7
+* Description: This method collects the next word at A3 and increments the pointer
+*           to the next word.
+* Preconditions: (A3) points to the current address we are looking at
+* Postconditions: D7 contains the new word
+*********************************************************************************
+Get_Next_Long_D7:
+    ; read long into D7 from current address
+    MOVE.L  (A3), D7
+
+    ; Increment Address
+    ADD        #4,A3        * Increment pointer by four bytes
+
+    RTS
+
 
 *********************************************************************************
 * Method Name: DisassembleOpcode
@@ -333,6 +378,7 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     
 
    END    $1000        ; last line of source
+
 
 
 
