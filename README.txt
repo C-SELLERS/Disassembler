@@ -9,9 +9,6 @@ documentation:
     add mask 10
     add mask 6
 
-main:
-    print '$' before ASCII in PrintASCIIWord ?
-
 addressing:
 	MXn
 	XnM
