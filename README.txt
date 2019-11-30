@@ -4,18 +4,23 @@ TODO:
 documentation:
 	add mask 210
 	add mask 5
+    add mask 7654
+	add mask 3210
+    add mask 10
+    add mask 6
+
+main:
+    print '$' before ASCII in PrintASCIIWord ?
 
 breakdown_opcode:
 	bclr - handle fetching of next byte
-	movem
 	cmpi, ori - handle fetching of next byte
-	data - print ASCII value of current word
 
 addressing:
 	MXn
 	XnM
-	Displacement
-	Data11109
+	Displacement - fetch next word
+    RegisterList
 
 Main:
 	lea address into A7 at beginning of program
