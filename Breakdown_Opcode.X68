@@ -11,409 +11,482 @@
 *-----------------------------------------------------------
 
 DATA:
-    LEA STRINGDATA, A2
+    LEA STR_DATA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR PrintASCIIWord          ; print the input word to output
     BRA Opcode_Finish
 
 SUB:
-    LEA STRINGSUB, A2
+    LEA STR_SUB, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     MOVE.W  D6,D3               ; move word value into D3
     AND #MASK_8, D3             ; mask bit 8
     CMP.W #$0000,D3             ; compare with 0
     BNE SUB_EA_DN_EA
 SUB_DN_EA_DN:                   ; case  Dn + <ea> -> Dn
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR Dn
     BRA Opcode_Finish
 SUB_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
     JSR Dn
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 SUBQ:
-    LEA STRINGSUBQ, A2
+    LEA STR_SUBQ, A2
     JSR AppendOutput            ; write SUBQ to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     JSR Data11109
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 MULS:
-    LEA STRINGMULS, A2
+    LEA STR_MULS, A2
     JSR AppendOutput            ; write MULS to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR Dn
     BRA Opcode_Finish
 
 ORI:
-    LEA STRINGORI, A2
+    LEA STR_ORI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
+    CMP.W   #$0000, D4
+    BEQ ORI_B                   ; if size == byte then fetch next byte
+    CMP.W   #$0001, D4          
+    BEQ ORI_W                   ; if size == word then fetch next word
+ORI_L:                          ; if size == long then fetch next long
+    JSR Get_Next_Long_D7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.L  D7, D6              ; move long immediate into D6
+    JSR PrintASCIILong
+    BRA ORI_END
+ORI_B:
+ORI_W:
+    JSR Get_Next_Word_D7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.W  D7, D6              ; move word immediate into D6
+    JSR PrintASCIIWord
+    BRA ORI_END
+ORI_END:
+    MOVE.W  D4, D6              ; revert word to D6
+    JSR Comma
     JSR MXn
-    ;todo
-    ; if size == byte then fetch next byte
-    ; if size == word then fetch next word
-    ; if size == long then fetch next long
     BRA Opcode_Finish
 
 CMPI:
-    LEA STRINGCMPI, A2
+    LEA STR_CMPI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Size76
+    CMP.W   #$0000, D4
+    BEQ CMPI_B                  ; if size == byte then fetch next byte
+    CMP.W   #$0001, D4          
+    BEQ CMPI_W                  ; if size == word then fetch next word
+CMPI_L:                         ; if size == long then fetch next long
+    JSR Get_Next_Long_D7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.L  D7, D6              ; move long immediate into D6
+    JSR PrintASCIILong
+    BRA CMPI_END
+CMPI_B:
+CMPI_W:
+    JSR Get_Next_Word_D7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.W  D7, D6              ; move word immediate into D6
+    JSR PrintASCIIWord
+    BRA CMPI_END
+CMPI_END:
+    MOVE.W  D4, D6              ; revert word to D6
+    JSR Comma
     JSR MXn
-    ;todo
-    ; if size == byte then fetch next byte
-    ; if size == word then fetch next word
-    ; if size == long then fetch next long
     BRA Opcode_Finish
 
 BCLR:
-    LEA STRINGBCLR, A2
+    LEA STR_BCLR, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Dn 
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 BCLR_I:
-    LEA STRINGBCLR, A2
+    LEA STR_BCLR, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-    ;todo
-    ; jsr get_immedate_in_next_byte
+    JSR Get_Next_Word_D7
+    LEA STRINGPOUNDHEX, A2
+    JSR AppendOutput            ; print "#$"
+    MOVE.W  D6, D4              ; temp store word in D4
+    MOVE.W  D7, D6              ; move word immediate into D6
+    JSR PrintASCIIWord
+    MOVE.W  D4, D6              ; revert word to D6
     JSR Comma
     JSR MXn
     BRA Opcode_Finish
 
+
 ADDA:
-    LEA STRINGADDA, A2
+    LEA STR_ADDA, A2
     JSR AppendOutput            ; write ADDA to the output string
     JSR Size8
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR An
     BRA Opcode_Finish
 
 ADD:
-    LEA STRINGADD, A2
+    LEA STR_ADD, A2
     JSR AppendOutput            ; write ADD to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     MOVE.W  D6,D3               ; move word value into D3
     AND #MASK_8, D3             ; mask bit 8
     CMP.W #$0000,D3             ; compare with 0
     BNE ADD_EA_DN_EA
 ADD_DN_EA_DN:                   ; case  Dn + <ea> -> Dn
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR Dn
     BRA Opcode_Finish
 ADD_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
     JSR Dn
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 DIVS:
-    LEA STRINGDIVS, A2
+    LEA STR_DIVS, A2
     JSR AppendOutput            ; write DIVS to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR Dn
     BRA Opcode_Finish
 
 OR: 
-    LEA STRINGOR, A2
-    JSR AppendOutput            ; write OR to the output string
-    JSR Size76
-    MOVE.W  D6,D3               ; move word value into D3
-    AND #MASK_8, D3             ; mask bit 8
-    CMP.W #$0000,D3             ; compare with 0
-    BNE OR_EA_DN_EA
+    LEA         STR_OR, A2
+    JSR         AppendOutput            ; write OR to the output string
+    JSR         Opcode_AppendSizeSuffix
+    MOVE.W      D6,D3               ; move word value into D3
+    
+    MOVEM.L     D0-D7/A0-A6,-(SP)
+    JSR EA_AppendMXn
+
+    AND         #MASK_8, D3             ; mask bit 8
+    ;CMP.W #$0000,D3             ; compare with 0
+    ;BNE OR_EA_DN_EA       
+    
+    CMP.W #$0010,D3             ; compare with 0
+    BEQ OR_DN_EA_DN
+    
+    MOVE.L      D6,D3                       ; move EA string from D6 (dest) to D3 (src)
+    MOVE.L      D7,D4                       ; move EA value from D7 (dest value) to D4 (src value)    
+  
+    
 OR_DN_EA_DN:                    ; case  Dn + <ea> -> Dn
-    JSR MXn
-    JSR Comma
+    
+    LEA         EA_StrArray_Dn,A0           ; A0 -> to the Dn string list 
+    MOVE.L      (SP),D3                     ; copy to word value to D3 
+    AND.L       #MASK_11109,D3              ; mask the source 
+    ASR         #8,D3   
+    ASR         #1,D3
+    MOVE.L      (A0,D3),D3      
+  
+    ADDA        #02,SP                  ; clear backup 'd6' off the stack
+    MOVEM.L     (SP)+,D0-D2/A0-A7       ; restore temps to registers
+    
+    
+    ;JSR EA_AppendMXn
+    MOVE.L      D6,A2
+    JSR         AppendOutput
+    
+    JSR AppendComma
     JSR Dn
     BRA Opcode_Finish
 OR_EA_DN_EA:                    ; case <ea> + Dn -> <ea>
     JSR Dn
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 CMP:
-    LEA STRINGCMP, A2
+    LEA STR_CMP, A2
     JSR AppendOutput            ; write CMP to the output string
-    JSR Size76
-    JSR MXn
-    JSR Comma
+    JSR Opcode_AppendSizeSuffix
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR Dn
     BRA Opcode_Finish
 
 EOR: 
-    LEA STRINGEOR, A2
+    LEA STR_EOR, A2
     JSR AppendOutput            ; write EOR to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     JSR Dn
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 MOVEA_B:
-    LEA STRINGMOVEA_B, A2
+    LEA STR_MOVEA_B, A2
     JSR AppendOutput            ; write MOVEA.B to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR An
     BRA Opcode_Finish
 
 MOVE_B:
-    LEA STRINGMOVE_B, A2
+    LEA STR_MOVE_B, A2
     JSR AppendOutput            ; write MOVE.B to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR XnM
     BRA Opcode_Finish
 
 MOVEA_W:
-    LEA STRINGMOVEA_W, A2
+    LEA STR_MOVEA_W, A2
     JSR AppendOutput            ; write MOVEA.W to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR An
     BRA Opcode_Finish
 
 MOVE_W:
-    LEA STRINGMOVE_W, A2
+    LEA STR_MOVE_W, A2
     JSR AppendOutput            ; write MOVE.W to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR XnM
     BRA Opcode_Finish
 
 MOVEA_L:
-    LEA STRINGMOVEA_L, A2
+    LEA STR_MOVEA_L, A2
     JSR AppendOutput            ; write MOVEA.L to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR An
     BRA Opcode_Finish
 
 MOVE_L:
-    LEA STRINGMOVE_L, A2
+    LEA STR_MOVE_L, A2
     JSR AppendOutput            ; write MOVE.L to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR XnM
     BRA Opcode_Finish
 
 ROL:
-    LEA STRINGROL, A2
+    ;LEA STR_ROL, A2
     JSR AppendOutput            ; write ROL to the output string
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 ROR:
-    LEA STRINGROR, A2
+    ;LEA STR_ROR, A2
     JSR AppendOutput            ; write ROR to the output string
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 LSL:
-    LEA STRINGLSL, A2
+    ;LEA STR_LSL, A2
     JSR AppendOutput            ; write LSL to the output string
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 LSR:
-    LEA STRINGLSR, A2
+    ;LEA STRINGLSR, A2
     JSR AppendOutput            ; write LSR to the output string
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 ASL:
-    LEA STRINGASL, A2
+    ;LEA STR_ASL, A2
     JSR AppendOutput            ; write ASL to the output string
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 ASR:
-    LEA STRINGASR, A2
+    ;LEA STR_ASR, A2
     JSR AppendOutput            ; write ASR to the output string
-    JSR MXn
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 
 ROL_I:
-    LEA STRINGROL, A2
+    ;LEA STR_ROL, A2
     JSR AppendOutput            ; write ROL to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     MOVE.W  D6,D3               ; move word value into working register D3
     AND #MASK_5, D3             ; mask bit 5
     CMP.W #$0000,D3             ; compare with 0
     BNE ROL_I_DN
 ROL_I_I:                        ; case of immediate input
     JSR Data11109
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 ROL_I_DN:                       ; case of data register input
     JSR Dn
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 
 ROR_I:
-    LEA STRINGROR, A2
+    ;LEA STR_ROR, A2
     JSR AppendOutput            ; write ROR to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     MOVE.W  D6,D3               ; move word value into working register D3
     AND #MASK_5, D3             ; mask bit 5
     CMP.W #$0000,D3             ; compare with 0
     BNE ROR_I_DN
 ROR_I_I:                        ; case of immediate input
     JSR Data11109
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 ROR_I_DN:                       ; case of data register input
     JSR Dn
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 
 LSL_I:
-    LEA STRINGLSL, A2
+    ;LEA STR_LSL, A2
     JSR AppendOutput            ; write LSL to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     MOVE.W  D6,D3               ; move word value into working register D3
     AND #MASK_5, D3             ; mask bit 5
     CMP.W #$0000,D3             ; compare with 0
     BNE LSL_I_DN
 LSL_I_I:                        ; case of immediate input
     JSR Data11109
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 LSL_I_DN:                       ; case of data register input
     JSR Dn
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 
 LSR_I:
-    LEA STRINGLSR, A2
+    ;LEA STR_LSR, A2
     JSR AppendOutput            ; write LSR to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     MOVE.W  D6,D3               ; move word value into working register D3
     AND #MASK_5, D3             ; mask bit 5
     CMP.W #$0000,D3             ; compare with 0
     BNE LSR_I_DN
 LSR_I_I:                        ; case of immediate input
     JSR Data11109
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 LSR_I_DN:                       ; case of data register input
     JSR Dn
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 
 ASL_I:
-    LEA STRINGASL, A2
+    ;LEA STR_ASL, A2
     JSR AppendOutput            ; write ASL to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     MOVE.W  D6,D3               ; move word value into working register D3
     AND #MASK_5, D3             ; mask bit 5
     CMP.W #$0000,D3             ; compare with 0
     BNE ASL_I_DN
 ASL_I_I:                        ; case of immediate input
     JSR Data11109
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 ASL_I_DN:                       ; case of data register input
     JSR Dn
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 
 ASR_I:
-    LEA STRINGASR, A2
+    ;LEA STR_ASR, A2
     JSR AppendOutput            ; write ASR to the output string
-    JSR Size76
+    JSR Opcode_AppendSizeSuffix
     MOVE.W  D6,D3               ; move word value into working register D3
     AND #MASK_5, D3             ; mask bit 5
     CMP.W #$0000,D3             ; compare with 0
     BNE ASR_I_DN
 ASR_I_I:                        ; case of immediate input
     JSR Data11109
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 ASR_I_DN:                       ; case of data register input
     JSR Dn
-    JSR Comma
+    JSR AppendComma
     JSR Dn210
     BRA Opcode_Finish
 
 BRA:
-    LEA STRINGBRA, A2
+    LEA STR_BRA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BCS:
-    LEA STRINGBCS, A2
+    LEA STR_BCS, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BGE:
-    LEA STRINGBGE, A2
+    LEA STR_BGE, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BLT:
-    LEA STRINGBLT, A2
+    LEA STR_BLT, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 BVC:
-    LEA STRINGBVC, A2
+    LEA STR_BVC, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     JSR Displacement
     BRA Opcode_Finish
 
 RTS:
-    LEA STRINGRTS, A2
+    LEA STR_RTS, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
     BRA Opcode_Finish
 
 LEA:
-    LEA STRINGLEA, A2
+    LEA STR_LEA, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR An
     BRA Opcode_Finish
 
 NEG:
-    LEA STRINGNEG, A2
-    JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR Size76
-    JSR MXn
-    BRA Opcode_Finish
+    LEA         STR_NEG, A2
+    JSR         AppendOutput                    ; write the current string in A2 to the output string
+    JSR         Opcode_AppendSizeSuffix
+    JSR         EA_AppendMXn
+    BRA         Opcode_Finish
     
 MOVEM:
-    LEA STRINGMOVEM, A2
+    LEA STR_MOVEM, A2
     JSR AppendOutput            ; write the current string in A2
     JSR Size6                   
     MOVE.W  D6,D3               ; move word value into working register D3
@@ -422,37 +495,34 @@ MOVEM:
     BNE MOVEM_EA_RL
 MOVEM_RL_EA:                    ; case of registers to memory
     JSR RegisterList
-    JSR Comma
-    JSR MXn
+    JSR AppendComma
+    JSR EA_AppendMXn
     BRA Opcode_Finish
 MOVEM_EA_RL:                    ; case of memory to registers
-    JSR MXn
-    JSR Comma
+    JSR EA_AppendMXn
+    JSR AppendComma
     JSR RegisterList
     BRA Opcode_Finish
 
 JSR:
-    LEA STRINGJSR, A2
-    JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR MXn
-    BRA Opcode_Finish
+    LEA         STR_JSR, A2
+    JSR         AppendOutput
+    
+    JSR         EA_AppendMXn                    ; Sets D4 & 5 to Src Name & Value; Sets D6 & 7 to Dest Name & Value
+ 
+    BRA         Opcode_Finish
 
 SIMHALT:
-    LEA STRINGSIMHALT, A2
-    JSR AppendOutput            ; write the current string in A2 to the output string
-    BRA Opcode_Finish
+    LEA         STR_SIMHALT, A2
+    JSR         AppendOutput                    ; write the current string in A2 to the output string
+    BRA         Opcode_Finish
 
 Opcode_Finish: 
     LEA OUTPUT, A1              ; Load Output into A1
     JSR TrapTask13              ; Send it to the printer
-
-
-    ;Set Current String Length Back to Zero
     LEA     CURRENT_STR_LENGTH, A2
-    CLR.B   (A2)
-
-
-    MOVEM.L (SP)+, D2-D3/A4     ; return registers to their previous state
+    CLR.B   (A2)                ; Set Current String Length Back to Zero
+    MOVEM.L (SP)+, D2-D4/A4     ; return registers to their previous state
     RTS                         ; return from function
 
 *~Font name~Courier New~

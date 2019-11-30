@@ -12,10 +12,6 @@ documentation:
 main:
     print '$' before ASCII in PrintASCIIWord ?
 
-breakdown_opcode:
-	bclr - handle fetching of next byte
-	cmpi, ori - handle fetching of next byte
-
 addressing:
 	MXn
 	XnM
