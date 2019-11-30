@@ -29,7 +29,7 @@ SaveItFam REG A1-A3/D1-D2
     ;Load Current Output into A1
     LEA OUTPUT, A1
 
-    ;Counter D1, Must be set to -1 to deal with incrementing before moving bytes!
+    ;Counter D1, Must be set to -1 to deal with null termination of strings
     MOVE.B    #-1, D1
 
     ;Set D2 as Current String Length
