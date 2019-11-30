@@ -117,7 +117,7 @@ Size6_W:
 * This value will be interpreted as a numerical displacement
 * If this value is 00000000, then the next word will be the numerical displacement
 Displacement:
-    MOVE.M  D6, D3              ; move current word into working register
+    MOVE.W  D6, D3              ; move current word into working register
     AND.W   #MASK_76543210, D3  ; mask so only the bottom byte is available
     CMP.W   #$0000, D3          ; compare with 0
     BEQ Displacement_Fetch_Word
