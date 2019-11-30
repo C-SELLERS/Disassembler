@@ -18,13 +18,13 @@
 *       been tested with RTS so we need to use a two word opcode or something to know for sure.
 *-----------------------------------------------------------
 SaveItFam REG A1-A3/D1-D2
+    ;Save context
+    MOVEM.L SaveItFam, -(SP)
 
-    ;Clear the registers I plan on using
+        ;Clear the registers I plan on using
     CLR     D1
     CLR     D2
 
-    ;Save context
-    MOVEM.L SaveItFam, -(SP)
 
     ;Load Current Output into A1
     LEA OUTPUT, A1
