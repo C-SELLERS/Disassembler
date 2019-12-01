@@ -26,7 +26,7 @@ MAIN_LOOP:
     ; Append String with address
     MOVE.L    A3, D6
     JSR     PrintASCIILong
-    CLR     D6
+    CLR.L     D6
     
     JSR     Get_Next_Word_D6
 
@@ -380,23 +380,13 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     
 
     ORG $00111112
-TMP_DATA
-    JSR $1234
-    JSR $1234
-    
-    RTS
-    JSR (A0)
-    JSR (A1)
-    JSR (A2)
-    JSR (A3)
-    JSR (A4)
-    JSR (A5)
-    JSR (A6)
-    JSR (A7)
 
-    INCLUDE 'UnitTests/Test_002.X68'     
+    INCLUDE '.\UnitTests\TEST_002.x68'
+
 
    END    $1000        ; last line of source
+
+
 
 
 

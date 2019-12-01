@@ -180,8 +180,8 @@ EA_Str_25    DC.B    '-(A5)',0
 EA_Str_26    DC.B    '-(A6)',0
 EA_Str_27    DC.B    '-(A7)',0
 
-EA_Str_3C    DC.B    '#',0
-EA_Str_39    DC.B    '#$',0
+EA_Str_Hash    DC.B    '#',0
+EA_Str_HashDollar    DC.B    '#$',0
 EA_Str_38    DC.B    '#$',0
 
 
@@ -190,7 +190,7 @@ EA_StrArray_An          DC.W    EA_Str_08, EA_Str_09, EA_Str_0A, EA_Str_0B, EA_S
 EA_StrArray_AnInd       DC.W    EA_Str_10, EA_Str_11, EA_Str_12, EA_Str_13, EA_Str_14, EA_Str_15, EA_Str_16, EA_Str_17
 EA_StrArray_AnPostInc   DC.W    EA_Str_18, EA_Str_19, EA_Str_1A, EA_Str_1B, EA_Str_1C, EA_Str_1D, EA_Str_1E, EA_Str_1F
 EA_StrArray_AnPreDec    DC.W    EA_Str_20, EA_Str_21, EA_Str_22, EA_Str_23, EA_Str_24, EA_Str_25, EA_Str_26, EA_Str_27 
-EA_StrArray_Else        DC.W    EA_Str_3C, EA_Str_39, EA_Str_38
+;EA_StrArray_Else        DC.W    EA_Str_3C, EA_Str_39, EA_Str_38
 
 
 EA_ModeArray_Dn         DC.W    $00,$01,$02,$03,$04,$05,$06,$07
@@ -219,6 +219,7 @@ Hex_Str_15              DC.B    'F',0
 
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
+
 
 
 
