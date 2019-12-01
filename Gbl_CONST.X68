@@ -72,11 +72,8 @@ STR_MULS        DC.B    TAB,'MULS',TAB,0
 STR_ADDA        DC.B    TAB,'ADDA',0
 STR_ADD         DC.B    TAB,'ADD',0
 STR_DIVS        DC.B    TAB,'DIVS',TAB,0
-STR_OR        DC.B    TAB,'OR.B',0
-STR_OR_B        DC.B    TAB,'OR.B',0
-STR_OR_W        DC.B    TAB,'OR.W',0
-STR_OR_L        DC.B    TAB,'OR.L',0
-STR_CMP         DC.B    TAB,'CMP',0
+STR_OR          DC.B    TAB,'OR',0
+STR_CMP          DC.B    TAB,'CMP',0
 STR_EOR         DC.B    TAB,'EOR',0
 STR_MOVE_B      DC.B    TAB,'MOVE.B',TAB,0
 STR_MOVE_W      DC.B    TAB,'MOVE.W',TAB,0
@@ -87,24 +84,12 @@ STR_MOVEA_L     DC.B    TAB,'MOVEA.L',TAB,0
 STR_MOVEM     DC.B    TAB,'MOVEM',TAB,0
 STR_MOVEM_W     DC.B    TAB,'MOVEM.W',TAB,0
 STR_MOVEM_L     DC.B    TAB,'MOVEM.L',TAB,0
-STR_ROR_B       DC.B    TAB,'ROR.B',TAB,0
-STR_ROL_B       DC.B    TAB,'ROL.B',TAB,0
-STR_ROR_W       DC.B    TAB,'ROR.W',TAB,0
-STR_ROL_W       DC.B    TAB,'ROL.W',TAB,0
-STR_ROR_L       DC.B    TAB,'ROR.L',TAB,0
-STR_ROL_L       DC.B    TAB,'ROL.L',TAB,0
-STR_LSR_B       DC.B    TAB,'LSR.B',TAB,0
-STR_LSL_B       DC.B    TAB,'LSL.B',TAB,0
-STR_LSR_W       DC.B    TAB,'LSR.W',TAB,0
-STR_LSL_W       DC.B    TAB,'LSL.W',TAB,0
-STR_LSR_L       DC.B    TAB,'LSR.L',TAB,0
-STR_LSL_L       DC.B    TAB,'LSL.L',TAB,0
-STR_ASL_B       DC.B    TAB,'ASL.B',TAB,0
-STR_ASR_B       DC.B    TAB,'ASR.B',TAB,0
-STR_ASL_W       DC.B    TAB,'ASL.W',TAB,0
-STR_ASR_W       DC.B    TAB,'ASR.W',TAB,0
-STR_ASL_L       DC.B    TAB,'ASL.L',TAB,0
-STR_ASR_L       DC.B    TAB,'ASR.L',TAB,0
+STR_ROR         DC.B    TAB,'ROR',TAB,0 
+STR_ROL         DC.B    TAB,'ROL',TAB,0
+STR_LSR         DC.B    TAB,'LSR',TAB,0
+STR_LSL         DC.B    TAB,'LSL',TAB,0
+STR_ASL         DC.B    TAB,'ASL',TAB,0
+STR_ASR         DC.B    TAB,'ASR',TAB,0
 STR_BCLR        DC.B    TAB,'BCLR',TAB,0
 STR_LEA         DC.B    TAB,'LEA',TAB,0
 STR_SIMHALT     DC.B    TAB,'SIMHALT',TAB,0
@@ -233,6 +218,7 @@ Hex_Str_15              DC.B    'F',0
 
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
+
 
 
 
