@@ -324,7 +324,7 @@ RL_LOOP:
     MOVE.W  (A4, D4), (A2)
     JSR AppendOutput            ; print register
     ; div d4 by 2
-    LEA     Str_Slash, A2       
+    LEA     STRINGSLASH, A2       
     JSR AppendOutput            ; print '/'
     BRA RL_LOOP
 RL_LOOP_END:
