@@ -323,11 +323,15 @@ RL_LOOP:
     MULU    #2, D4              ; multiply D4 by 2 for offset
     MOVE.W  (A4, D4), (A2)
     JSR AppendOutput            ; print register
+    ; div d4 by 2
     LEA     Str_Slash, A2       
     JSR AppendOutput            ; print '/'
     BRA RL_LOOP
 RL_LOOP_END:
-    ; remove ending /
+    LEA     OUTPUT, A1
+    LEA     CURRENT_STR_LENGTH, A2
+    ADD    (A2), A1
+    MOVE.B  #00, A1
     RTS
 
 *~Font name~Courier New~
