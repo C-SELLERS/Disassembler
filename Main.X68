@@ -393,7 +393,8 @@ TMP_DATA
     JSR (A5)
     JSR (A6)
     JSR (A7)
-          
+
+    INCLUDE 'UnitTests/Test_002.X68'     
 
    END    $1000        ; last line of source
 

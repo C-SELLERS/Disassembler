@@ -10,12 +10,14 @@
 *                string constants are in Gbl_CONST.X68
 *-----------------------------------------------------------
 
+**** Function for handling DATA Opcode ****
 Opcode_DATA:
     LEA         STR_DATA, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
     JSR         PrintASCIIWord          ; print the input word to output
     BRA         Opcode_Finish
 
+**** Function for handling DATA Opcode ****
 Opcode_SUB:
     LEA         STR_SUB, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
