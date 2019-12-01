@@ -185,37 +185,23 @@ Opcode_DIVS:
 
 **** Function for handling OR Opcode ****
 Opcode_OR: 
-    LEA         STR_OR, A2
-    JSR         AppendOutput                ; write OR to the output string
-    JSR         Opcode_AppendSizeSuffix
-    MOVE.W      D6,D3                       ; move word value into D3
-    JSR         EA_AppendMXn
-    AND         #MASK_8, D3                 ; mask bit 8
-    CMP.W       #$0000,D3                   ; compare with 0
-    BNE         OR_EA_DN_EA       
-    CMP.W       #$0010,D3                   ; compare with 0
-    BEQ         OR_DN_EA_DN
-    MOVE.L      D6,D3                       ; move EA string from D6 (dest) to D3 (src)
-    MOVE.L      D7,D4                       ; move EA value from D7 (dest value) to D4 (src value)    
+    LEA STR_OR, A2
+    JSR AppendOutput            ; write OR to the output string
+    JSR Opcode_AppendSizeSuffix
+    MOVE.W  D6,D3               ; move word value into D3
+    AND #MASK_8, D3             ; mask bit 8
+    CMP.W #$0000,D3             ; compare with 0
+    BNE OR_EA_DN_EA
 OR_DN_EA_DN:                    ; case  Dn + <ea> -> Dn
-    LEA         EA_StrArray_Dn,A0           ; A0 -> to the Dn string list 
-    MOVE.L      (SP),D3                     ; copy to word value to D3 
-    AND.L       #MASK_11109,D3              ; mask the source 
-    ASR         #8,D3   
-    ASR         #1,D3
-    MOVE.L      (A0,D3),D3      
-    ADDA        #02,SP                  ; clear backup 'd6' off the stack
-    JSR         EA_AppendMXn
-    MOVE.L      D6,A2
-    JSR         AppendOutput
-    JSR         AppendComma
-    JSR         Dn
-    BRA         Opcode_Finish
+    JSR EA_AppendMXn
+    JSR AppendComma
+    JSR Dn
+    BRA Opcode_Finish
 OR_EA_DN_EA:                    ; case <ea> + Dn -> <ea>
-    JSR         Dn
-    JSR         AppendComma
-    JSR         EA_AppendMXn
-    BRA         Opcode_Finish
+    JSR Dn
+    JSR AppendComma
+    JSR EA_AppendMXn
+    BRA Opcode_Finish
 
 **** Function for handling CMP Opcode ****
 Opcode_CMP:
