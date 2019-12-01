@@ -331,7 +331,7 @@ RL_LOOP_END:
     LEA     OUTPUT, A1
     LEA     CURRENT_STR_LENGTH, A2
     ADD    (A2), A1
-    MOVE.B  #00, A1
+    MOVE.B  #00, (A1)
     RTS
 
 *~Font name~Courier New~
