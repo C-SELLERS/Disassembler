@@ -26,6 +26,7 @@ MAIN_LOOP:
     ; Append String with address
     MOVE.L    A3, D6
     JSR     PrintASCIILong
+    CLR     D6
     
     JSR     Get_Next_Word_D6
 
@@ -168,19 +169,18 @@ PrintASCIIWord:
 *
 *********************************************************************************
 
-
 PrintASCIILong:
     MOVEM.L     D6-D7, -(SP)        ; MOVEM all registers used
     MOVE.L      D7,-(SP)            ; context save D7
     MOVE.B      #16, D7             ; move 16 into D7 for rotation
     ROL.L       D7, D6              ; rotate D6 by 16 bits
     JSR         PrintASCIIWord 
-    ROL.L       D7, D6              ; rotate D6 by 16 bits
+    MOVE.B      #16,D7
+    ROL.L       D7,D6
     JSR         PrintASCIIWord 
     MOVE.L      (SP)+,D7            ; context load D7
     MOVEM.L     (SP)+, D6-D7        ; MOVEM all registers used
     RTS
-
 
 *********************************************************************************
 * Method Name: TrapTask13
