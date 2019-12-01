@@ -24,12 +24,20 @@
 
 MAIN_LOOP:
     ; Append String with address
+<<<<<<< HEAD
     ;MOVE       A3, D6
     ;JSR        PrintASCIILong
     
     JSR         Get_Next_Word_D6
 
     JSR         DisassembleOpcode   ; disassemble and print word in D6
+=======
+    JSR     AppendAddress
+    
+    JSR     Get_Next_Word_D6
+
+    JSR     DisassembleOpcode   ; disassemble and print word in D6
+>>>>>>> b5e1b6539ad206f0161bfbfa9b00e9d4c0caa5df
 
     ; Compare current address to end address
     CMP.L       A4,A3           ; Are we done yet?

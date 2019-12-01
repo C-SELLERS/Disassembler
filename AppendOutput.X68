@@ -18,18 +18,18 @@
 *       been tested with RTS so we need to use a two word opcode or something to know for sure.
 *-----------------------------------------------------------
 SaveItFam REG A1-A3/D1-D2
+    ;Save context
+    MOVEM.L SaveItFam, -(SP)
 
-    ;Clear the registers I plan on using
+        ;Clear the registers I plan on using
     CLR     D1
     CLR     D2
 
-    ;Save context
-    MOVEM.L SaveItFam, -(SP)
 
     ;Load Current Output into A1
     LEA OUTPUT, A1
 
-    ;Counter D1, Must be set to -1 to deal with incrementing before moving bytes!
+    ;Counter D1, Must be set to -1 to deal with null termination of strings
     MOVE.B    #-1, D1
 
     ;Set D2 as Current String Length
