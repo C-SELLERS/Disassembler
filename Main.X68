@@ -378,7 +378,7 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
     
 
-    ORG $11111112
+    ORG $00111112
 TMP_DATA
     JSR $1234
     JSR $1234
@@ -395,6 +395,7 @@ TMP_DATA
           
 
    END    $1000        ; last line of source
+
 
 
 
