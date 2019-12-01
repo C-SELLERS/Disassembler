@@ -296,7 +296,7 @@ MOVE_B:
     JSR         AppendOutput            ; write MOVE.B to the output string
     JSR         EA_AppendMXn
     JSR         AppendComma
-    JSR         XnM
+    JSR         EA_AppendXnM
     BRA         Opcode_Finish
 
 MOVEA_W:
@@ -312,7 +312,7 @@ MOVE_W:
     JSR         AppendOutput            ; write MOVE.W to the output string
     JSR         EA_AppendMXn
     JSR         AppendComma
-    JSR         XnM
+    JSR         EA_AppendXnM
     BRA         Opcode_Finish
 
 MOVEA_L:
@@ -328,7 +328,7 @@ MOVE_L:
     JSR         AppendOutput            ; write MOVE.L to the output string
     JSR         EA_AppendMXn
     JSR         AppendComma
-    JSR         XnM
+    JSR         EA_AppendXnM
     BRA         Opcode_Finish
 
 Opcode_ROL:
@@ -569,6 +569,8 @@ Opcode_Finish:
     CLR.B       (A2)                ; Set Current String Length Back to Zero
     MOVEM.L     (SP)+, D2-D4/A4     ; return registers to their previous state
     RTS                         ; return from function
+
+
 
 
 
