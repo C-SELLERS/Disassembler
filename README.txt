@@ -11,6 +11,5 @@ Main:
 
 Current bugs:
     register list failing
-    OR, CMPI opcodes are probably messed up (pull old versions from github?)
 
 TEST ALL THE THINGS
