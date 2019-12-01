@@ -303,7 +303,7 @@ Data11109:
     LEA     OUTPUT_TEMP, A2     ; move address of output into A2
     ROL     #7, D3              ; rotate left 7 so bits are in least significant position
     MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.W  (A4,D3), (A2)       ; move ASCII char into A2
+    LEA     (A4,D3), A2         ; move ASCII char into A2
     JSR AppendOutput
     RTS
 
