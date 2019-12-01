@@ -1,5 +1,5 @@
 *.L68
 *.S68
 Output.txt
-
+UnitTests/*
 !Test_002.*

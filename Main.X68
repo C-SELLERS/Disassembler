@@ -378,34 +378,12 @@ byteRead            DS.B 1
 ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
     
-
-    ORG $00111112
-TMP_DATA
-    JSR $1234
-    JSR $1234
-    
-    RTS
-    JSR (A0)
-    JSR (A1)
-    JSR (A2)
-    JSR (A3)
-    JSR (A4)
-    JSR (A5)
-    JSR (A6)
-    JSR (A7)
-
+*******************************************************************
+*LOAD IN TEST FILE
+*******************************************************************
     INCLUDE 'UnitTests/Test_002.X68'     
 
    END    $1000        ; last line of source
-
-
-
-
-
-
-
-
-
 
 
 
