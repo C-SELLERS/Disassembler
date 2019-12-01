@@ -300,11 +300,10 @@ Data11109:
     MOVE.W  D6, D3              ; move current word into working register
     AND     MASK_11109, D3      ; mask bits 11, 10, 9
     MOVEA   Hex_StrArray, A4    ; Move the base array into A4
-    LEA     OUTPUT_TEMP, A2     ; move address of output into A2
     ROL     #7, D3              ; rotate left 7 so bits are in least significant position
     MULS    #2, D3              ; multiply by 2 for correct array offset
     LEA     (A4,D3), A2         ; move ASCII char into A2
-    JSR AppendOutput
+    JSR     AppendOutput
     RTS
 
 * RegisterList will ask for a new word from input, and interpret it as a register list
