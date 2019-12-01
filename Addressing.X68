@@ -300,17 +300,34 @@ Data11109:
     MOVE.W  D6, D3              ; move current word into working register
     AND     MASK_11109, D3      ; mask bits 11, 10, 9
     MOVEA   Hex_StrArray, A4    ; Move the base array into A4
-    LEA     OUTPUT, A2          ; move address of output into A2
+    LEA     OUTPUT_TEMP, A2     ; move address of output into A2
     ROL     #7, D3              ; rotate left 7 so bits are in least significant position
     MULS    #2, D3              ; multiply by 2 for correct array offset
     MOVE.W  (A4,D3), (A2)       ; move ASCII char into A2
     JSR AppendOutput
     RTS
 
-RegisterList:
-    ; get next word
-    ; interpret next word as list of registers
-    ; print ASCII list of registers
+* RegisterList will ask for a new word from input, and interpret it as a register list
+* It will then output the corresponding registers to the output string
+RegisterList_Predecrement:
+    JSR Get_Next_Word_D7        ; get next word into D7
+    MOVEA   EA_StrArray_Dn, A4  ; move the base array into A4
+    LEA     OUTPUT_TEMP, A2     ; load temp address into A2
+    MOVE.W  #16, D4             ; move counter into D4 and set to 15
+RL_LOOP:
+    CMP.W   #0, D4              ; check for end of loop
+    BEQ RL_LOOP_END
+    SUBQ #1, D4                 ; decrement D4
+    BTST D4, D7                 ; test bit in position D4
+    BNE RL_LOOP
+    MULU    #2, D4              ; multiply D4 by 2 for offset
+    MOVE.W  (A4, D4), (A2)
+    JSR AppendOutput            ; print register
+    LEA     Str_Slash, A2       
+    JSR AppendOutput            ; print '/'
+    BRA RL_LOOP
+RL_LOOP_END:
+    ; remove ending /
     RTS
 
 *~Font name~Courier New~

@@ -10,13 +10,10 @@ documentation:
     add mask 6
 
 addressing:
-	MXn
 	XnM
-	Displacement - fetch next word
     RegisterList
 
 Main:
-	lea address into A7 at beginning of program
-    add functionality for fetching next word?
+	lea address into A7 at beginning of program?
 
 TEST ALL THE THINGS
