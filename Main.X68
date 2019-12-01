@@ -381,10 +381,26 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
 
     ORG $00111112
 
-    INCLUDE '.\UnitTests\TEST_002.x68'
+    MOVE.L      #$AA,D0
+    MOVE.L      D0,A0
+    MOVE.L      D0,(A0)
+    
+    MOVE.W      $5555,D0
+    MOVE.W      $AAAAA,D0
+    MOVE.W      D7,-(A7)
+    
+    
+    ;INCLUDE '.\UnitTests\TEST_002.x68'
+
+    
+    ;MOVE.B      D7,(A7)
+    ;MOVE.B      D7,(A0)+
+    ;MOVE.B      D0,-(A7)
+
 
 
    END    $1000        ; last line of source
+
 
 
 

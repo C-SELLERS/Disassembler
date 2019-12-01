@@ -105,7 +105,7 @@ MASK_1110 		EQU 	$0C00
 MASK_11109      EQU     $0E00
 MASK_11108      EQU     $0D00
 MASK_11 		EQU 	$0800
-MASK_10 		EQU 	$000
+MASK_10 		EQU 	$0400
 MASK_1098       EQU     $0700
 MASK_9          EQU     $0200
 MASK_876 		EQU 	$01C0
@@ -130,6 +130,10 @@ MODE_Else       EQU     $0038
 MODE_Imm        EQU     $0004
 MODE_AbsLong    EQU     $0001
 MODE_AbsWord    EQU     $0002
+
+
+
+
 
 
 *********************************************************************************
@@ -180,9 +184,9 @@ EA_Str_25       DC.B    '-(A5)',0
 EA_Str_26       DC.B    '-(A6)',0
 EA_Str_27       DC.B    '-(A7)',0
 
-EA_Str_Hash     DC.B    '#',0
-EA_Str_HashDollar    DC.B    '#$',0
-EA_Str_38       DC.B    '#$',0
+EA_Str_Hash             DC.B    '#',0
+EA_Str_HashDollar       DC.B    '$',0
+EA_Str_38               DC.B    '$',0
 
 
 EA_StrArray_Dn          DC.W    EA_Str_00, EA_Str_01, EA_Str_02, EA_Str_03, EA_Str_04, EA_Str_05, EA_Str_06, EA_Str_07
@@ -219,6 +223,8 @@ Hex_Str_15              DC.B    'F',0
 
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
+
+
 
 
 

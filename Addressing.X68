@@ -79,55 +79,75 @@ MXn_SetElse
 MXn_GetRegister
     MOVE.L      (SP),D3
     AND.L       #MASK_210,D3
-    MULU        #02,D3              ; multiply by 2 because the string arrays are word-ordered
-    MOVE.W      (A2,D3),A2          ; A2 stores destination EA String
-    JSR         AppendOutput        ; AppendOutput prints the MXn result 
+    MULU        #02,D3                          ; multiply by 2 because the string arrays are word-ordered
+    MOVE.W      (A2,D3),A2                      ; A2 stores destination EA String
+    JSR         AppendOutput                    ; AppendOutput prints the MXn result 
     
     BRA         MXn_Return
+
 
 MXn_GetImmOrAbs
-    CLR.L        D3                 ; clear D3 to prep for masking rightmost bits
-    MOVE.L      (SP),D3             ; copy address into D3 for processing
-    AND.L       #MASK_210,D3        ; mask to read addressin type
+    CLR.L        D3                             ; clear D3 to prep for masking rightmost bits
+    MOVE.L      (SP),D6                         ; copy address into D3 for processing
+    AND.W       #MASK_76, D6                    ; determine the opcode size using bits 76
+
+MXn_LoadImmOrAbsData   
+    CMP.W       #$0080, D6                          ; compare with 10
+    BEQ         XnM_LoadLong
+
+    CMP.W       #$0000, D6                          ;compare with 00
+    BEQ         XnM_LoadByte
     
-    CMP         #MODE_Imm,D3        ; check if address = Immediate (#)
-    BEQ         MXn_GetImmediate
-  
-  
-    CMP         #MODE_AbsLong,D3    ; check if address = Absolute Long (xxx.L)
-    BEQ         MXn_GetLong
+    ;CMP.W      #$0040, D6                          ; compare with 01
+    JSR         Get_Next_Word_D6                ; store the next word in D6
+    BRA         XnM_ParseImmOrAbsData
+    
+MXn_LoadByte
+    JSR         Get_Next_Word_D6                ; pull the next word into D3
+    AND.W       #$0F,D6                         ; mask the word in D6 to a byte
+    BRA         MXn_ParseImmOrAbsData
 
+MXn_LoadLong
+    JSR         Get_Next_Long_D7                ; copy the next long into D7
+    MOVE.L      D7,D6                           ; move from D7 to D6
+    BRA         MXn_ParseImmOrAbsData
+ 
+MXn_ParseImmOrAbsData
+    MOVE.L      (SP),D3                         ; copy address into D3 for processing
+    AND.L       #MASK_543,D3                    ; mask to read addressin type
+    
+    CMP         #MODE_Imm,D3                    ; check if address = Immediate (#)
+    BEQ         MXn_ParseImmediate
+  
+    CMP         #MODE_AbsLong,D3                ; check if address = Absolute Long (xxx.L)
+    BEQ         MXn_ParseLong
 
-                                    ; address = Absolute Word (xxx.W)
+                                                ; address = Absolute Word (xxx.W)
     LEA         EA_Str_HashDollar,A2            ; move the '#$' value into A2
-    JSR         AppendOutput        ; print 
-    
-    JSR         Get_Next_Word_D6
-    JSR         PrintASCIIWord      ; PrintAsciiWord uses d6 as input         
+    JSR         AppendOutput                    ; print to output buffer
+        
+    ;otherwise print the word already stored in D6
+    JSR         PrintASCIIWord                  ; PrintAsciiWord uses d6 as input
     BRA         MXn_Return
     
     
-MXn_GetLong
+MXn_ParseLong
     LEA         EA_Str_HashDollar,A2            ; move the '#$' value into A2 
-    JSR         AppendOutput    
+    JSR         AppendOutput                    
     
-    JSR         Get_Next_Long_D7
-    MOVE.L      D7,D6
-    JSR         PrintASCIILong      ; PrintAsciiWord uses d6 as input
+    JSR         PrintASCIILong                  ; PrintAsciiWord uses d6 as input
     BRA         MXn_Return
   
-MXn_GetImmediate
-    LEA         EA_Str_Hash,A2             ; move the '#' value into A2
+MXn_ParseImmediate
+    LEA         EA_Str_Hash,A2                  ; move the '#' value into A2
     JSR         AppendOutput
-    
-    JSR         Get_Next_Word_D6    ; pull the next word into D3
-    AND.W       #$0F,D6             ; mask the word in D6 to a byte       
-    JSR         PrintASCIIWord      ; PrintAsciiWord uses d6 as input
+          
+    JSR         PrintASCIIWord                  ; PrintAsciiWord uses d6 as input
     BRA         MXn_Return
         
 MXn_Return    
-    ADDA        #04,SP
-    MOVEM.L     (SP)+,D0-D5/A1
+    MOVE.L      (SP)+,D6
+    MOVEM.L     (SP)+,D0-D5/A1                  ; clean up the other stack storage
     RTS
 
 
@@ -155,28 +175,30 @@ EA_AppendXnM:
     MOVEM.L     D0-D5/A1,-(SP)
     MOVE.L      D6,-(SP)
     
-    MOVE.L      D6,D3                   ; copy the current address into d3 for processing
+    MOVE.L      D6,D3                           ; copy the current address into d3 for processing
     AND.L       #MASK_876,D3
+    ASR.L       #3,D3                           ; shift to the right so the MODE masks align 
     
-    
-    CMP         #MODE_Dn,D3             ; check if mode = Dn, data reg direct
+    CMP         #MODE_Dn,D3                     ; check if mode = Dn, data reg direct
     BEQ         XnM_SetDn
     
-    CMP         #Mode_An,D3             ; check if mode = An, address reg direct
+    CMP         #Mode_An,D3                     ; check if mode = An, address reg direct
     BEQ         XnM_SetAn
     
-    CMP         #Mode_AnInd,D3          ; check if mode = (An), address reg indirect
+    CMP         #Mode_AnInd,D3                  ; check if mode = (An), address reg indirect
     BEQ         XnM_SetAnInd 
     
-    CMP         #Mode_AnPostInc,D3      ; check if mode = -(An), address reg post increment
+    CMP         #Mode_AnPostInc,D3              ; check if mode = -(An), address reg post increment
     BEQ         XnM_SetAnPostInc
         
-    CMP         #Mode_AnPreDec,D3       ; chec if mode = (An)+, address reg pre decrement
+    CMP         #Mode_AnPreDec,D3               ; chec if mode = (An)+, address reg pre decrement
     BEQ         XnM_SetAnPreDec
 
-    CMP         #Mode_Else,D3           ; check if mode = Immediate or Absolute word or long
+    CMP         #Mode_Else,D3                   ; check if mode = Immediate or Absolute word or long
     BEQ         XnM_SetElse   
  
+    
+    
 XnM_SetDn    
     LEA         EA_StrArray_Dn,A2
     BRA         XnM_GetRegister
@@ -203,10 +225,10 @@ XnM_SetElse
 
 
 XnM_GetRegister
-    MOVE.L      (SP),D3
-    AND.L       #MASK_11109,D3
-    ASR.L       #8,D3
-    ASR.L       #1,D3
+    MOVE.L      (SP),D3                         ; copy the current opcode-word into D3
+    AND.L       #MASK_11109,D3                  ; mask D3 to get the Mode
+    ASR.L       #8,D3                           ; shift to 543 for use with the standar MODE masks
+    ASR.L       #1,D3                           ; shift one more to align with bits 543
 
     MULU        #02,D3                          ; multiply by 2 because the string arrays are word-ordered
     MOVE.W      (A2,D3),A2                      ; A2 stores destination EA String
@@ -214,53 +236,79 @@ XnM_GetRegister
 
     BRA         XnM_Return
 
+
 XnM_GetImmOrAbs
     CLR.L       D3                              ; clear D3 to prep for masking rightmost bits
-    MOVE.L      (SP),D3                         ; copy address into D3 for processing
-    AND.L       #MASK_11109,D3                  ; mask to read addressin type
-    ASR.L       #8,D3
-    ASR.L       #1,D3
+    MOVE.L      (SP),D6
+    ASR.L       #6,D6
+    ;AND.W       #$3000, D6                      ; determine the opcode size using bits 13,12
+    AND.W       #MASK_76, D6                    ; determine the opcode size using bits 76
+ 
+XnM_LoadImmOrAbsData   
+    CMP.W       #$0080, D6                          ; compare with 10
+    BEQ         XnM_LoadLong
 
+    CMP.W       #$0000, D6                          ;compare with 00
+    BEQ         XnM_LoadByte
+    
+    ;CMP.W      #$0040, D6                          ; compare with 01
+    JSR         Get_Next_Word_D6                ; store the next word in D6
+    BRA         XnM_ParseImmOrAbsData
+    
+XnM_LoadByte
+    JSR         Get_Next_Word_D6                ; pull the next word into D3
+    AND.W       #$0F,D6                         ; mask the word in D6 to a byte
+    BRA         XnM_ParseImmOrAbsData
+
+XnM_LoadLong
+    JSR         Get_Next_Long_D7                ; copy the next long into D7
+    MOVE.L      D7,D6                           ; move from D7 to D6
+    BRA         XnM_ParseImmOrAbsData
+ 
+ 
+XnM_ParseImmOrAbsData
+    MOVE.L      (SP),D3                         ; copy address into D3 for processing
+    AND.L       #MASK_876,D3                    ; mask to read addressin type
+    ASR.L       #6,D3
+    
     CMP         #MODE_Imm,D3                    ; check if address = Immediate (#)
-    BEQ         XnM_GetImmediate
-  
+    BEQ         XnM_ParseImmediate
   
     CMP         #MODE_AbsLong,D3                ; check if address = Absolute Long (xxx.L)
-    BEQ         XnM_GetLong
+    BEQ         XnM_ParseLong
 
                                                 ; address = Absolute Word (xxx.W)
     LEA         EA_Str_HashDollar,A2            ; move the '#$' value into A2
     JSR         AppendOutput                    ; print to output buffer
     
-    JSR         Get_Next_Word_D6                        ; store the next word in D6
+    
+    ;otherwise print the word already stored in D6
     JSR         PrintASCIIWord                  ; PrintAsciiWord uses d6 as input
-           
-    ADDA        #02,A3                          ; increment A3 to skip the word we just processed
     BRA         XnM_Return
     
     
-XnM_GetLong
+XnM_ParseLong
     LEA         EA_Str_HashDollar,A2            ; move the '#$' value into A2 
     JSR         AppendOutput                    
     
-    JSR         Get_Next_Long_D7                ; copy the next long into D7
-    MOVE.L      D7,D6                           ; move from D7 to D6
     JSR         PrintASCIILong                  ; PrintAsciiWord uses d6 as input
     BRA         XnM_Return
   
-XnM_GetImmediate
+XnM_ParseImmediate
     LEA         EA_Str_Hash,A2                  ; move the '#' value into A2
     JSR         AppendOutput
-    
-    JSR         Get_Next_Word_D6                ; pull the next word into D3
-    AND.W       #$0F,D6                         ; mask the word in D6 to a byte       
+          
     JSR         PrintASCIIWord                  ; PrintAsciiWord uses d6 as input
     BRA         XnM_Return
         
 XnM_Return    
-    ADDA        #04,SP
-    MOVEM.L     (SP)+,D0-D5/A1
+    MOVE.L      (SP)+,D6
+    MOVEM.L     (SP)+,D0-D5/A1                  ; clean up the other stack storage
     RTS
+
+
+
+
 
 * Size76 deals with bit values in positions 7,6
 * Positions 76 contain size values, function will set D4
@@ -269,31 +317,34 @@ XnM_Return
 *   01      .W      01
 *   10      .L      10
 Opcode_AppendSizeSuffix:
-    MOVE.W      D6, D3                             ; move current word into working register
-    AND.W       #MASK_76, D3                       ; mask bits 7, 6
+    MOVE.W      D6, D3                              ; move current word into working register
+    AND.W       #MASK_76, D3                        ; mask bits 7, 6
+    
     CMP.W       #$0000, D3                          ; compare with 00
     BEQ         Opcode_AppendSizeSuffix_B           ; if equal goto B 
+    
     CMP.W       #$0040, D3                          ; compare with 01
     BEQ         Opcode_AppendSizeSuffix_W           ; if equal goto W
+    
     CMP.W       #$0080, D3                          ; compare with 10
     BEQ         Opcode_AppendSizeSuffix_L           ; if equal goto L
-                                                ; if bytes are 11 there is an error, not handling this currently
+                                                    ; if bytes are 11 there is an error, not handling this currently
 Opcode_AppendSizeSuffix_B:
     LEA         STRING_B, A2
-    JSR         AppendOutput                            ; write '.B' to the output string
+    JSR         AppendOutput                        ; write '.B' to the output string
     MOVE.W      #$0000, D4                          ; set D4 to 00
     RTS
 
 Opcode_AppendSizeSuffix_W:
     LEA         STRING_W, A2
-    JSR         AppendOutput                            ; write '.W' to the output string
+    JSR         AppendOutput                        ; write '.W' to the output string
     MOVE.W      #$0001, D4                          ; set D4 to 01
     RTS
 
 Opcode_AppendSizeSuffix_L:
     LEA         STRING_L, A2
-    JSR         AppendOutput            ; write '.L' to the output string
-    MOVE.W      #$0002, D4          ; set D4 to 10
+    JSR         AppendOutput                        ; write '.L' to the output string
+    MOVE.W      #$0002, D4                          ; set D4 to 10
     RTS
 
 * Size8 checks bit 8 and interprets it as a Word or Long
@@ -437,6 +488,9 @@ RegisterList_Postincrement:
     RTS
 
 
+
+
+    
 
 
 
