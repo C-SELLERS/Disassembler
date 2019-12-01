@@ -57,8 +57,8 @@ STRING_W        DC.B    '.W',TAB,0
 STRING_L        DC.B    '.L',TAB,0
 
 STR_DATA        DC.B    TAB,'DATA',TAB,0
-STR_RTS         DC.B    TAB,'RTS',TAB,0
-STR_JSR         DC.B    TAB,'JSR',TAB,0
+STR_RTS         DC.B    TAB,'RTS',TAB,TAB,0
+STR_JSR         DC.B    TAB,'JSR',TAB,TAB,0
 STR_NEG         DC.B    TAB,'NEG',0
 STR_BRA         DC.B    TAB,'BRA',TAB,0
 STR_BCS         DC.B    TAB,'BCS',TAB,0
@@ -74,7 +74,7 @@ STR_ADDA        DC.B    TAB,'ADDA',0
 STR_ADD         DC.B    TAB,'ADD',0
 STR_DIVS        DC.B    TAB,'DIVS',TAB,0
 STR_OR          DC.B    TAB,'OR',0
-STR_CMP          DC.B    TAB,'CMP',0
+STR_CMP         DC.B    TAB,'CMP',0
 STR_EOR         DC.B    TAB,'EOR',0
 STR_MOVE_B      DC.B    TAB,'MOVE.B',TAB,0
 STR_MOVE_W      DC.B    TAB,'MOVE.W',TAB,0
@@ -82,7 +82,7 @@ STR_MOVE_L      DC.B    TAB,'MOVE.L',TAB,0
 STR_MOVEA_B     DC.B    TAB,'MOVEA.B',TAB,0
 STR_MOVEA_W     DC.B    TAB,'MOVEA.W',TAB,0
 STR_MOVEA_L     DC.B    TAB,'MOVEA.L',TAB,0
-STR_MOVEM     DC.B    TAB,'MOVEM',TAB,0
+STR_MOVEM       DC.B    TAB,'MOVEM',TAB,0
 STR_MOVEM_W     DC.B    TAB,'MOVEM.W',TAB,0
 STR_MOVEM_L     DC.B    TAB,'MOVEM.L',TAB,0
 STR_ROR         DC.B    TAB,'ROR',TAB,0 
@@ -92,7 +92,7 @@ STR_LSL         DC.B    TAB,'LSL',TAB,0
 STR_ASL         DC.B    TAB,'ASL',TAB,0
 STR_ASR         DC.B    TAB,'ASR',TAB,0
 STR_BCLR        DC.B    TAB,'BCLR',TAB,0
-STR_LEA         DC.B    TAB,'LEA',TAB,0
+STR_LEA         DC.B    TAB,'LEA',TAB,TAB,0
 STR_SIMHALT     DC.B    TAB,'SIMHALT',TAB,0
 
 *********************************************************************************
@@ -135,54 +135,54 @@ MODE_AbsWord    EQU     $0002
 *********************************************************************************
 * Effective Addressing Constants
 *********************************************************************************
-EA_Str_00    DC.B    'D0',0
-EA_Str_01    DC.B    'D1',0
-EA_Str_02    DC.B    'D2',0
-EA_Str_03    DC.B    'D3',0
-EA_Str_04    DC.B    'D4',0
-EA_Str_05    DC.B    'D5',0
-EA_Str_06    DC.B    'D6',0
-EA_Str_07    DC.B    'D7',0
+EA_Str_00       DC.B    'D0',0
+EA_Str_01       DC.B    'D1',0
+EA_Str_02       DC.B    'D2',0
+EA_Str_03       DC.B    'D3',0
+EA_Str_04       DC.B    'D4',0
+EA_Str_05       DC.B    'D5',0
+EA_Str_06       DC.B    'D6',0
+EA_Str_07       DC.B    'D7',0
 
-EA_Str_08    DC.B    'A0',0
-EA_Str_09    DC.B    'A1',0
-EA_Str_0A    DC.B    'A2',0
-EA_Str_0B    DC.B    'A3',0
-EA_Str_0C    DC.B    'A4',0
-EA_Str_0D    DC.B    'A5',0
-EA_Str_0E    DC.B    'A6',0
-EA_Str_0F    DC.B    'A7',0
+EA_Str_08       DC.B    'A0',0
+EA_Str_09       DC.B    'A1',0
+EA_Str_0A       DC.B    'A2',0
+EA_Str_0B       DC.B    'A3',0
+EA_Str_0C       DC.B    'A4',0
+EA_Str_0D       DC.B    'A5',0
+EA_Str_0E       DC.B    'A6',0
+EA_Str_0F       DC.B    'A7',0
 
-EA_Str_10    DC.B    '(A0)',0
-EA_Str_11    DC.B    '(A1)',0
-EA_Str_12    DC.B    '(A2)',0
-EA_Str_13    DC.B    '(A3)',0
-EA_Str_14    DC.B    '(A4)',0
-EA_Str_15    DC.B    '(A5)',0
-EA_Str_16    DC.B    '(A6)',0
-EA_Str_17    DC.B    '(A7)',0
+EA_Str_10       DC.B    '(A0)',0
+EA_Str_11       DC.B    '(A1)',0
+EA_Str_12       DC.B    '(A2)',0
+EA_Str_13       DC.B    '(A3)',0
+EA_Str_14       DC.B    '(A4)',0
+EA_Str_15       DC.B    '(A5)',0
+EA_Str_16       DC.B    '(A6)',0
+EA_Str_17       DC.B    '(A7)',0
 
-EA_Str_18    DC.B    '(A0)+',0
-EA_Str_19    DC.B    '(A7)+',0
-EA_Str_1A    DC.B    '(A7)+',0
-EA_Str_1B    DC.B    '(A7)+',0
-EA_Str_1C    DC.B    '(A7)+',0
-EA_Str_1D    DC.B    '(A7)+',0
-EA_Str_1E    DC.B    '(A7)+',0
-EA_Str_1F    DC.B    '(A7)+',0
+EA_Str_18       DC.B    '(A0)+',0
+EA_Str_19       DC.B    '(A7)+',0
+EA_Str_1A       DC.B    '(A7)+',0
+EA_Str_1B       DC.B    '(A7)+',0
+EA_Str_1C       DC.B    '(A7)+',0
+EA_Str_1D       DC.B    '(A7)+',0
+EA_Str_1E       DC.B    '(A7)+',0
+EA_Str_1F       DC.B    '(A7)+',0
 
-EA_Str_20    DC.B    '-(A0)',0
-EA_Str_21    DC.B    '-(A1)',0
-EA_Str_22    DC.B    '-(A2)',0
-EA_Str_23    DC.B    '-(A3)',0
-EA_Str_24    DC.B    '-(A4)',0
-EA_Str_25    DC.B    '-(A5)',0
-EA_Str_26    DC.B    '-(A6)',0
-EA_Str_27    DC.B    '-(A7)',0
+EA_Str_20       DC.B    '-(A0)',0
+EA_Str_21       DC.B    '-(A1)',0
+EA_Str_22       DC.B    '-(A2)',0
+EA_Str_23       DC.B    '-(A3)',0
+EA_Str_24       DC.B    '-(A4)',0
+EA_Str_25       DC.B    '-(A5)',0
+EA_Str_26       DC.B    '-(A6)',0
+EA_Str_27       DC.B    '-(A7)',0
 
-EA_Str_Hash    DC.B    '#',0
+EA_Str_Hash     DC.B    '#',0
 EA_Str_HashDollar    DC.B    '#$',0
-EA_Str_38    DC.B    '#$',0
+EA_Str_38       DC.B    '#$',0
 
 
 EA_StrArray_Dn          DC.W    EA_Str_00, EA_Str_01, EA_Str_02, EA_Str_03, EA_Str_04, EA_Str_05, EA_Str_06, EA_Str_07
@@ -219,6 +219,7 @@ Hex_Str_15              DC.B    'F',0
 
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
+
 
 
 
