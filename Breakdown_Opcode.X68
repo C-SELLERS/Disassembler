@@ -10,12 +10,14 @@
 *                string constants are in Gbl_CONST.X68
 *-----------------------------------------------------------
 
+**** Function for handling DATA Opcode ****
 Opcode_DATA:
     LEA         STR_DATA, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
     JSR         PrintASCIIWord          ; print the input word to output
     BRA         Opcode_Finish
 
+**** Function for handling DATA Opcode ****
 Opcode_SUB:
     LEA         STR_SUB, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -85,32 +87,13 @@ ORI_END:
     BRA         Opcode_Finish
 
 Opcode_CMPI:
-    LEA         STR_CMPI, A2
-    JSR         AppendOutput            ; write the current string in A2 to the output string
-    JSR         Opcode_AppendSizeSuffix
-    CMP.W       #$0000, D4
-    BEQ         CMPI_B                  ; if size == byte then fetch next byte
-    CMP.W       #$0001, D4          
-    BEQ         CMPI_W                  ; if size == word then fetch next word
-
-    MOVE.W  D4, D6              ; revert word to D6
-
-    JSR AppendComma
-    JSR EA_AppendMXn
-
-    BRA Opcode_Finish
-
-CMPI:
     LEA STR_CMPI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-
     JSR Opcode_AppendSizeSuffix
-
     CMP.W   #$0000, D4
     BEQ CMPI_B                  ; if size == byte then fetch next byte
     CMP.W   #$0001, D4          
     BEQ CMPI_W                  ; if size == word then fetch next word
-
 CMPI_L:                         ; if size == long then fetch next long
     JSR         Get_Next_Long_D7
     LEA         STRINGPOUNDHEX, A2
@@ -129,7 +112,6 @@ CMPI_W:
     JSR         PrintASCIIWord
     BRA         CMPI_END
 CMPI_END:
-
     MOVE.W      D4, D6              ; revert word to D6
     JSR         AppendComma
     JSR         EA_AppendMXn

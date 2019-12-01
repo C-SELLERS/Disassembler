@@ -323,7 +323,7 @@ RL_LOOP:
     MULU    #2, D4              ; multiply D4 by 2 for offset
     MOVE.W  (A4, D4), (A2)
     JSR AppendOutput            ; print register
-    ; div d4 by 2
+    DIVS    #2, D4              ; divide D4 by 2 for counter
     LEA     STRINGSLASH, A2       
     JSR AppendOutput            ; print '/'
     BRA RL_LOOP
@@ -337,6 +337,7 @@ RL_LOOP_END:
 RegisterList_Postincrement:
     ;todo
     RTS
+
 
 *~Font name~Courier New~
 *~Font size~10~

@@ -24,8 +24,9 @@
 
 MAIN_LOOP:
     ; Append String with address
-    MOVE    A3, D6
+    MOVE.L    A3, D6
     JSR     PrintASCIILong
+    CLR     D6
     
     JSR     Get_Next_Word_D6
 
@@ -168,17 +169,15 @@ PrintASCIIWord:
 *
 *********************************************************************************
 
-
 PrintASCIILong:
-    MOVE.L      D7,-(SP)            ; context save D7
+    MOVEM.L     D6-D7, -(SP)        ; MOVEM all registers used
     MOVE.B      #16, D7             ; move 16 into D7 for rotation
     ROL.L       D7, D6              ; rotate D6 by 16 bits
     JSR         PrintASCIIWord 
-    ROL.L       D7, D6              ; rotate D6 by 16 bits
+    ROL.L       D7, D6
     JSR         PrintASCIIWord 
-    MOVE.L      (SP)+,D7            ; context load D7
+    MOVEM.L     (SP)+, D6-D7        ; MOVEM all registers used
     RTS
-
 
 *********************************************************************************
 * Method Name: TrapTask13
@@ -380,7 +379,7 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     INCLUDE 'Gbl_CONST.X68'
     
 
-    ORG $00002000
+    ORG $00111112
 TMP_DATA
     JSR $1234
     JSR $1234
@@ -394,9 +393,12 @@ TMP_DATA
     JSR (A5)
     JSR (A6)
     JSR (A7)
-          
+
+    INCLUDE 'UnitTests/Test_002.X68'     
 
    END    $1000        ; last line of source
+
+
 
 
 
