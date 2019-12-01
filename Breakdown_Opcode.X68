@@ -78,7 +78,7 @@ ORI_W:
     JSR         PrintASCIIWord
     BRA         ORI_END
 ORI_END:
-<<<<<<< HEAD
+
     MOVE.W      D4, D6              ; revert word to D6
     JSR         AppendComma
     JSR         EA_AppendMXn
@@ -92,34 +92,25 @@ Opcode_CMPI:
     BEQ         CMPI_B                  ; if size == byte then fetch next byte
     CMP.W       #$0001, D4          
     BEQ         CMPI_W                  ; if size == word then fetch next word
-=======
+
     MOVE.W  D4, D6              ; revert word to D6
-<<<<<<< HEAD
-    JSR Comma
-    JSR MXn
-=======
-<<<<<<< HEAD
-    JSR Comma
-=======
+
     JSR AppendComma
->>>>>>> 416e1c0e9233be291dad90a9410cb76dc652fe88
     JSR EA_AppendMXn
->>>>>>> 1c21b0f1782c7b2f205afce8bea16049ba8ed1a9
+
     BRA Opcode_Finish
 
 CMPI:
     LEA STR_CMPI, A2
     JSR AppendOutput            ; write the current string in A2 to the output string
-<<<<<<< HEAD
-    JSR Size76
-=======
+
     JSR Opcode_AppendSizeSuffix
->>>>>>> 1c21b0f1782c7b2f205afce8bea16049ba8ed1a9
+
     CMP.W   #$0000, D4
     BEQ CMPI_B                  ; if size == byte then fetch next byte
     CMP.W   #$0001, D4          
     BEQ CMPI_W                  ; if size == word then fetch next word
->>>>>>> b5e1b6539ad206f0161bfbfa9b00e9d4c0caa5df
+
 CMPI_L:                         ; if size == long then fetch next long
     JSR         Get_Next_Long_D7
     LEA         STRINGPOUNDHEX, A2
@@ -138,7 +129,7 @@ CMPI_W:
     JSR         PrintASCIIWord
     BRA         CMPI_END
 CMPI_END:
-<<<<<<< HEAD
+
     MOVE.W      D4, D6              ; revert word to D6
     JSR         AppendComma
     JSR         EA_AppendMXn
@@ -180,53 +171,15 @@ Opcode_ADD:
     LEA         STR_ADD, A2
     JSR         AppendOutput            ; write ADD to the output string
     JSR         Opcode_AppendSizeSuffix
-    MOVE.W          D6,D3               ; move word value into D3
+    MOVE.W      D6,D3                   ; move word value into D3
     AND         #MASK_8, D3             ; mask bit 8
-    CMP.W       #$0000,D3             ; compare with 0
+    CMP.W       #$0000,D3               ; compare with 0
     BNE         ADD_EA_DN_EA
-=======
-    MOVE.W  D4, D6              ; revert word to D6
-<<<<<<< HEAD
-    JSR Comma
-    JSR MXn
-=======
-<<<<<<< HEAD
-    JSR Comma
-=======
-    JSR AppendComma
->>>>>>> 416e1c0e9233be291dad90a9410cb76dc652fe88
-    JSR EA_AppendMXn
->>>>>>> 1c21b0f1782c7b2f205afce8bea16049ba8ed1a9
-    BRA Opcode_Finish
 
-BCLR:
-    LEA STR_BCLR, A2
-    JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR Dn 
-    JSR AppendComma
-    JSR EA_AppendMXn
-    BRA Opcode_Finish
+    JSR         AppendComma
+    JSR         EA_AppendMXn
 
-BCLR_I:
-    LEA STR_BCLR, A2
-    JSR AppendOutput            ; write the current string in A2 to the output string
-    JSR Get_Next_Word_D7
-    LEA STRINGPOUNDHEX, A2
-    JSR AppendOutput            ; print "#$"
-    MOVE.W  D6, D4              ; temp store word in D4
-    MOVE.W  D7, D6              ; move word immediate into D6
-    JSR PrintASCIIWord
-    MOVE.W  D4, D6              ; revert word to D6
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1c21b0f1782c7b2f205afce8bea16049ba8ed1a9
-    JSR Comma
-=======
-    JSR AppendComma
->>>>>>> 416e1c0e9233be291dad90a9410cb76dc652fe88
-    JSR EA_AppendMXn
-    BRA Opcode_Finish
+    BRA         Opcode_Finish
 
 
 ADDA:
@@ -246,7 +199,7 @@ ADD:
     AND #MASK_8, D3             ; mask bit 8
     CMP.W #$0000,D3             ; compare with 0
     BNE ADD_EA_DN_EA
->>>>>>> b5e1b6539ad206f0161bfbfa9b00e9d4c0caa5df
+
 ADD_DN_EA_DN:                   ; case  Dn + <ea> -> Dn
     JSR         EA_AppendMXn
     JSR         AppendComma
@@ -260,7 +213,7 @@ ADD_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
 
 Opcode_DIVS:
     LEA         STR_DIVS, A2
-    JSR         AppendOutput            ; write DIVS to the output string
+    JSR         AppendOutput                ; write DIVS to the output string
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         Dn
@@ -268,18 +221,18 @@ Opcode_DIVS:
 
 Opcode_OR: 
     LEA         STR_OR, A2
-    JSR         AppendOutput            ; write OR to the output string
+    JSR         AppendOutput                ; write OR to the output string
     JSR         Opcode_AppendSizeSuffix
-    MOVE.W      D6,D3               ; move word value into D3
+    MOVE.W      D6,D3                       ; move word value into D3
     
     MOVEM.L     D0-D7/A0-A6,-(SP)
     JSR         EA_AppendMXn
 
-    AND         #MASK_8, D3             ; mask bit 8
-    ;CMP.W #$0000,D3             ; compare with 0
-    ;BNE OR_EA_DN_EA       
+    AND         #MASK_8, D3                 ; mask bit 8
+    CMP.W       #$0000,D3                   ; compare with 0
+    BNE         OR_EA_DN_EA       
     
-    CMP.W       #$0010,D3             ; compare with 0
+    CMP.W       #$0010,D3                   ; compare with 0
     BEQ         OR_DN_EA_DN
     
     MOVE.L      D6,D3                       ; move EA string from D6 (dest) to D3 (src)
@@ -299,7 +252,7 @@ OR_DN_EA_DN:                    ; case  Dn + <ea> -> Dn
     MOVEM.L     (SP)+,D0-D2/A0-A7       ; restore temps to registers
     
     
-    ;JSR EA_AppendMXn
+    JSR         EA_AppendMXn
     MOVE.L      D6,A2
     JSR         AppendOutput
     
@@ -379,7 +332,7 @@ MOVE_L:
     BRA         Opcode_Finish
 
 Opcode_ROL:
-    ;LEA STR_ROL, A2
+    LEA         STR_ROL, A2
     JSR         AppendOutput            ; write ROL to the output string
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
@@ -432,7 +385,6 @@ ROL_I_DN:                       ; case of data register input
     JSR         AppendComma
     JSR         Dn210
     BRA         Opcode_Finish
-
 ROR_I:
     LEA         STR_ROR, A2
     JSR         AppendOutput            ; write ROR to the output string
@@ -617,6 +569,8 @@ Opcode_Finish:
     CLR.B       (A2)                ; Set Current String Length Back to Zero
     MOVEM.L     (SP)+, D2-D4/A4     ; return registers to their previous state
     RTS                         ; return from function
+
+
 
 
 
