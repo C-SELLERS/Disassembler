@@ -175,26 +175,26 @@ EA_AppendXnM:
     MOVEM.L     D0-D5/A1,-(SP)
     MOVE.L      D6,-(SP)
     
-    MOVE.L      D6,D3                           ; copy the current address into d3 for processing
-    AND.L       #MASK_876,D3
-    ASR.L       #3,D3                           ; shift to the right so the MODE masks align 
+    MOVE.W      D6,D3                           ; copy the current address into d3 for processing
+    AND.W       #MASK_876,D3
+    ASR.W       #3,D3                           ; shift to the right so the MODE masks align 
     
-    CMP         #MODE_Dn,D3                     ; check if mode = Dn, data reg direct
+    CMP.W       #MODE_Dn,D3                     ; check if mode = Dn, data reg direct
     BEQ         XnM_SetDn
     
-    CMP         #Mode_An,D3                     ; check if mode = An, address reg direct
+    CMP.W       #Mode_An,D3                     ; check if mode = An, address reg direct
     BEQ         XnM_SetAn
     
-    CMP         #Mode_AnInd,D3                  ; check if mode = (An), address reg indirect
+    CMP.W       #Mode_AnInd,D3                  ; check if mode = (An), address reg indirect
     BEQ         XnM_SetAnInd 
     
-    CMP         #Mode_AnPostInc,D3              ; check if mode = -(An), address reg post increment
+    CMP.W       #Mode_AnPostInc,D3              ; check if mode = -(An), address reg post increment
     BEQ         XnM_SetAnPostInc
         
-    CMP         #Mode_AnPreDec,D3               ; chec if mode = (An)+, address reg pre decrement
+    CMP.W       #Mode_AnPreDec,D3               ; chec if mode = (An)+, address reg pre decrement
     BEQ         XnM_SetAnPreDec
 
-    CMP         #Mode_Else,D3                   ; check if mode = Immediate or Absolute word or long
+    CMP.W       #Mode_Else,D3                   ; check if mode = Immediate or Absolute word or long
     BEQ         XnM_SetElse   
  
     
