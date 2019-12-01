@@ -334,6 +334,10 @@ RL_LOOP_END:
     MOVE.B  #00, (A1)
     RTS
 
+RegisterList_Postincrement:
+    ;todo
+    RTS
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

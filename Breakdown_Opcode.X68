@@ -539,14 +539,14 @@ Opcode_MOVEM:
     CMP.W       #$0000,D3             ; compare with 0
     BNE         MOVEM_EA_RL
 MOVEM_RL_EA:                    ; case of registers to memory
-    JSR         RegisterList
+    JSR         RegisterList_Predecrement
     JSR         AppendComma
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 MOVEM_EA_RL:                    ; case of memory to registers
     JSR         EA_AppendMXn
     JSR         AppendComma
-    JSR         RegisterList
+    JSR         RegisterList_PostIncrement
     BRA         Opcode_Finish
 
 Opcode_JSR:
