@@ -10,8 +10,7 @@ Main:
 	lea address into A7 at beginning of program?
 
 Current bugs:
-    cmpi immediate not printing
     register list failing
-    jsr immediate printing the wrong word
+    OR, CMPI opcodes are probably messed up (pull old versions from github?)
 
 TEST ALL THE THINGS
