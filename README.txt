@@ -5,6 +5,7 @@ TODO:
 addressing:
 	XnM
     RegisterList_Preincrement
+    data11109 case 000
 
 Main:
 	lea address into A7 at beginning of program?
