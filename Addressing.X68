@@ -397,7 +397,6 @@ AppendComma:
 * Possible output values are 1-8 (001 = 1, 010 = 2 ... 000 = 8)
 * Value will be appended with '#' and appended to the output string
 Data11109:
-<<<<<<< HEAD
     MOVE.W  D6, D3              ; move current word into working register
     AND.W   MASK_11109, D3      ; mask bits 11, 10, 9
     MOVEA   Hex_StrArray, A4    ; Move the base array into A4
@@ -405,15 +404,6 @@ Data11109:
     MULS    #2, D3              ; multiply by 2 for correct array offset
     LEA     (A4,D3), A2         ; move ASCII char into A2
     JSR     AppendOutput
-=======
-    MOVE.W      D6, D3              ; move current word into working register
-    AND         MASK_11109, D3      ; mask bits 11, 10, 9
-    MOVEA       Hex_StrArray, A4    ; Move the base array into A4
-    ROL         #7, D3              ; rotate left 7 so bits are in least significant position
-    MULS        #2, D3              ; multiply by 2 for correct array offset
-    LEA         (A4,D3), A2       ; move ASCII char into A2
-    JSR         AppendOutput
->>>>>>> 183863388ed1db415fa0fdb0a0a918688c63e0a5
     RTS
 
 * RegisterList will ask for a new word from input, and interpret it as a register list
