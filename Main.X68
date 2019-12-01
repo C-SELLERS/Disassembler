@@ -19,19 +19,20 @@
     ORG    $1000    *Don't change this; see hints and tips above
 *---------------------------------------------------------------------------
 
-    INCLUDE 'Disassembler_Setup.X68'
+    INCLUDE     'Disassembler_Setup.X68'
 
 
 MAIN_LOOP:
     ; Append String with address
-    JSR     AppendAddress
+    MOVE    A3, D6
+    JSR     PrintASCIILong
     
     JSR     Get_Next_Word_D6
 
     JSR     DisassembleOpcode   ; disassemble and print word in D6
 
     ; Compare current address to end address
-    CMP.L         A4,A3           ; Are we done yet?
+    CMP.L       A4,A3           ; Are we done yet?
     BLE         MAIN_LOOP       ; Branch if less than or equal too MAIN_LOOP
     
     ; end (print SIMHALT?  close file?)
@@ -47,7 +48,7 @@ MAIN_LOOP:
 *********************************************************************************
 Get_Next_Word_D6:
     ; read word into D6 from current address
-    MOVE.W  (A3), D6
+    MOVE.W      (A3), D6
 
     ; Increment Address
     ADD        #2,A3        * Increment pointer by two bytes
@@ -63,7 +64,7 @@ Get_Next_Word_D6:
 *********************************************************************************
 Get_Next_Word_D7:
     ; read word into D7 from current address
-    MOVE.W  (A3), D7
+    MOVE.W      (A3), D7
 
     ; Increment Address
     ADD        #2,A3        * Increment pointer by two bytes
@@ -79,10 +80,10 @@ Get_Next_Word_D7:
 *********************************************************************************
 Get_Next_Long_D7:
     ; read long into D7 from current address
-    MOVE.L  (A3), D7
+    MOVE.L      (A3), D7
 
     ; Increment Address
-    ADD        #4,A3        * Increment pointer by four bytes
+    ADD         #4,A3        * Increment pointer by four bytes
 
     RTS
 
@@ -95,10 +96,10 @@ Get_Next_Long_D7:
 * Postconditions: (A1) points to ASCII assembly code ending in 0
 *********************************************************************************
 DisassembleOpcode:
-    INCLUDE 'Determine_Opcode.X68'
-    INCLUDE 'Breakdown_Opcode.X68'
-    INCLUDE 'Addressing.X68'
-    ;INCLUDE 'OPCODE_OR.x68'
+    INCLUDE     'Determine_Opcode.X68'
+    INCLUDE     'Breakdown_Opcode.X68'
+    INCLUDE     'Addressing.X68'
+    ;INCLUDE    'OPCODE_OR.x68'
     RTS
 
 
@@ -113,7 +114,7 @@ DisassembleOpcode:
 *
 *********************************************************************************
 AppendOutput:
-    INCLUDE 'AppendOutput.X68'
+    INCLUDE     'AppendOutput.X68'
     RTS
 
 *********************************************************************************
@@ -125,36 +126,36 @@ AppendOutput:
 *
 *********************************************************************************
 PrintASCIIWord:
-    MOVEM.L D2-D3/A4, -(SP)     ; MOVEM all registers used
-    MOVEA   Hex_StrArray, A4    ; Move the base array into A4
-    LEA     OUTPUT_TEMP, A2          ; move address of output into A2
+    MOVEM.L     D2-D3/A4, -(SP)     ; MOVEM all registers used
+    MOVEA       Hex_StrArray, A4    ; Move the base array into A4
+    LEA         OUTPUT_TEMP, A2          ; move address of output into A2
 
-    MOVE.W D6,D3                ; move word into temp register
-    AND #MASK_OPCODE, D3        ; mask first 4 bits
-    ROL #4, D3                  ; rotate left 4 so bits are in least significant position
-    MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.B  (A4,D3), (A2)       ; move ASCII char into A2
-    JSR AppendOutput
+    MOVE.W      D6,D3                ; move word into temp register
+    AND         #MASK_OPCODE, D3        ; mask first 4 bits
+    ROL         #4, D3                  ; rotate left 4 so bits are in least significant position
+    MULS        #2, D3              ; multiply by 2 for correct array offset
+    MOVE.B      (A4,D3), (A2)       ; move ASCII char into A2
+    JSR         AppendOutput
     
-    MOVE.W  D6, D3              ; move word into temp register
-    AND #MASK_111098, D3        ; mask second 4 bits
-    ROL     #8, D3              ; rotate right 8 so bits are in least significant position
-    MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.B  (A4,D3), (A2)       ; move ASCII char into A2
-    JSR AppendOutput
+    MOVE.W      D6, D3              ; move word into temp register
+    AND         #MASK_111098, D3        ; mask second 4 bits
+    ROL         #8, D3              ; rotate right 8 so bits are in least significant position
+    MULS        #2, D3              ; multiply by 2 for correct array offset
+    MOVE.B      (A4,D3), (A2)       ; move ASCII char into A2
+    JSR         AppendOutput
 
-    MOVE.W D6, D3               ; move word into temp register
-    AND    #MASK_7654, D3       ; mask third 4 bits
-    ROR     #4, D3              ; rotate right 4 so bits are in least significant position
-    MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.B  (A4,D3), (A2)       ; move ASCII char into A2
-    JSR AppendOutput
+    MOVE.W      D6, D3               ; move word into temp register
+    AND         #MASK_7654, D3       ; mask third 4 bits
+    ROR         #4, D3              ; rotate right 4 so bits are in least significant position
+    MULS        #2, D3              ; multiply by 2 for correct array offset
+    MOVE.B      (A4,D3), (A2)       ; move ASCII char into A2
+    JSR         AppendOutput
     
-    MOVE.W D6, D3               ; move word into temp register
-    AND    #MASK_3210, D3       ; mask last 4 bits
-    MULS    #2, D3              ; multiply by 2 for correct array offset
-    MOVE.B  (A4,D3), (A2)       ; move ASCII char into A2
-    JSR AppendOutput
+    MOVE.W      D6, D3               ; move word into temp register
+    AND         #MASK_3210, D3       ; mask last 4 bits
+    MULS        #2, D3              ; multiply by 2 for correct array offset
+    MOVE.B      (A4,D3), (A2)       ; move ASCII char into A2
+    JSR         AppendOutput
 
     MOVEM.L     (SP)+, D2-D3/A4     ; return registers to their previous state
     RTS
@@ -394,6 +395,7 @@ TMP_DATA
           
 
    END    $1000        ; last line of source
+
 
 
 

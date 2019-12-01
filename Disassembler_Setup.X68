@@ -4,7 +4,7 @@
     TRAP    #15
 
     ;Setup for Read
-    MOVE    #LONG_LENGTH, D2        ;# bytes to read
+    MOVE    #8, D2        ;# bytes to read
     MOVE    #53,D0                  ;read from file
 
     ; Read & store begin address in BEGIN_ADDRESS_STR
@@ -21,7 +21,7 @@
     TRAP    #15
     
     ;Setup for Read again
-    MOVE    #LONG_LENGTH, D2        ;# bytes to read
+    MOVE    #8, D2        ;# bytes to read
     MOVE    #53,D0                  ;read from file
     
     ; Read & store end address in END_ADDRESS
