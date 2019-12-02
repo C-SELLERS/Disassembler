@@ -1,15 +1,32 @@
-*-----------------------------------------------------------
+*=====================================================================================================================
 * Title      :  Breakdown_Opcode.X68
-* Written by :  Kyle Dukart
-* Date       :
-* Description:  This file will be included in Main.X68 disassembler program
-*       Once the Determine_Opcode has run, it will break to one of these subroutines
-*       corresponding to each of the valid opcodes.  These subroutines will put the 
-*       correct ASCII values in (A2)
-* Preconditions: D6 contains word length opcode
-*                string constants are in Gbl_CONST.X68
-*-----------------------------------------------------------
+* Written by : CSS 422 Best Group
+*              
+*   The CSS 422 Best Group is:  
+*       - Howie Catlin
+*       - Kyle Dukart
+*       - Colton Sellers 
+*
+* Date       : 10-Nov-2019
+*
+* Description:
+*   This file will be included in Main.X68 disassembler program Once the Determine_Opcode has run, it will break 
+*   to one of these subroutines corresponding to each of the valid opcodes.  These subroutines will put the  correct 
+*   ASCII values in (A2).
+*
+* Preconditions: 
+*   - D6: contains word length opcode string constants are in Gbl_CONST.X68
+*=====================================================================================================================
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_DATA:
+* 
+* Appends the string 'DATA' to the output buffer along with the address 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling DATA Opcode ****
 Opcode_DATA:
     LEA         STR_DATA, A2
@@ -17,6 +34,16 @@ Opcode_DATA:
     JSR         PrintASCIIWord          ; print the input word to output
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_SUB:
+* 
+* Differentiates between various versions of the 'SUB' opcode and the way that they are printed depending on the 
+* effective addressing scheme 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling SUB Opcode ****
 Opcode_SUB:
     LEA         STR_SUB, A2
@@ -37,6 +64,14 @@ SUB_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_SUBQ:
+* 
+* Disassembles the SUBQ operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling SUBQ Opcode ****
 Opcode_SUBQ:
     LEA         STR_SUBQ, A2
@@ -47,6 +82,15 @@ Opcode_SUBQ:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_MULS:
+* 
+*  Disassembles the MULS operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling MULS Opcode ****
 Opcode_MULS:
     LEA         STR_MULS, A2
@@ -56,6 +100,16 @@ Opcode_MULS:
     JSR         Dn
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_ORI:
+* 
+*  Differenetiates between the various versions of ORI and prints the appropriate data to the output buffer depending 
+*   on the type of effective addressing 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ORI Opcode ****
 Opcode_ORI:
     LEA         STR_ORI, A2
@@ -99,6 +153,16 @@ ORI_END:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_CMPI:
+* 
+*  Differenetiates between the various versions of CMPI and prints the appropriate data to the output buffer depending 
+*   on the type of effective addressing 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling CMPI Opcode ****
 Opcode_CMPI:
     LEA         STR_CMPI, A2
@@ -141,6 +205,16 @@ CMPI_END:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_BCLR:
+* 
+*  Disassembles the BCLR operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling BCLR Opcode ****
 Opcode_BCLR:
     LEA         STR_BCLR, A2
@@ -164,6 +238,15 @@ BCLR_I:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_ADDA:
+* 
+*  Disassembles the ADDA operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ADDA Opcode ****
 Opcode_ADDA:
     LEA         STR_ADDA, A2
@@ -174,6 +257,17 @@ Opcode_ADDA:
     JSR         An
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_ADD:
+* 
+*  Differenetiates between the various versions of ADD and prints the appropriate data to the output buffer depending 
+*   on the type of effective addressing 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ADD Opcode ****
 Opcode_ADD:
     LEA         STR_ADD, A2
@@ -194,6 +288,16 @@ ADD_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_DIVS:
+* 
+*  Disassembles the ADDA operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling DIVS Opcode ****
 Opcode_DIVS:
     LEA         STR_DIVS, A2
@@ -203,6 +307,16 @@ Opcode_DIVS:
     JSR         Dn
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_OR:
+* 
+*  Differenetiates between the various versions of OR and prints the appropriate data to the output buffer depending 
+*   on the type of effective addressing 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling OR Opcode ****
 Opcode_OR: 
     LEA STR_OR, A2
@@ -223,6 +337,16 @@ OR_EA_DN_EA:                    ; case <ea> + Dn -> <ea>
     JSR EA_AppendMXn
     BRA Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_CMP:
+* 
+*  Disassembles the CMP operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling CMP Opcode ****
 Opcode_CMP:
     LEA         STR_CMP, A2
@@ -233,6 +357,16 @@ Opcode_CMP:
     JSR         Dn
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_EOR:
+* 
+*  Disassembles the ADDA operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling EOR Opcode ****
 Opcode_EOR: 
     LEA         STR_EOR, A2
@@ -243,6 +377,16 @@ Opcode_EOR:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* MOVEA_B:
+* 
+*  Disassembles the MOVEA.B operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling MOVEA.B Opcode ****
 MOVEA_B:
     LEA         STR_MOVEA_B, A2
@@ -253,6 +397,16 @@ MOVEA_B:
     JSR         An
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* MOVE_B:
+* 
+*  Disassembles the MOVE.B operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling MOVE.B Opcode ****
 MOVE_B:
     LEA         STR_MOVE_B, A2
@@ -263,6 +417,15 @@ MOVE_B:
     JSR         EA_AppendXnM
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* MOVEA_W:
+* 
+*  Disassembles the MOVE.W operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling MOVEA.W Opcode ****
 MOVEA_W:
     LEA         STR_MOVEA_W, A2
@@ -273,6 +436,16 @@ MOVEA_W:
     JSR         An
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* MOVE_W:
+* 
+*  Disassembles the MOVE_W operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling MOVE.W Opcode ****
 MOVE_W:
     LEA         STR_MOVE_W, A2
@@ -283,6 +456,16 @@ MOVE_W:
     JSR         EA_AppendXnM
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* MOVEA_L:
+* 
+*  Disassembles the MOVEA.L operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling MOVEA.L Opcode ****
 MOVEA_L:
     LEA         STR_MOVEA_L, A2
@@ -293,6 +476,16 @@ MOVEA_L:
     JSR         An
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* MOVE_L:
+* 
+*  Disassembles the MOVE.L operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling MOVE.L Opcode ****
 MOVE_L:
     LEA         STR_MOVE_L, A2
@@ -303,6 +496,16 @@ MOVE_L:
     JSR         EA_AppendXnM
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_ROL:
+* 
+*  Disassembles the ROL operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ROL Opcode ****
 Opcode_ROL:
     LEA         STR_ROL, A2
@@ -310,6 +513,16 @@ Opcode_ROL:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_ROR:
+* 
+*  Disassembles the ADDA operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ROR Opcode ****
 Opcode_ROR:
     LEA         STR_ROR, A2
@@ -317,6 +530,16 @@ Opcode_ROR:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_LSL:
+* 
+*  Disassembles the LSL operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling LSL Opcode ****
 Opcode_LSL:
     LEA         STR_LSL, A2
@@ -324,6 +547,16 @@ Opcode_LSL:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_LSR:
+* 
+*  Disassembles the LSR operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling LSR Opcode ****
 Opcode_LSR:
     LEA         STR_LSR, A2
@@ -331,6 +564,15 @@ Opcode_LSR:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_ASL:
+* 
+*  Disassembles the LSR operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ASL Opcode ****
 Opcode_ASL:
     LEA         STR_ASL, A2
@@ -338,6 +580,15 @@ Opcode_ASL:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_ASR:
+* 
+*  Disassembles the ASR operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ASR Opcode ****
 Opcode_ASR:
     LEA         STR_ASR, A2
@@ -345,6 +596,16 @@ Opcode_ASR:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* ROL_I:
+* 
+*  Disassembles the various versions of the ROL opcode and prints the data to the output buffer depending on the size
+*   of the data and the effective addressing scheme
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ROL Opcode ****
 ROL_I:
     LEA         STR_ROL, A2
@@ -365,6 +626,16 @@ ROL_I_DN:                       ; case of data register input
     JSR         Dn210
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* ROR_I:
+* 
+*  Disassembles the various versions of the ROR opcode and prints the data to the output buffer depending on the size
+*   of the data and the effective addressing scheme
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ROR Opcode ****
 ROR_I:
     LEA         STR_ROR, A2
@@ -385,6 +656,16 @@ ROR_I_DN:                       ; case of data register input
     JSR         Dn210
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* LSL_I:
+* 
+*  Disassembles the various versions of the LSL opcode and prints the data to the output buffer depending on the size
+*   of the data and the effective addressing scheme
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling LSL Opcode ****
 LSL_I:
     LEA         STR_LSL, A2
@@ -405,6 +686,16 @@ LSL_I_DN:                       ; case of data register input
     JSR         Dn210
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* LSR_I:
+* 
+*  Disassembles the various versions of the LSR opcode and prints the data to the output buffer depending on the size
+*   of the data and the effective addressing scheme
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling LSR Opcode ****
 LSR_I:
     LEA         STR_LSR, A2
@@ -425,6 +716,16 @@ LSR_I_DN:                       ; case of data register input
     JSR         Dn210
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* ASL_I:
+* 
+*  Disassembles the various versions of the ASL opcode and prints the data to the output buffer depending on the size
+*   of the data and the effective addressing scheme
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ASL Opcode ****
 ASL_I:
     LEA         STR_ASL, A2
@@ -445,6 +746,15 @@ ASL_I_DN:                       ; case of data register input
     JSR         Dn210
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* ASR_I:
+* 
+*  Disassembles the various versions of the ASR opcode and prints the data to the output buffer depending on the size
+*   of the data and the effective addressing scheme
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ASR Opcode ****
 ASR_I:
     LEA         STR_ASR, A2
@@ -465,6 +775,15 @@ ASR_I_DN:                       ; case of data register input
     JSR         Dn210
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_BRA:
+* 
+*  Disassembles the BRA opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling BRA Opcode ****
 Opcode_BRA:
     LEA         STR_BRA, A2
@@ -472,6 +791,14 @@ Opcode_BRA:
     JSR         Displacement
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_BCA:
+* 
+*  Disassembles the BRA opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling BCS Opcode ****
 Opcode_BCS:
     LEA         STR_BCS, A2
@@ -479,6 +806,15 @@ Opcode_BCS:
     JSR         Displacement
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_BGE:
+* 
+*  Disassembles the BRA opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling BGE Opcode ****
 Opcode_BGE:
     LEA         STR_BGE, A2
@@ -486,6 +822,14 @@ Opcode_BGE:
     JSR         Displacement
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_BLT:
+* 
+*  Disassembles the BLT opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling BLT Opcode ****
 Opcode_BLT:
     LEA         STR_BLT, A2
@@ -493,6 +837,15 @@ Opcode_BLT:
     JSR         Displacement
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_BVC:
+* 
+*  Disassembles the BRA opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling BVC Opcode ****
 Opcode_BVC:
     LEA         STR_BVC, A2
@@ -500,18 +853,42 @@ Opcode_BVC:
     JSR         Displacement
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_NOP:
+* 
+*  Disassembles the NOP opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling NOP Opcode ****
 Opcode_NOP:
     LEA         STR_NOP, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
     BRA         Opcode_Finish
     
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_ILLEGAL:
+* 
+*  Disassembles the ILLEGAL opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling ILLEGAL Opcode ****
 Opcode_ILLEGAL:
     LEA         STR_ILLEGAL, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_RTS:
+* 
+*  Disassembles the BRA opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling RTS Opcode ****
 Opcode_RTS:
     LEA         STR_RTS, A2
@@ -519,6 +896,14 @@ Opcode_RTS:
     BRA         Opcode_Finish
 
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_LEA:
+* 
+*  Disassembles the LEA opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling LEA Opcode ****
 Opcode_LEA:
     LEA         STR_LEA, A2
@@ -528,6 +913,14 @@ Opcode_LEA:
     JSR         An
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_NEG:
+* 
+*  Disassembles the NEG opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling NEG Opcode ****
 Opcode_NEG:
     LEA         STR_NEG, A2
@@ -536,6 +929,15 @@ Opcode_NEG:
     JSR         EA_AppendMXn
     BRA         Opcode_Finish
     
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_MOVEM:
+* 
+*  Disassembles the various vesrions of the MOVEM opcode and prints the data to the output buffer depending on the 
+*   size of the data and effective addressing scheme
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling MOVEM Opcode ****
 Opcode_MOVEM:
     LEA         STR_MOVEM, A2
@@ -556,19 +958,45 @@ MOVEM_EA_RL:                    ; case of memory to registers
     JSR         RegisterList_PostIncrement
     BRA         Opcode_Finish
 
-**** Function for handling JSR Opcode ****
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_JSR:
+* 
+*  Disassembles the JSR opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
+*** Function for handling JSR Opcode ****
 Opcode_JSR:
     LEA         STR_JSR, A2
     JSR         AppendOutput
     JSR         EA_AppendMXn                    ; Sets D4 & 5 to Src Name & Value; Sets D6 & 7 to Dest Name & Value
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_SIMHALT:
+* 
+*  Disassembles the SIMHALT opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Function for handling SIMHALT Opcode ****
 Opcode_SIMHALT:
     LEA         STR_SIMHALT, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
     BRA         Opcode_Finish
 
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_Finish:
+* 
+*  Performs routine cleanup tasks following the successful disassembly of an opcode, including reloading the output
+*   buffer, printing via TrapTask13, resetting the string length counter, and restoring any registers that may have 
+*   been modified in the process. 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
 **** Opcode_Finish is executed at the end of every opcode ****
 Opcode_Finish: 
     LEA         OUTPUT, A1                      ; Load Output into A1

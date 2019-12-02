@@ -1,11 +1,22 @@
-*-----------------------------------------------------------
+*=====================================================================================================================
 * Title      :  AppendAddress.X68
-* Written by :  Colton Sellers
-* Date       :
-* Description:  Takes address and appends it to the output buffer
+* Written by : CSS 422 Best Group
+*              
+*   The CSS 422 Best Group is: 
+*       - Howie Catlin
+*       - Kyle Dukart
+*       - Colton Sellers 
 *
-* Preconditions: A3 Contains the address
 *
+* Date       : 10-Nov-2019
+*
+* Description:
+*   Takes address and appends it to the output buffer
+*
+* Preconditions:
+*   - A3 Contains the address
+*=====================================================================================================================
+
 * TODO: APPEND THAT ADDRESS BITCH
 *   This is just a copy of append output that needs to be worked on.
 

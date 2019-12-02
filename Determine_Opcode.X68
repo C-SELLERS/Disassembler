@@ -1,12 +1,21 @@
-*-----------------------------------------------------------
+*=====================================================================================================================
 * Title      :  Determine_Opcode.X68
-* Written by :  Kyle Dukart
-* Date       :
-* Description:  This file will be included in Main.X68 disassembler program
-*       It will take in a world-length value stored in D6 and determine which
-*       opcode it corresponds to.
-* Preconditions: D6 contains word length opcode
-*-----------------------------------------------------------
+* Written by : CSS 422 Best Group
+*              
+*   The CSS 422 Best Group is: 
+*       - Howie Catlin
+*       - Kyle Dukart
+*       - Colton Sellers 
+*
+* Date       : 10-Nov-2019
+*
+* Description:  
+*   This file will be included in Main.X68 disassembler program It will take in a world-length value stored in D6 
+*   and determine which  opcode it corresponds to.
+* 
+* Preconditions: 
+*   - D6 contains word length opcode
+*=====================================================================================================================
 
 Opcode:
     MOVEM.L     D2-D4/A4, -(SP)         ; MOVEM all registers used

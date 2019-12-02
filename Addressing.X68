@@ -1,16 +1,24 @@
 *=====================================================================================================================
 * Title      :  Addressing.X68
-* Written by :  Kyle Dukart
-* Date       :
-* Description:  This file will be included in Main.X68 disassembler program
-*       Once the Determine_Opcode and Breakdown_Opcode has run, it will jump to
-*       one or more of these subroutines to process the addressing information.
-*       These subroutines will append the correct ASCII values in (A1).
-* Preconditions: D6 contains word length opcode
-*                string constants are in Gbl_CONST.X68
+* Written by : CSS 422 Best Group
+*              
+*   The CSS 422 Best Group is composed of: 
+*       - Howie Catlin
+*       - Kyle Dukart
+*       - Colton Sellers 
+*
+* Date       : 10-Nov-2019
+*
+* Description: 
+*   This file will be included in Main.X68 disassembler program Once the Determine_Opcode and Breakdown_Opcode has 
+*   run, it will jump to one or more of these subroutines to process the addressing information.
+*   These subroutines will append the correct ASCII values in (A1).
+* 
+* Preconditions: 
+*   - D6: contains word length opcode string constants are in Gbl_CONST.X68
 *=====================================================================================================================
 
-*=====================================================================================================================
+
 
 *---------------------------------------------------------------------------------------------------------------------
 * EA_AppendMXn
@@ -358,6 +366,7 @@ Opcode_AppendSizeSuffix_L:
     JSR         OpcodeSize_SetToLong
     RTS
 
+
 *---------------------------------------------------------------------------------------------------------------------
 * Opcode_AppendSizeSuffix
 * 
@@ -448,7 +457,6 @@ Displacement_Fetch_Word:
     RTS
 
     
-    
 *---------------------------------------------------------------------------------------------------------------------
 * Dn
 * 
@@ -526,6 +534,7 @@ An:
     JSR         AppendOutput        ; print string in A2
     RTS
 
+
 *---------------------------------------------------------------------------------------------------------------------
 * AppendComma
 * 
@@ -574,8 +583,22 @@ Data11109_NOT_ZERO:
     JSR     AppendOutput
     RTS
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* RegisterList_Predecrement:
+* 
 * RegisterList will ask for a new word from input, and interpret it as a register list
 * It will then output the corresponding registers to the output string
+* 
+* Pre: 
+*   - D6: current opcode
+*   
+* Post: 
+*   - 
+*   
+* Notes: 
+*---------------------------------------------------------------------------------------------------------------------
+
 RegisterList_Predecrement:
     JSR         Get_Next_Word_D7        ; get next word into D7
     MOVEA       EA_StrArray_Dn, A4  ; move the base array into A4
@@ -600,6 +623,20 @@ RL_LOOP_END:
     MOVE.B      #00, (A1)
     RTS
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* RegisterList_Postincrement:
+* 
+* 
+* 
+* Pre: 
+*   - D6: current opcode
+*   
+* Post: 
+*   - 
+*   
+* Notes: 
+*---------------------------------------------------------------------------------------------------------------------
 RegisterList_Postincrement:
     ;todo
     RTS
@@ -607,9 +644,276 @@ RegisterList_Postincrement:
 
 
 
+
+
+ *=====================================================================================================================
+ * Effective Addressing Helper Functions
+ *=====================================================================================================================
+*---------------------------------------------------------------------------------------------------------------------
+* EA_GetIsMxN
+* 
+*   Reads the 'EA_IsMXn' storage space to determine if it has been set.
+*   This is space acts as a flag that signifies whether the user is trying to read from a hex value in 
+*   Mode-Register format, or Register-Mode format. This allows EA_AppendModeRegister to perform double-duty,
+*   by ensuring the the bits in question are always shifted to align with the common masks and checks.  
+* 
+* Pre: 
+*   - EA_IsMXn is defined in Gbl_CONST.x68 as 1 byte 
+*   - 'IsTrue' is defined as a constant in Gbl_CONST.x68
+*   - 'IsFalse' is defined as a constant in Gbl_CONST.x68
+*  
+* Post: 
+*   -  D0 contains a value matching IsTrue or IsFalse 
+*---------------------------------------------------------------------------------------------------------------------
+EA_GetIsMXn
+    MOVE.L      A0,-(SP)           ; backup A0
+    LEA         EA_IsMXn,A0        ; A0 -> the 'isMXn' flag
+    MOVE.B      (A0),D0            ; copy the 'isMXn' flag into D0
+    MOVE.L      (SP)+,A0           ; restore A0
+    RTS
+  
+*---------------------------------------------------------------------------------------------------------------------
+* EA_GetIsXnM
+* 
+*   Reads the 'EA_IsXnM' storage space to determine if it has been set. See the description above for 
+*   'EA_GetIsMXn' for more information. 
+* 
+* Pre: 
+*   - EA_IsXnM is defined in Gbl_CONST.x68 as 1 byte 
+*   - 'IsTrue' is defined as a constant in Gbl_CONST.x68
+*   - 'IsFalse' is defined as a constant in Gbl_CONST.x68
+*  
+* Post: 
+*   -  D0 contains a value matching IsTrue or IsFalse 
+*---------------------------------------------------------------------------------------------------------------------
+EA_GetIsXnM
+    MOVE.L      A0,-(SP)           ; backup A0
+    LEA         EA_IsXnM,A0        ; A0 -> the 'isXnM' flag
+    MOVE.B      (A0),D0            ; copy the 'isXnM' flag into D0
+    MOVE.L      (SP)+,A0           ; restore A0
+    RTS
+ 
+
+*---------------------------------------------------------------------------------------------------------------------
+* EA_SetIsMXn
+* 
+*   Sets the value in 'EA_IsMXn' to 'IsTrue' and the value in 'EA_IsXnM' to 'IsFalse'. 
+* 
+* Pre: 
+*   - EA_IsMXn is defined in Gbl_CONST.x68 as 1 byte 
+*   - EA_IsXnM is defined in Gbl_CONST.x68 as 1 byte 
+*   - 'IsTrue' is defined as a constant in Gbl_CONST.x68
+*   - 'IsFalse' is defined as a constant in Gbl_CONST.x68
+*  
+* Post: 
+*   - EA_IsMXn is set to 'IsTrue'
+*   - EA_IsXnM is set to 'IsFalse'
+*---------------------------------------------------------------------------------------------------------------------
+EA_SetIsMXn
+    MOVE.L      A0,-(SP)            ; backup A0
+    LEA         EA_IsMXn,A0         ; A0 -> isMXn flag
+    MOVE.B      #IsTrue,(A0)        ; set isMXn = to isTrue 
+    LEA         EA_IsXnM,A0         ; A0 -> isXnM
+    MOVE.B      #IsFalse,(A0)       ; set isXnM = isFalse
+    MOVE.L      (SP)+,A0            ; restore A0
+    RTS
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* EA_SetIsXnM
+* 
+*   Sets the value in 'EA_IsXnM' to 'IsTrue' and the value in 'EA_IsMXn' to 'IsFalse'. 
+* 
+* Pre: 
+*   - EA_IsMXn is defined in Gbl_CONST.x68 as 1 byte 
+*   - EA_IsXnM is defined in Gbl_CONST.x68 as 1 byte 
+*   - 'IsTrue' is defined as a constant in Gbl_CONST.x68
+*   - 'IsFalse' is defined as a constant in Gbl_CONST.x68
+*  
+* Post: 
+*   - EA_IsXnM is set to 'IsTrue'
+*   - EA_IsMXn is set to 'IsFalse'
+*---------------------------------------------------------------------------------------------------------------------       
+EA_SetIsXnM
+    MOVE.L      A0,-(SP)            ; backup A0
+    LEA         EA_IsXnM,A0         ; A0 -> XnM
+    MOVE.B      #IsTrue,(A0)        ; XnM set to isTrue
+    LEA         EA_IsMXn,A0         ; A0 -> MXn
+    MOVE.B      #IsFalse,(A0)       ; MXn set to isFalse
+    MOVE.L      (SP)+,A0            ; restore A0
+    RTS
     
 
+*---------------------------------------------------------------------------------------------------------------------
+* OpcodeSize_SetToByte
+* 
+*   Sets the value in 'OpcodeSize_Current' to OPCODESIZE_BYTE.
+*   This is space acts as a flag that signifies the size of the current opcode, regardless of the mechanism used to 
+*   establish that size (some codes use bit 8, some use bits 7/6, some use 13/12). This flag persists until it is 
+*   overwritten by another operation code. 
+* 
+* Pre: 
+*   - 'OpcodeSize_Current' is defined in Gbl_CONST.x68 as 1 byte 
+*   - 'OPCODESIZE_BYTE' is defined as a constant in Gbl_CONST.x68
+*  
+* Post: 
+*   - 'OpcodeSize_Current' is set to 'OPCODESIZE_BYTE'
+*---------------------------------------------------------------------------------------------------------------------  
+OpcodeSize_SetToByte
+    MOVE.L      A0,-(SP)
+    LEA         OpcodeSize_Current,A0
+    MOVE.B      #OPCODESIZE_BYTE,(A0)
+    MOVE.L      (SP)+,A0
+    RTS
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* OpcodeSize_SetToWord
+* 
+*   Sets the value in 'OpcodeSize_Current' to OPCODESIZE_WORD. See 'OpcodeSize_SetToByte' for more information.
+* 
+* Pre: 
+*   - 'OpcodeSize_Current' is defined in Gbl_CONST.x68 as 1 byte 
+*   - 'OPCODESIZE_WORD' is defined as a constant in Gbl_CONST.x68
+*  
+* Post: 
+*   - 'OpcodeSize_Current' is set to 'OPCODESIZE_WORD'
+*---------------------------------------------------------------------------------------------------------------------  
+OpcodeSize_SetToWord
+    MOVE.L      A0,-(SP)
+    LEA         OpcodeSize_Current,A0
+    MOVE.B      #OPCODESIZE_WORD,(A0)
+    MOVE.L      (SP)+,A0
+    RTS
+
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* OpcodeSize_SetToLong
+* 
+*   Sets the value in 'OpcodeSize_Current' to OPCODESIZE_LONG. See 'OpcodeSize_SetToByte' for more information.
+* 
+* Pre: 
+*   - 'OpcodeSize_Current' is defined in Gbl_CONST.x68 as 1 byte 
+*   - 'OPCODESIZE_LONG' is defined as a constant in Gbl_CONST.x68
+*  
+* Post: 
+*   - 'OpcodeSize_Current' is set to 'OPCODESIZE_LONG'
+*---------------------------------------------------------------------------------------------------------------------  
+OpcodeSize_SetToLong
+    MOVE.L      A0,-(SP)
+    LEA         OpcodeSize_Current,A0
+    MOVE.B      #OPCODESIZE_LONG,(A0)
+    MOVE.L      (SP)+,A0
+    RTS
+
+*---------------------------------------------------------------------------------------------------------------------
+* OpcodeSize_GetSize
+* 
+*   Sets the value in 'OpcodeSize_Current'. See 'OpcodeSize_SetToByte' for more information.
+* 
+* Pre: 
+*   - 'OpcodeSize_Current' is defined in Gbl_CONST.x68 as 1 byte 
+
+* Post: 
+*   - D0 contains a copy of the value stored in OpcodeSize_Current
+*---------------------------------------------------------------------------------------------------------------------  
+OpcodeSize_GetSize
+    MOVE.L      A0,-(SP)
+    LEA         OpcodeSize_Current,A0
+    MOVE.B      (A0),D0
+    MOVE.L      (SP)+,A0
+    RTS
+   
+*---------------------------------------------------------------------------------------------------------------------
+* OpcodeSize_IsByte
+* 
+*   Sets D0 to 'IsTrue' if the value in 'OpcodeSize_Current' is OPCODESIZE_BYTE. See 'OpcodeSize_SetToByte' 
+*   for more information.
+* 
+* Pre: 
+*   - 'OpcodeSize_Current' is defined in Gbl_CONST.x68 as 1 byte 
+
+* Post: 
+*   - D0 'IsTrue' if 'OpcodeSize_Current' is 'OPCODESIZE_BYTE' 
+*---------------------------------------------------------------------------------------------------------------------  
+OpcodeSize_IsByte
+    JSR         OpcodeSize_GetSize
+    CMP.B       #OPCODESIZE_BYTE,D0
+    BEQ         Flag_IsTrue
+    BRA         Flag_IsFalse
+        
+
+*---------------------------------------------------------------------------------------------------------------------
+* OpcodeSize_IsWord
+* 
+*   Sets D0 to 'IsTrue' if the value in 'OpcodeSize_Current' is OPCODESIZE_WORD. See 'OpcodeSize_SetToByte' 
+*   for more information.
+* 
+* Pre: 
+*   - 'OpcodeSize_Current' is defined in Gbl_CONST.x68 as 1 byte 
+
+* Post: 
+*   - D0 'IsTrue' if 'OpcodeSize_Current' is 'OPCODESIZE_WORD' 
+*---------------------------------------------------------------------------------------------------------------------          
+OpcodeSize_IsWord
+    JSR         OpcodeSize_GetSize
+    CMP.B       #OPCODESIZE_WORD,D0
+    BEQ         Flag_IsTrue
+    BRA         Flag_IsFalse
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* OpcodeSize_IsLong
+* 
+*   Sets D0 to 'IsTrue' if the value in 'OpcodeSize_Current' is OPCODESIZE_LONG. See 'OpcodeSize_SetToByte' 
+*   for more information.
+* 
+* Pre: 
+*   - 'OpcodeSize_Current' is defined in Gbl_CONST.x68 as 1 byte 
+
+* Post: 
+*   - D0 'IsTrue' if 'OpcodeSize_Current' is 'OPCODESIZE_LONG' 
+*---------------------------------------------------------------------------------------------------------------------  
+OpcodeSize_IsLong
+    JSR         OpcodeSize_GetSize
+    CMP.B       #OPCODESIZE_LONG,D0
+    BEQ         Flag_IsTrue
+    BRA         Flag_IsFalse
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Flag_IsFalse
+* 
+*   Sets D0 to the constant 'IsFalse', for use in comparisons
+* 
+* Pre: 
+*   - 'IsFalse' is defined in Gbl_CONST.x68 as 1 byte 
+
+* Post: 
+*   - D0 is set to 'IsFalse'
+*---------------------------------------------------------------------------------------------------------------------  
+Flag_IsFalse        
+    CLR.L       D0
+    MOVE.B      #IsFalse,D0
+    RTS    
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* Flag_IsTrue
+* 
+*   Sets D0 to the constant 'IsTrue', for use in comparisons
+* 
+* Pre: 
+*   - 'IsTrue' is defined in Gbl_CONST.x68 as 1 byte 
+
+* Post: 
+*   - D0 is set to 'IsTrue'
+*---------------------------------------------------------------------------------------------------------------------  
+Flag_IsTrue        
+    CLR.L       D0
+    MOVE.B      #IsTrue,D0
+    RTS    
 
 
 

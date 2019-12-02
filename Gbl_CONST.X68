@@ -1,6 +1,12 @@
-*-----------------------------------------------------------
+*=====================================================================================================================
 * Title      : Global Constants
-* Written by : Howie Catlin
+* Written by : CSS 422 Best Group
+*              
+*   The CSS 422 Best Group is: 
+*       - Howie Catlin
+*       - Kyle Dukart
+*       - Colton Sellers 
+*
 * Date       : 10-Nov-2019
 *
 * Description:
@@ -11,101 +17,11 @@
 *   functions by being written UNDERSCORE_SEPARATED_CAPITALS,
 *   while other objects are CamelCase. 
 *
-*-----------------------------------------------------------
+*=====================================================================================================================
 
 * returns opcode size in D0
 
-EA_GetIsMXn
-    MOVE.L      A0,-(SP)           ; backup A0
-    LEA         EA_IsMXn,A0        ; A0 -> the 'isMXn' flag
-    MOVE.B      (A0),D0            ; copy the 'isMXn' flag into D0
-    MOVE.L      (SP)+,A0           ; restore A0
-    RTS
-  
-EA_GetIsXnM
-    MOVE.L      A0,-(SP)           ; backup A0
-    LEA         EA_IsXnM,A0        ; A0 -> the 'isXnM' flag
-    MOVE.B      (A0),D0            ; copy the 'isXnM' flag into D0
-    MOVE.L      (SP)+,A0           ; restore A0
-    RTS
- 
-EA_SetIsMXn
-    MOVE.L      A0,-(SP)            ; backup A0
-    LEA         EA_IsMXn,A0         ; A0 -> isMXn flag
-    MOVE.B      #IsTrue,(A0)        ; set isMXn = to isTrue 
-    LEA         EA_IsXnM,A0         ; A0 -> isXnM
-    MOVE.B      #IsFalse,(A0)       ; set isXnM = isFalse
-    MOVE.L      (SP)+,A0            ; restore A0
-    RTS
-        
-EA_SetIsXnM
-    MOVE.L      A0,-(SP)            ; backup A0
-    LEA         EA_IsXnM,A0         ; A0 -> XnM
-    MOVE.B      #IsTrue,(A0)        ; XnM set to isTrue
-    LEA         EA_IsMXn,A0         ; A0 -> MXn
-    MOVE.B      #IsFalse,(A0)       ; MXn set to isFalse
-    MOVE.L      (SP)+,A0            ; restore A0
-    RTS
-    
 
-OpcodeSize_SetToByte
-    MOVE.L      A0,-(SP)
-    LEA         Opcode_Size,A0
-    MOVE.B      #OPCODESIZE_BYTE,(A0)
-    MOVE.L      (SP)+,A0
-    RTS
-
-
-OpcodeSize_SetToWord
-    MOVE.L      A0,-(SP)
-    LEA         Opcode_Size,A0
-    MOVE.B      #OPCODESIZE_WORD,(A0)
-    MOVE.L      (SP)+,A0
-    RTS
-
-
-OpcodeSize_SetToLong
-    MOVE.L      A0,-(SP)
-    LEA         Opcode_Size,A0
-    MOVE.B      #OPCODESIZE_LONG,(A0)
-    MOVE.L      (SP)+,A0
-    RTS
-
-
-OpcodeSize_GetSize
-    MOVE.L      A0,-(SP)
-    LEA         Opcode_Size,A0
-    MOVE.B      (A0),D0
-    MOVE.L      (SP)+,A0
-    RTS
-   
-OpcodeSize_IsByte
-    JSR         OpcodeSize_GetSize
-    CMP.B       #OPCODESIZE_BYTE,D0
-    BEQ         Flag_IsTrue
-    BRA         Flag_IsFalse
-        
-OpcodeSize_IsWord
-    JSR         OpcodeSize_GetSize
-    CMP.B       #OPCODESIZE_WORD,D0
-    BEQ         Flag_IsTrue
-    BRA         Flag_IsFalse
-
-OpcodeSize_IsLong
-    JSR         OpcodeSize_GetSize
-    CMP.B       #OPCODESIZE_LONG,D0
-    BEQ         Flag_IsTrue
-    BRA         Flag_IsFalse
-
-Flag_IsFalse        
-    CLR.L       D0
-    MOVE.B      #IsFalse,D0
-    RTS    
-
-Flag_IsTrue        
-    CLR.L       D0
-    MOVE.B      #IsTrue,D0
-    RTS    
 
 ARRAY_ELEMENT_WIDTH     EQU     2
     
@@ -119,7 +35,7 @@ IsFalse     EQU     0
 *********************************************************************************
 * Opcode Properties
 *********************************************************************************
-Opcode_Size DC.B    1
+OpcodeSize_Current DC.B    1
 
 OPCODESIZE_BYTE    EQU 0
 OPCODESIZE_WORD    EQU 1
@@ -261,11 +177,6 @@ MODE_Else       EQU     $0038
 MODE_Imm        EQU     $0004
 MODE_AbsLong    EQU     $0001
 MODE_AbsWord    EQU     $0000
-
-;MODE_Imm        EQU     $003C
-;MODE_AbsWord    EQU     $0038
-;MODE_AbsLong    EQU     $0039
-
 
 
 

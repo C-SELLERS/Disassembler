@@ -1,12 +1,18 @@
-*--------------------------------------------------------------------------
+*=====================================================================================================================
 * Title      : Disassembler
-* Written by : THE BEST GROUP 
-* Date       :
-* 
-* Description: This code contains a method for you to use
-* with your Disassembler project IO, and a short demo of 
-* how to call this method in the body of the "START" code.
-* 
+* Written by : CSS 422 Best Group
+*              
+*   The CSS 422 Best Group is: 
+*       - Howie Catlin
+*       - Kyle Dukart
+*       - Colton Sellers 
+*
+* Date       : 01-Dec-2019
+*
+* Description:  
+*   This code contains a method for you to use with your Disassembler project IO, and a short demo of 
+*   how to call this method in the body of the "START" code.
+*=====================================================================================================================
 * Hints and Tips:
 *   -Follow the code commenting convention here for file & method headers
 *   -Don't rename this file name (Main.X68)

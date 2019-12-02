@@ -1,22 +1,32 @@
-*-----------------------------------------------------------
+*=====================================================================================================================
 * Title      :  AppendOutput.X68
-* Written by :  Colton Sellers
-* Date       :
-* Description:  This file will be included in Main.X68 disassembler program
-*       When opcodes is being broken down we will be actively appending the
-*       output string to prepare for TrapTask13
+* Written by : CSS 422 Best Group
+*              
+*   The CSS 422 Best Group is: 
+*       - Howie Catlin
+*       - Kyle Dukart
+*       - Colton Sellers 
 *
-* Preconditions: Appending String is in A2 and must end in null
-*                string constants are in Gbl_CONST.X68
+* Date       : 10-Nov-2019
 *
-*TODO: 
+* Description:
+* This file will be included in Main.X68 disassembler program when opcodes is being broken down we will be actively 
+* appending the output string to prepare for TrapTask13.
+*
+* Preconditions: 
+*   - Appending String is in A2 and must end in null
+*                
+* Notes: 
+*   - string constants are in Gbl_CONST.X68
+*
+* TODO: 
 *   1)  I believe there is issues with CURRENT_STR_LENGTH as it is set to 0
 *       but when loaded into a register comes up as FFFF????
 *       Good thing is that it does work with add operations so using it as a variable is good!
 *       
 *   2) Address where it starts writting the next sequence in string, might work fine but has only
 *       been tested with RTS so we need to use a two word opcode or something to know for sure.
-*-----------------------------------------------------------
+*=====================================================================================================================
 SaveItFam REG A1-A3/D1-D2
     ;Save context
     MOVEM.L SaveItFam, -(SP)
