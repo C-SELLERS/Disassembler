@@ -22,12 +22,11 @@
 *---------------------------------------------------------------------------------------------------------------------
 * Opcode_DATA:
 * 
-* Appends the string 'DATA' to the output buffer along with the address 
+* Appends the string 'DATA' to the output buffer along with the address. This is the default when no other Opcodes fit.
 * 
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling DATA Opcode ****
 Opcode_DATA:
     LEA         STR_DATA, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -44,7 +43,6 @@ Opcode_DATA:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling SUB Opcode ****
 Opcode_SUB:
     LEA         STR_SUB, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -72,7 +70,6 @@ SUB_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling SUBQ Opcode ****
 Opcode_SUBQ:
     LEA         STR_SUBQ, A2
     JSR         AppendOutput            ; write SUBQ to the output string
@@ -91,7 +88,6 @@ Opcode_SUBQ:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling MULS Opcode ****
 Opcode_MULS:
     LEA         STR_MULS, A2
     JSR         AppendOutput            ; write MULS to the output string
@@ -110,7 +106,6 @@ Opcode_MULS:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ORI Opcode ****
 Opcode_ORI:
     LEA         STR_ORI, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -163,7 +158,6 @@ ORI_END:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling CMPI Opcode ****
 Opcode_CMPI:
     LEA         STR_CMPI, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -215,7 +209,6 @@ CMPI_END:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling BCLR Opcode ****
 Opcode_BCLR:
     LEA         STR_BCLR, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -247,7 +240,6 @@ BCLR_I:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ADDA Opcode ****
 Opcode_ADDA:
     LEA         STR_ADDA, A2
     JSR         AppendOutput            ; write ADDA to the output string
@@ -268,7 +260,6 @@ Opcode_ADDA:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ADD Opcode ****
 Opcode_ADD:
     LEA         STR_ADD, A2
     JSR         AppendOutput            ; write ADD to the output string
@@ -293,12 +284,11 @@ ADD_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
 *---------------------------------------------------------------------------------------------------------------------
 * Opcode_DIVS:
 * 
-*  Disassembles the ADDA operation code and prints the data to the output buffer 
+*  Disassembles the DIVS operation code and prints the data to the output buffer 
 * 
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling DIVS Opcode ****
 Opcode_DIVS:
     LEA         STR_DIVS, A2
     JSR         AppendOutput                ; write DIVS to the output string
@@ -317,7 +307,6 @@ Opcode_DIVS:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling OR Opcode ****
 Opcode_OR: 
     LEA STR_OR, A2
     JSR AppendOutput            ; write OR to the output string
@@ -347,7 +336,6 @@ OR_EA_DN_EA:                    ; case <ea> + Dn -> <ea>
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling CMP Opcode ****
 Opcode_CMP:
     LEA         STR_CMP, A2
     JSR         AppendOutput            ; write CMP to the output string
@@ -367,7 +355,6 @@ Opcode_CMP:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling EOR Opcode ****
 Opcode_EOR: 
     LEA         STR_EOR, A2
     JSR         AppendOutput            ; write EOR to the output string
@@ -387,7 +374,6 @@ Opcode_EOR:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling MOVEA.B Opcode ****
 MOVEA_B:
     LEA         STR_MOVEA_B, A2
     JSR         AppendOutput            ; write MOVEA.B to the output string
@@ -407,7 +393,6 @@ MOVEA_B:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling MOVE.B Opcode ****
 MOVE_B:
     LEA         STR_MOVE_B, A2
     JSR         AppendOutput            ; write MOVE.B to the output string
@@ -426,7 +411,6 @@ MOVE_B:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling MOVEA.W Opcode ****
 MOVEA_W:
     LEA         STR_MOVEA_W, A2
     JSR         AppendOutput            ; write MOVEA.W to the output string
@@ -446,7 +430,6 @@ MOVEA_W:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling MOVE.W Opcode ****
 MOVE_W:
     LEA         STR_MOVE_W, A2
     JSR         AppendOutput            ; write MOVE.W to the output string
@@ -466,7 +449,6 @@ MOVE_W:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling MOVEA.L Opcode ****
 MOVEA_L:
     LEA         STR_MOVEA_L, A2
     JSR         AppendOutput            ; write MOVEA.L to the output string
@@ -486,7 +468,6 @@ MOVEA_L:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling MOVE.L Opcode ****
 MOVE_L:
     LEA         STR_MOVE_L, A2
     JSR         AppendOutput            ; write MOVE.L to the output string
@@ -506,7 +487,6 @@ MOVE_L:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ROL Opcode ****
 Opcode_ROL:
     LEA         STR_ROL, A2
     JSR         AppendOutput            ; write ROL to the output string
@@ -523,7 +503,6 @@ Opcode_ROL:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ROR Opcode ****
 Opcode_ROR:
     LEA         STR_ROR, A2
     JSR         AppendOutput            ; write ROR to the output string
@@ -540,7 +519,6 @@ Opcode_ROR:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling LSL Opcode ****
 Opcode_LSL:
     LEA         STR_LSL, A2
     JSR         AppendOutput            ; write LSL to the output string
@@ -557,7 +535,6 @@ Opcode_LSL:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling LSR Opcode ****
 Opcode_LSR:
     LEA         STR_LSR, A2
     JSR         AppendOutput            ; write LSR to the output string
@@ -573,7 +550,6 @@ Opcode_LSR:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ASL Opcode ****
 Opcode_ASL:
     LEA         STR_ASL, A2
     JSR         AppendOutput            ; write ASL to the output string
@@ -589,7 +565,6 @@ Opcode_ASL:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ASR Opcode ****
 Opcode_ASR:
     LEA         STR_ASR, A2
     JSR         AppendOutput            ; write ASR to the output string
@@ -606,7 +581,6 @@ Opcode_ASR:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ROL Opcode ****
 ROL_I:
     LEA         STR_ROL, A2
     JSR         AppendOutput            ; write ROL to the output string
@@ -636,7 +610,6 @@ ROL_I_DN:                       ; case of data register input
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ROR Opcode ****
 ROR_I:
     LEA         STR_ROR, A2
     JSR         AppendOutput            ; write ROR to the output string
@@ -666,7 +639,6 @@ ROR_I_DN:                       ; case of data register input
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling LSL Opcode ****
 LSL_I:
     LEA         STR_LSL, A2
     JSR         AppendOutput            ; write LSL to the output string
@@ -696,7 +668,6 @@ LSL_I_DN:                       ; case of data register input
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling LSR Opcode ****
 LSR_I:
     LEA         STR_LSR, A2
     JSR         AppendOutput                ; write LSR to the output string
@@ -726,7 +697,6 @@ LSR_I_DN:                       ; case of data register input
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ASL Opcode ****
 ASL_I:
     LEA         STR_ASL, A2
     JSR         AppendOutput                ; write ASL to the output string
@@ -755,7 +725,6 @@ ASL_I_DN:                       ; case of data register input
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ASR Opcode ****
 ASR_I:
     LEA         STR_ASR, A2
     JSR         AppendOutput                ; write ASR to the output string
@@ -784,7 +753,6 @@ ASR_I_DN:                       ; case of data register input
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling BRA Opcode ****
 Opcode_BRA:
     LEA         STR_BRA, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -799,7 +767,6 @@ Opcode_BRA:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling BCS Opcode ****
 Opcode_BCS:
     LEA         STR_BCS, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -815,7 +782,6 @@ Opcode_BCS:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling BGE Opcode ****
 Opcode_BGE:
     LEA         STR_BGE, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -830,7 +796,6 @@ Opcode_BGE:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling BLT Opcode ****
 Opcode_BLT:
     LEA         STR_BLT, A2
     JSR         AppendOutput            ; write the current string in A2 to the output string
@@ -846,7 +811,6 @@ Opcode_BLT:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling BVC Opcode ****
 Opcode_BVC:
     LEA         STR_BVC, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
@@ -861,7 +825,6 @@ Opcode_BVC:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling NOP Opcode ****
 Opcode_NOP:
     LEA         STR_NOP, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
@@ -875,7 +838,6 @@ Opcode_NOP:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling ILLEGAL Opcode ****
 Opcode_ILLEGAL:
     LEA         STR_ILLEGAL, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
@@ -889,7 +851,6 @@ Opcode_ILLEGAL:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling RTS Opcode ****
 Opcode_RTS:
     LEA         STR_RTS, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
@@ -904,7 +865,6 @@ Opcode_RTS:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling LEA Opcode ****
 Opcode_LEA:
     LEA         STR_LEA, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
@@ -921,7 +881,6 @@ Opcode_LEA:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling NEG Opcode ****
 Opcode_NEG:
     LEA         STR_NEG, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
@@ -938,7 +897,6 @@ Opcode_NEG:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling MOVEM Opcode ****
 Opcode_MOVEM:
     LEA         STR_MOVEM, A2
     JSR         AppendOutput                    ; write the current string in A2
@@ -966,7 +924,6 @@ MOVEM_EA_RL:                    ; case of memory to registers
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-*** Function for handling JSR Opcode ****
 Opcode_JSR:
     LEA         STR_JSR, A2
     JSR         AppendOutput
@@ -981,7 +938,6 @@ Opcode_JSR:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Function for handling SIMHALT Opcode ****
 Opcode_SIMHALT:
     LEA         STR_SIMHALT, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
@@ -997,7 +953,6 @@ Opcode_SIMHALT:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-**** Opcode_Finish is executed at the end of every opcode ****
 Opcode_Finish: 
     LEA         OUTPUT, A1                      ; Load Output into A1
     JSR         TrapTask13                      ; Send it to the printer
@@ -1005,14 +960,6 @@ Opcode_Finish:
     CLR.B       (A2)                            ; Set Current String Length Back to Zero
     MOVEM.L     (SP)+, D2-D4/A4                 ; return registers to their previous state
     RTS                                         ; return from function
-
-
-
-
-
-
-
-
 
 
 *~Font name~Courier New~

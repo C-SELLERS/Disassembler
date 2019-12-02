@@ -98,7 +98,9 @@ Get_Next_Long_D7:
 *********************************************************************************
 * Method Name: DisassembleOpcode
 * Description: This method will determine which opcode is in the current word, and
-*   write its ASCII assembly code equivalent into (A1)
+*   write its ASCII assembly code equivalent into (A1). It will then call TrapTask13
+*   to print the ASCII assembly code line.
+*
 * Preconditions:  D6 contains word-length opcode
 * Postconditions: (A1) points to ASCII assembly code ending in 0
 *********************************************************************************
@@ -127,7 +129,7 @@ AppendOutput:
 *********************************************************************************
 * Method Name:  PrintASCIIWord
 * Description:  This function will take a 16 bit word as input and convert it to 
-*       ASCII format.  It will then call AppendOutput to print it.
+*       ASCII format.  It will then call AppendOutput to add it to the print buffer.
 *
 * Preconditions: Current word is in D6
 *
@@ -170,7 +172,7 @@ PrintASCIIWord:
 *********************************************************************************
 * Method Name:  PrintASCIILong
 * Description:  This function will take a 32 bit word as input and convert it to 
-*       ASCII format.  It will then call AppendOutput to print it.
+*       ASCII format.  It will then call AppendOutput to add it to the print buffer.
 *
 * Preconditions: Current word is in D6
 *

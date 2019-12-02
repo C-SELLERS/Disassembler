@@ -11,10 +11,15 @@
 *
 * Description:  
 *   This file will be included in Main.X68 disassembler program It will take in a world-length value stored in D6 
-*   and determine which  opcode it corresponds to.
+*   and determine which opcode it corresponds to.  It will then call the method corresponding to that opcode, methods
+*   are stored in Breakdown_Opcode.X68.  If the data in D6 does not correspond to a supported opcode, it will jump to
+*   DATA as default.
 * 
 * Preconditions: 
 *   - D6 contains word length opcode
+*
+* Postconditions:
+*   - Correct Opcode method will be called
 *=====================================================================================================================
 
 Opcode:
