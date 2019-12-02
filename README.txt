@@ -3,20 +3,20 @@ Disassembler Project for 422
 TODO:
 ------------------------
     * Main() does not return when A3 >= A4(END_ADDRESS) 
-    * ROLs interpreted as RORs and vice-versa
     * RegisterList_Preincrement
     * RegisterList failing
 	* Displacement needs to be interpreted (we are printing 0006 when it should be '3', printing 00FA when it should be '-4')
-    * Test non-required opcodes (to see how it catches DATA)
     * Function headers 
 
 Low priority:
 ------------------------
     extra credit stuff
+    print '#' in Data11109?
 
 
 Completed: 
 ------------------------
+    * ROLs interpreted as RORs and vice-versa
     * Created STACK_LOCATION, and LEA'd A7 to it in DissassemblerSetup.x68 [crashing error]; 
          - STACK_LOCATION is set to $0070000, but feel free to change that
     * Added NOP and ILLEGAL commands

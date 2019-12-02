@@ -126,9 +126,9 @@ Skip_0010:
     MOVE.W      D6,D3                   ; reset the word value in D3
     AND         #MASK_1098,D3           ; mask bits 10, 9, 8
     
-    CMP.W       #$0600,D3               ; compare with 110
+    CMP.W       #$0700,D3               ; compare with 110
     BEQ         Opcode_ROL              ; if equal jump to ROL
-    CMP.W       #$0700,D3               ; compare with 111
+    CMP.W       #$0600,D3               ; compare with 111
     BEQ         Opcode_ROR              ; if equal jump to ROR
     
     CMP.W       #$0300,D3               ; compare with 011
