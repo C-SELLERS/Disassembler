@@ -183,10 +183,17 @@ Skip_0110:
     BNE         Skip_0100               ; if not equal then skip
     MOVE.W      D6,D3                   ; move current word into working register (D3)
     
+    CMP.W       #$4E71,D3               ; check against constant NOP code
+    BEQ         Opcode_NOP              ; if equal jump to NOP
+
+    CMP.W       #$4AFC,D3               ; check against constant ILLEGAL code
+    BEQ         Opcode_ILLEGAL          ; if equal jump to ILLEGAL
+    
     CMP.W       #$4E75,D3               ; check against constant RTS code
     BEQ         Opcode_RTS              ; if equal jump to RTS
     AND         #MASK_8,D3              ; mask bit 8
-    
+   
+
     CMP         #$0100,D3               ; compare with 1
     BEQ         Opcode_LEA              ; if equal jump to LEA
     MOVE.W      D6,D3                   ; refresh current word into D3
@@ -206,6 +213,7 @@ Skip_0100:
     BEQ         Opcode_SIMHALT          ; if equal jump to SIMHALT
     
     BRA         Opcode_DATA             ; if no opcodes found jump to DATA
+
 
 
 *~Font name~Courier New~

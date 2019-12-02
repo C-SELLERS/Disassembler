@@ -13,12 +13,141 @@
 *
 *-----------------------------------------------------------
 
+* returns opcode size in D0
+
+EA_GetIsMXn
+    MOVE.L      A0,-(SP)           ; backup A0
+    LEA         EA_IsMXn,A0        ; A0 -> the 'isMXn' flag
+    MOVE.B      (A0),D0            ; copy the 'isMXn' flag into D0
+    MOVE.L      (SP)+,A0           ; restore A0
+    RTS
+  
+EA_GetIsXnM
+    MOVE.L      A0,-(SP)           ; backup A0
+    LEA         EA_IsXnM,A0        ; A0 -> the 'isXnM' flag
+    MOVE.B      (A0),D0            ; copy the 'isXnM' flag into D0
+    MOVE.L      (SP)+,A0           ; restore A0
+    RTS
+ 
+EA_SetIsMXn
+    MOVE.L      A0,-(SP)            ; backup A0
+    LEA         EA_IsMXn,A0         ; A0 -> isMXn flag
+    MOVE.B      #IsTrue,(A0)        ; set isMXn = to isTrue 
+    LEA         EA_IsXnM,A0         ; A0 -> isXnM
+    MOVE.B      #IsFalse,(A0)       ; set isXnM = isFalse
+    MOVE.L      (SP)+,A0            ; restore A0
+    RTS
+        
+EA_SetIsXnM
+    MOVE.L      A0,-(SP)            ; backup A0
+    LEA         EA_IsXnM,A0         ; A0 -> XnM
+    MOVE.B      #IsTrue,(A0)        ; XnM set to isTrue
+    LEA         EA_IsMXn,A0         ; A0 -> MXn
+    MOVE.B      #IsFalse,(A0)       ; MXn set to isFalse
+    MOVE.L      (SP)+,A0            ; restore A0
+    RTS
+    
+
+OpcodeSize_SetToByte
+    MOVE.L      A0,-(SP)
+    LEA         Opcode_Size,A0
+    MOVE.B      #OPCODESIZE_BYTE,(A0)
+    MOVE.L      (SP)+,A0
+    RTS
+
+
+OpcodeSize_SetToWord
+    MOVE.L      A0,-(SP)
+    LEA         Opcode_Size,A0
+    MOVE.B      #OPCODESIZE_WORD,(A0)
+    MOVE.L      (SP)+,A0
+    RTS
+
+
+OpcodeSize_SetToLong
+    MOVE.L      A0,-(SP)
+    LEA         Opcode_Size,A0
+    MOVE.B      #OPCODESIZE_LONG,(A0)
+    MOVE.L      (SP)+,A0
+    RTS
+
+
+OpcodeSize_GetSize
+    MOVE.L      A0,-(SP)
+    LEA         Opcode_Size,A0
+    MOVE.B      (A0),D0
+    MOVE.L      (SP)+,A0
+    RTS
+   
+OpcodeSize_IsByte
+    JSR         OpcodeSize_GetSize
+    CMP.B       #OPCODESIZE_BYTE,D0
+    BEQ         Flag_IsTrue
+    BRA         Flag_IsFalse
+        
+OpcodeSize_IsWord
+    JSR         OpcodeSize_GetSize
+    CMP.B       #OPCODESIZE_WORD,D0
+    BEQ         Flag_IsTrue
+    BRA         Flag_IsFalse
+
+OpcodeSize_IsLong
+    JSR         OpcodeSize_GetSize
+    CMP.B       #OPCODESIZE_LONG,D0
+    BEQ         Flag_IsTrue
+    BRA         Flag_IsFalse
+
+Flag_IsFalse        
+    CLR.L       D0
+    MOVE.B      #IsFalse,D0
+    RTS    
+
+Flag_IsTrue        
+    CLR.L       D0
+    MOVE.B      #IsTrue,D0
+    RTS    
+
+ARRAY_ELEMENT_WIDTH     EQU     2
+    
+
+*********************************************************************************
+* FLAGS - Always return in D0
+*********************************************************************************
+IsTrue      EQU     1
+IsFalse     EQU     0
+
+*********************************************************************************
+* Opcode Properties
+*********************************************************************************
+Opcode_Size DC.B    1
+
+OPCODESIZE_BYTE    EQU 0
+OPCODESIZE_WORD    EQU 1
+OPCODESIZE_LONG    EQU 2
+
+
+*********************************************************************************
+* Effective Addressing Properties
+*********************************************************************************
+EA_IsMXn            DS.B    1
+EA_IsXnM            DS.B    1
+
+EA_REGISTER_ASRL_DISTANCE  EQU 9
+EA_MODE_ASRL_DISTANCE      EQU 3
+
+
 *********************************************************************************
 * File Constants
 *********************************************************************************
 inFile          DC.B 'Config.cfg',0
 BEGIN_ADDRESS_STR   DS.B 8
 END_ADDRESS_STR     DS.B 8
+
+
+
+STACK_LOCATION      EQU     $0070000
+
+
 
 *********************************************************************************
 * Numeric Constants
@@ -57,6 +186,8 @@ STRING_W        DC.B    '.W',TAB,0
 STRING_L        DC.B    '.L',TAB,0
 
 STR_DATA        DC.B    TAB,'DATA',TAB,0
+STR_NOP         DC.B    TAB,'NOP',TAB,TAB,0
+STR_ILLEGAL     DC.B    TAB,'ILLEGAL',TAB,0
 STR_RTS         DC.B    TAB,'RTS',TAB,TAB,0
 STR_JSR         DC.B    TAB,'JSR',TAB,TAB,0
 STR_NEG         DC.B    TAB,'NEG',0
@@ -129,8 +260,11 @@ MODE_AnPreDec   EQU     $0020
 MODE_Else       EQU     $0038
 MODE_Imm        EQU     $0004
 MODE_AbsLong    EQU     $0001
-MODE_AbsWord    EQU     $0002
+MODE_AbsWord    EQU     $0000
 
+;MODE_Imm        EQU     $003C
+;MODE_AbsWord    EQU     $0038
+;MODE_AbsLong    EQU     $0039
 
 
 
@@ -139,62 +273,62 @@ MODE_AbsWord    EQU     $0002
 *********************************************************************************
 * Effective Addressing Constants
 *********************************************************************************
-EA_Str_00       DC.B    'D0',0
-EA_Str_01       DC.B    'D1',0
-EA_Str_02       DC.B    'D2',0
-EA_Str_03       DC.B    'D3',0
-EA_Str_04       DC.B    'D4',0
-EA_Str_05       DC.B    'D5',0
-EA_Str_06       DC.B    'D6',0
-EA_Str_07       DC.B    'D7',0
+EA_Str_D0       DC.B    'D0',0
+EA_Str_D1       DC.B    'D1',0
+EA_Str_D2       DC.B    'D2',0
+EA_Str_D3       DC.B    'D3',0
+EA_Str_D4       DC.B    'D4',0
+EA_Str_D5       DC.B    'D5',0
+EA_Str_D6       DC.B    'D6',0
+EA_Str_D7       DC.B    'D7',0
 
-EA_Str_08       DC.B    'A0',0
-EA_Str_09       DC.B    'A1',0
-EA_Str_0A       DC.B    'A2',0
-EA_Str_0B       DC.B    'A3',0
-EA_Str_0C       DC.B    'A4',0
-EA_Str_0D       DC.B    'A5',0
-EA_Str_0E       DC.B    'A6',0
-EA_Str_0F       DC.B    'A7',0
+EA_Str_A0       DC.B    'A0',0
+EA_Str_A1       DC.B    'A1',0
+EA_Str_A2       DC.B    'A2',0
+EA_Str_A3       DC.B    'A3',0
+EA_Str_A4       DC.B    'A4',0
+EA_Str_A5       DC.B    'A5',0
+EA_Str_A6       DC.B    'A6',0
+EA_Str_A7       DC.B    'A7',0
 
-EA_Str_10       DC.B    '(A0)',0
-EA_Str_11       DC.B    '(A1)',0
-EA_Str_12       DC.B    '(A2)',0
-EA_Str_13       DC.B    '(A3)',0
-EA_Str_14       DC.B    '(A4)',0
-EA_Str_15       DC.B    '(A5)',0
-EA_Str_16       DC.B    '(A6)',0
-EA_Str_17       DC.B    '(A7)',0
+EA_Str_AInd0       DC.B    '(A0)',0
+EA_Str_AInd1       DC.B    '(A1)',0
+EA_Str_AInd2       DC.B    '(A2)',0
+EA_Str_AInd3       DC.B    '(A3)',0
+EA_Str_AInd4       DC.B    '(A4)',0
+EA_Str_AInd5       DC.B    '(A5)',0
+EA_Str_AInd6       DC.B    '(A6)',0
+EA_Str_AInd7       DC.B    '(A7)',0
 
-EA_Str_18       DC.B    '(A0)+',0
-EA_Str_19       DC.B    '(A7)+',0
-EA_Str_1A       DC.B    '(A7)+',0
-EA_Str_1B       DC.B    '(A7)+',0
-EA_Str_1C       DC.B    '(A7)+',0
-EA_Str_1D       DC.B    '(A7)+',0
-EA_Str_1E       DC.B    '(A7)+',0
-EA_Str_1F       DC.B    '(A7)+',0
+EA_Str_APostInc0       DC.B    '(A0)+',0
+EA_Str_APostInc1       DC.B    '(A1)+',0
+EA_Str_APostInc2       DC.B    '(A2)+',0
+EA_Str_APostInc3       DC.B    '(A3)+',0
+EA_Str_APostInc4       DC.B    '(A4)+',0
+EA_Str_APostInc5       DC.B    '(A5)+',0
+EA_Str_APostInc6       DC.B    '(A6)+',0
+EA_Str_APostInc7       DC.B    '(A7)+',0
 
-EA_Str_20       DC.B    '-(A0)',0
-EA_Str_21       DC.B    '-(A1)',0
-EA_Str_22       DC.B    '-(A2)',0
-EA_Str_23       DC.B    '-(A3)',0
-EA_Str_24       DC.B    '-(A4)',0
-EA_Str_25       DC.B    '-(A5)',0
-EA_Str_26       DC.B    '-(A6)',0
-EA_Str_27       DC.B    '-(A7)',0
+EA_Str_APreDec0       DC.B    '-(A0)',0
+EA_Str_APreDec1       DC.B    '-(A1)',0
+EA_Str_APreDec2       DC.B    '-(A2)',0
+EA_Str_APreDec3       DC.B    '-(A3)',0
+EA_Str_APreDec4       DC.B    '-(A4)',0
+EA_Str_APreDec5       DC.B    '-(A5)',0
+EA_Str_APreDec6       DC.B    '-(A6)',0
+EA_Str_APreDec7       DC.B    '-(A7)',0
+
 
 EA_Str_Hash             DC.B    '#',0
-EA_Str_HashDollar       DC.B    '$',0
-EA_Str_38               DC.B    '$',0
+EA_Str_HashDollar       DC.B    '#$',0
+EA_Str_Dollar           DC.B    '$',0
 
 
-EA_StrArray_Dn          DC.W    EA_Str_00, EA_Str_01, EA_Str_02, EA_Str_03, EA_Str_04, EA_Str_05, EA_Str_06, EA_Str_07
-EA_StrArray_An          DC.W    EA_Str_08, EA_Str_09, EA_Str_0A, EA_Str_0B, EA_Str_0C, EA_Str_0D, EA_Str_0E, EA_Str_0F
-EA_StrArray_AnInd       DC.W    EA_Str_10, EA_Str_11, EA_Str_12, EA_Str_13, EA_Str_14, EA_Str_15, EA_Str_16, EA_Str_17
-EA_StrArray_AnPostInc   DC.W    EA_Str_18, EA_Str_19, EA_Str_1A, EA_Str_1B, EA_Str_1C, EA_Str_1D, EA_Str_1E, EA_Str_1F
-EA_StrArray_AnPreDec    DC.W    EA_Str_20, EA_Str_21, EA_Str_22, EA_Str_23, EA_Str_24, EA_Str_25, EA_Str_26, EA_Str_27 
-;EA_StrArray_Else        DC.W    EA_Str_3C, EA_Str_39, EA_Str_38
+EA_StrArray_Dn          DC.W    EA_Str_D0,        EA_Str_D1,        EA_Str_D2,        EA_Str_D3,        EA_Str_D4,        EA_Str_D5,        EA_Str_D6,        EA_Str_D7
+EA_StrArray_An          DC.W    EA_Str_A0,        EA_Str_A1,        EA_Str_A2,        EA_Str_A3,        EA_Str_A4,        EA_Str_A5,        EA_Str_A6,        EA_Str_A7
+EA_StrArray_AnInd       DC.W    EA_Str_AInd0,     EA_Str_AInd1,     EA_Str_AInd2,     EA_Str_AInd3,     EA_Str_AInd4,     EA_Str_AInd5,     EA_Str_AInd6,     EA_Str_AInd7
+EA_StrArray_AnPostInc   DC.W    EA_Str_APostInc0, EA_Str_APostInc1, EA_Str_APostInc2, EA_Str_APostInc3, EA_Str_APostInc4, EA_Str_APostInc5, EA_Str_APostInc6, EA_Str_APostInc7
+EA_StrArray_AnPreDec    DC.W    EA_Str_APreDec0,  EA_Str_APreDec1,  EA_Str_APreDec2,  EA_Str_APreDec3,  EA_Str_APreDec4,  EA_Str_APreDec5,  EA_Str_APreDec6,  EA_Str_APreDec7
 
 
 EA_ModeArray_Dn         DC.W    $00,$01,$02,$03,$04,$05,$06,$07
@@ -203,6 +337,7 @@ EA_ModeArray_AnInd      DC.W    $10,$11,$12,$13,$14,$15,$16,$17
 EA_ModeArray_AnPostInc  DC.W    $18,$19,$1A,$1B,$1C,$1D,$1E,$1F
 EA_ModeArray_AnPreDec   DC.W    $20,$21,$22,$23,$24,$25,$26,$27
 EA_ModeArray_Else       DC.W    $3C,$39,$38
+
 
 Hex_Str_00              DC.B    '0',0
 Hex_Str_01              DC.B    '1',0
@@ -223,6 +358,7 @@ Hex_Str_15              DC.B    'F',0
 
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
+
 
 
 

@@ -72,8 +72,17 @@ ORI_L:                          ; if size == long then fetch next long
     MOVE.W      D6, D4              ; temp store word in D4
     MOVE.L      D7, D6              ; move long immediate into D6
     JSR         PrintASCIILong
+    JSR         OpcodeSize_SetToLong
     BRA         ORI_END
 ORI_B:
+    JSR         Get_Next_Word_D7
+    LEA         STRINGPOUNDHEX, A2
+    JSR         AppendOutput            ; print "#$"
+    MOVE.W      D6, D4              ; temp store word in D4
+    MOVE.W      D7, D6              ; move word immediate into D6
+    JSR         PrintASCIIWord
+    JSR         OpcodeSize_SetToByte
+    BRA         ORI_END
 ORI_W:
     JSR         Get_Next_Word_D7
     LEA         STRINGPOUNDHEX, A2
@@ -81,6 +90,7 @@ ORI_W:
     MOVE.W      D6, D4              ; temp store word in D4
     MOVE.W      D7, D6              ; move word immediate into D6
     JSR         PrintASCIIWord
+    JSR         OpcodeSize_SetToWord
     BRA         ORI_END
 ORI_END:
 
@@ -105,8 +115,17 @@ CMPI_L:                         ; if size == long then fetch next long
     MOVE.W      D6, D4              ; temp store word in D4
     MOVE.L      D7, D6              ; move long immediate into D6
     JSR         PrintASCIILong
+    JSR         OpcodeSize_SetToLong
     BRA         CMPI_END
 CMPI_B:
+    JSR         Get_Next_Word_D7
+    LEA         STRINGPOUNDHEX, A2
+    JSR         AppendOutput            ; print "#$"
+    MOVE.W      D6, D4              ; temp store word in D4
+    MOVE.W      D7, D6              ; move word immediate into D6
+    JSR         PrintASCIIWord
+    JSR         OpcodeSize_SetToByte
+    BRA         CMPI_END
 CMPI_W:
     JSR         Get_Next_Word_D7
     LEA         STRINGPOUNDHEX, A2
@@ -114,6 +133,7 @@ CMPI_W:
     MOVE.W      D6, D4              ; temp store word in D4
     MOVE.W      D7, D6              ; move word immediate into D6
     JSR         PrintASCIIWord
+    JSR         OpcodeSize_SetToWord
     BRA         CMPI_END
 CMPI_END:
     MOVE.W      D4, D6              ; revert word to D6
@@ -227,6 +247,7 @@ Opcode_EOR:
 MOVEA_B:
     LEA         STR_MOVEA_B, A2
     JSR         AppendOutput            ; write MOVEA.B to the output string
+    JSR         OpcodeSize_SetToByte
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         An
@@ -236,6 +257,7 @@ MOVEA_B:
 MOVE_B:
     LEA         STR_MOVE_B, A2
     JSR         AppendOutput            ; write MOVE.B to the output string
+    JSR         OpcodeSize_SetToByte
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         EA_AppendXnM
@@ -245,6 +267,7 @@ MOVE_B:
 MOVEA_W:
     LEA         STR_MOVEA_W, A2
     JSR         AppendOutput            ; write MOVEA.W to the output string
+    JSR         OpcodeSize_SetToWord
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         An
@@ -254,6 +277,7 @@ MOVEA_W:
 MOVE_W:
     LEA         STR_MOVE_W, A2
     JSR         AppendOutput            ; write MOVE.W to the output string
+    JSR         OpcodeSize_SetToWord
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         EA_AppendXnM
@@ -263,6 +287,7 @@ MOVE_W:
 MOVEA_L:
     LEA         STR_MOVEA_L, A2
     JSR         AppendOutput            ; write MOVEA.L to the output string
+    JSR         OpcodeSize_SetToLong
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         An
@@ -272,6 +297,7 @@ MOVEA_L:
 MOVE_L:
     LEA         STR_MOVE_L, A2
     JSR         AppendOutput            ; write MOVE.L to the output string
+    JSR         OpcodeSize_SetToLong
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         EA_AppendXnM
@@ -474,11 +500,24 @@ Opcode_BVC:
     JSR         Displacement
     BRA         Opcode_Finish
 
+**** Function for handling NOP Opcode ****
+Opcode_NOP:
+    LEA         STR_NOP, A2
+    JSR         AppendOutput                    ; write the current string in A2 to the output string
+    BRA         Opcode_Finish
+    
+**** Function for handling ILLEGAL Opcode ****
+Opcode_ILLEGAL:
+    LEA         STR_ILLEGAL, A2
+    JSR         AppendOutput                    ; write the current string in A2 to the output string
+    BRA         Opcode_Finish
+
 **** Function for handling RTS Opcode ****
 Opcode_RTS:
     LEA         STR_RTS, A2
     JSR         AppendOutput                    ; write the current string in A2 to the output string
     BRA         Opcode_Finish
+
 
 **** Function for handling LEA Opcode ****
 Opcode_LEA:
@@ -538,6 +577,9 @@ Opcode_Finish:
     CLR.B       (A2)                            ; Set Current String Length Back to Zero
     MOVEM.L     (SP)+, D2-D4/A4                 ; return registers to their previous state
     RTS                                         ; return from function
+
+
+
 
 
 
