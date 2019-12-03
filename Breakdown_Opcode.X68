@@ -108,6 +108,7 @@ Opcode_ADDQ:
 Opcode_MULS:
     LEA         STR_MULS, A2
     JSR         AppendOutput            ; write MULS to the output string
+    JSR         OpcodeSize_SetToWord
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         Dn
