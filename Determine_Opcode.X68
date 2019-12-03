@@ -11,10 +11,15 @@
 *
 * Description:  
 *   This file will be included in Main.X68 disassembler program It will take in a world-length value stored in D6 
-*   and determine which  opcode it corresponds to.
+*   and determine which opcode it corresponds to.  It will then call the method corresponding to that opcode, methods
+*   are stored in Breakdown_Opcode.X68.  If the data in D6 does not correspond to a supported opcode, it will jump to
+*   DATA as default.
 * 
 * Preconditions: 
 *   - D6 contains word length opcode
+*
+* Postconditions:
+*   - Correct Opcode method will be called
 *=====================================================================================================================
 
 Opcode:
@@ -126,9 +131,9 @@ Skip_0010:
     MOVE.W      D6,D3                   ; reset the word value in D3
     AND         #MASK_1098,D3           ; mask bits 10, 9, 8
     
-    CMP.W       #$0600,D3               ; compare with 110
+    CMP.W       #$0700,D3               ; compare with 110
     BEQ         Opcode_ROL              ; if equal jump to ROL
-    CMP.W       #$0700,D3               ; compare with 111
+    CMP.W       #$0600,D3               ; compare with 111
     BEQ         Opcode_ROR              ; if equal jump to ROR
     
     CMP.W       #$0300,D3               ; compare with 011

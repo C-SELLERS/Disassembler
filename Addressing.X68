@@ -368,26 +368,22 @@ Opcode_AppendSizeSuffix_L:
 
 
 *---------------------------------------------------------------------------------------------------------------------
-* Opcode_AppendSizeSuffix
+* Size8
 * 
-* Reads the Opcode size from bits 7/6 and appends the size suffix to the output buffer
+* Reads the Opcode size from bit 8 and appends the size suffix to the output buffer
 * 
 * Pre: 
 *   - D6: current opcode
 *   
-* Post: 
-*   - D4: size of opcode (see below) 
-*   - Output buffer: appended with opcode size suffix (.B, .W, or .L)
+* Post:  
+*   - Output buffer: appended with opcode size suffix (.W or .L)
 *   
 * Notes: 
-* Positions 76 contain size values, function will set D4
-*   76      Size    D4
-*   00      .B      00
-*   01      .W      01
-*   10      .L      10
+* Position 8 contains size values
+*   8      Size
+*   0      .W
+*   1      .L
 *---------------------------------------------------------------------------------------------------------------------
-* Size8 checks bit 8 and interprets it as a Word or Long
-* Corresponding ASCII value will be appended to the output string
 Size8:
     MOVE.W      D6, D3              ; move current word into working register
     AND.W       #MASK_8, D3         ; mask bit 8
@@ -404,8 +400,23 @@ Size8_W:
     JSR         OpcodeSize_SetToWord
     RTS
 
-* Size6 checks bit 6 and interprets it as a Word or Long
-* Corresponding ASCII value will be appended to the output string
+*---------------------------------------------------------------------------------------------------------------------
+* Size6
+* 
+* Reads the Opcode size from bit 6 and appends the size suffix to the output buffer
+* 
+* Pre: 
+*   - D6: current opcode
+*   
+* Post:  
+*   - Output buffer: appended with opcode size suffix (.W or .L)
+*   
+* Notes: 
+* Position 6 contains size value
+*   6      Size
+*   0      .W
+*   1      .L
+*---------------------------------------------------------------------------------------------------------------------
 Size6:
     MOVE.W      D6, D3                  ; move current word into working register
     AND.W       #MASK_6, D3             ; mask bit 8
@@ -428,15 +439,14 @@ Size6_W:
 * 
 * Displacement deals with bit values in positions 76543210
 * This value will be interpreted as a numerical displacement
-* If this value is 00000000, then the next word will be the numerical displacement
+* If this value is 00000000, then the function will pull the next word from input and interpret
+* that word as a numerical displacement
 * 
 * Pre: 
 *   - D6: current opcode
 *   
 * Post: 
-*   - 
-*   
-* Notes: 
+*   - Numerical displacement is added to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 Displacement:
     MOVE.W      D6, D3              ; move current word into working register
@@ -468,9 +478,7 @@ Displacement_Fetch_Word:
 *   - D6: current opcode
 *   
 * Post: 
-*   - 
-*   
-* Notes: 
+*   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 Dn:
     MOVE.W      D6,D3               ; move word into D3
@@ -494,9 +502,7 @@ Dn:
 *   - D6: current opcode
 *   
 * Post: 
-*   - 
-*   
-* Notes: 
+*   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 Dn210:
     MOVE.W      D6,D3               ; move word into D3
@@ -506,7 +512,6 @@ Dn210:
     MOVE.W      (A4,D3),A2          ; move string value from StrArray_Dn with offset D3 into A2
     JSR         AppendOutput        ; print string in A2
     RTS
-
 
     
 *---------------------------------------------------------------------------------------------------------------------
@@ -520,9 +525,7 @@ Dn210:
 *   - D6: current opcode
 *   
 * Post: 
-*   - 
-*   
-* Notes: 
+*   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 An:
     MOVE.W      D6,D3               ; move word into D3
@@ -544,9 +547,7 @@ An:
 *   - D6: current opcode
 *   
 * Post: 
-*   - 
-*   
-* Notes: 
+*   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 AppendComma:
     LEA         STRINGCOMMA, A2     ; move string comma into A2
@@ -565,13 +566,11 @@ AppendComma:
 *   - D6: current opcode
 *   
 * Post: 
-*   - 
-*   
-* Notes: 
+*   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 Data11109:
     MOVE.W  D6, D3              ; move current word into working register
-    AND.W   #MASK_11109, D3      ; mask bits 11, 10, 9
+    AND.W   #MASK_11109, D3     ; mask bits 11, 10, 9
     MOVEA   Hex_StrArray, A4    ; Move the base array into A4
     ROL     #7, D3              ; rotate left 7 so bits are in least significant position
     CMP.W   #0, D3              ; check if D3 is 0
@@ -579,7 +578,9 @@ Data11109:
     ADD.W   #8, D3              ; if D3 is zero, add 8
 Data11109_NOT_ZERO:
     MULS    #2, D3              ; multiply by 2 for correct array offset
-    LEA     (A4,D3), A2         ; move ASCII char into A2
+    LEA     STRINGPOUND, A2     ; move string # into A2
+    JSR     AppendOutput        ; print string # in A2
+    LEA     (A4,D3), A2         ; move ASCII immediate into A2
     JSR     AppendOutput
     RTS
 
@@ -594,9 +595,7 @@ Data11109_NOT_ZERO:
 *   - D6: current opcode
 *   
 * Post: 
-*   - 
-*   
-* Notes: 
+*   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 
 RegisterList_Predecrement:
@@ -627,15 +626,14 @@ RL_LOOP_END:
 *---------------------------------------------------------------------------------------------------------------------
 * RegisterList_Postincrement:
 * 
-* 
+* RegisterList will ask for a new word from input, and interpret it as a register list
+* It will then output the corresponding registers to the output string
 * 
 * Pre: 
 *   - D6: current opcode
 *   
 * Post: 
-*   - 
-*   
-* Notes: 
+*   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 RegisterList_Postincrement:
     ;todo
