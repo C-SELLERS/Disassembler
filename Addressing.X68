@@ -806,6 +806,27 @@ OpcodeSize_SetToLong
     RTS
 
 *---------------------------------------------------------------------------------------------------------------------
+* OpcodeSize_SetToElse
+* 
+*   Sets the value in 'OpcodeSize_Current' to OPCODESIZE_ELSE. See 'OpcodeSize_SetToByte' for more information.
+* 
+* Pre: 
+*   - 'OpcodeSize_Current' is defined in Gbl_CONST.x68 as 1 byte 
+*   - 'OPCODESIZE_ELSE' is defined as a constant in Gbl_CONST.x68
+*  
+* Post: 
+*   - 'OpcodeSize_Current' is set to 'OPCODESIZE_ELSE'
+*---------------------------------------------------------------------------------------------------------------------  
+OpcodeSize_SetToElse
+    MOVE.L      A0,-(SP)
+    LEA         OpcodeSize_Current,A0
+    MOVE.B      #OPCODESIZE_ELSE,(A0)
+    MOVE.L      (SP)+,A0
+    RTS
+
+
+
+*---------------------------------------------------------------------------------------------------------------------
 * OpcodeSize_GetSize
 * 
 *   Sets the value in 'OpcodeSize_Current'. See 'OpcodeSize_SetToByte' for more information.
