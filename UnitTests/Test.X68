@@ -5,19 +5,15 @@
 * Description: Use as an include to load into memory at the
 * 
 *-----------------------------------------------------------
-    ORG    $2000
+TESTIO
 
 * Put program code here
 
-    RTS
-    RTS
-    JSR     $2000
-
-* Put variables and constants here
-
-
-    END $2000
-*~Font name~Courier New~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
+    ;PROBLEM OPCODES
+        ;EOR.W  #$AAFF,D0 -> CMPI   IMMEDIATE HEX FAIL
+        ;EOR.L  
+        ;ADD    #02, D1  -> SUBQ    READS IT AS AN ADDQ; NEED TO ADD ADDQ FUNCTIONALITY**
+        ;
+  
+    EOR.W  #$AAFF,D0
+    CMPI   #$AAFF,D0 
