@@ -59,7 +59,14 @@ Skip_5000:
     AND         #MASK_11,D3             ; mask bit 11
     
     CMP.W       #$0800,D3               ; compare with 1
-    BEQ         Opcode_CMPI             ; if equal jump to CMPI
+    BNE         Skip_CMPI_EORI          ; if not equal then skip
+    MOVE.W      D6, D3                  ; reset current word in D3
+    AND.W       #MASK_10, D3            ; mask bit 10
+    CMP.W       #$0000, D3              ; compare with 0
+    BEQ         Opcode_EORI             ; if equal jump to EORI
+    BRA         Opcode_CMPI             ; if not equal jump to CMPI
+Skip_CMPI_EORI:
+
     MOVE.W      D6,D3                   ; reset current word in D3
     AND         #MASK_11108,D3          ; mask bit 11, 10,8
     

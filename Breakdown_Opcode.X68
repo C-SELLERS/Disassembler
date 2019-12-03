@@ -219,6 +219,58 @@ CMPI_END:
 
 
 *---------------------------------------------------------------------------------------------------------------------
+* Opcode_EORI:
+* 
+*  Differenetiates between the various versions of EORI and prints the appropriate data to the output buffer depending 
+*   on the type of effective addressing 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
+Opcode_EORI:
+    LEA         STR_EORI, A2
+    JSR         AppendOutput            ; write the current string in A2 to the output string
+    JSR         Opcode_AppendSizeSuffix
+    CMP.W       #$0000, D4
+    BEQ         EORI_B                  ; if size == byte then fetch next byte
+    CMP.W       #$0001, D4          
+    BEQ         EORI_W                  ; if size == word then fetch next word
+EORI_L:                         ; if size == long then fetch next long
+    JSR         Get_Next_Long_D7
+    LEA         STRINGPOUNDHEX, A2
+    JSR         AppendOutput            ; print "#$"
+    MOVE.W      D6, D4              ; temp store word in D4
+    MOVE.L      D7, D6              ; move long immediate into D6
+    JSR         PrintASCIILong
+    JSR         OpcodeSize_SetToLong
+    BRA         EORI_END
+EORI_B:
+    JSR         Get_Next_Word_D7
+    LEA         STRINGPOUNDHEX, A2
+    JSR         AppendOutput            ; print "#$"
+    MOVE.W      D6, D4              ; temp store word in D4
+    MOVE.W      D7, D6              ; move word immediate into D6
+    JSR         PrintASCIIWord
+    JSR         OpcodeSize_SetToByte
+    BRA         EORI_END
+EORI_W:
+    JSR         Get_Next_Word_D7
+    LEA         STRINGPOUNDHEX, A2
+    JSR         AppendOutput            ; print "#$"
+    MOVE.W      D6, D4              ; temp store word in D4
+    MOVE.W      D7, D6              ; move word immediate into D6
+    JSR         PrintASCIIWord
+    JSR         OpcodeSize_SetToWord
+    BRA         EORI_END
+EORI_END:
+    MOVE.W      D4, D6              ; revert word to D6
+    JSR         AppendComma
+    JSR         EA_AppendMXn
+    BRA         Opcode_Finish
+
+
+
+*---------------------------------------------------------------------------------------------------------------------
 * Opcode_BCLR:
 * 
 *  Disassembles the BCLR operation code and prints the data to the output buffer 

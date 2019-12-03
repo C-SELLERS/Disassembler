@@ -8,8 +8,7 @@ TODO:
 	* Displacement needs to be interpreted (we are printing 0006 when it should be '3', printing 00FA when it should be '-4')
     * Function headers 
     * Required Documentation
-    * Unsolved bug(s):
-    * Handle ADDQ, EORI
+    * Handle EORI
 
 Low priority:
 ------------------------
