@@ -118,6 +118,7 @@ STR_ORI         DC.B    TAB,'ORI',0
 STR_CMPI        DC.B    TAB,'CMPI',0
 STR_SUB         DC.B    TAB,'SUB',0
 STR_SUBQ        DC.B    TAB,'SUBQ',0
+STR_ADDQ        DC.B    TAB,'ADDQ',0
 STR_MULS        DC.B    TAB,'MULS',TAB,0
 STR_ADDA        DC.B    TAB,'ADDA',0
 STR_ADD         DC.B    TAB,'ADD',0

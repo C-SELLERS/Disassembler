@@ -32,7 +32,13 @@ Opcode:
     BEQ         Opcode_SUB              ; if equal jump to SUB
     
     CMP.W       #$5000,D2               ; compare with 1010
-    BEQ         Opcode_SUBQ             ; if equal jump to SUBQ
+    BNE         SKIP_5000               ; if not equal then skip
+    MOVE.W      D6, D3                  ; move current word into working register (D3)
+    AND.W       #MASK_8, D3             ; mask bit 8
+    CMP.W       #$0000, D3              ; compare with 0
+    BNE         Opcode_SUBQ             ; if not equal jump to SUBQ
+    BRA         Opcode_ADDQ             ; if equal jump to ADDQ
+Skip_5000:
     
     CMP.W       #$C000,D2               ; compare with 1100
     BEQ         Opcode_MULS             ; if equal jump to MULS
@@ -59,8 +65,8 @@ Opcode:
     
     CMP.W       #$0000,D3               ; compare with 000
     BEQ         Opcode_ORI              ; if equal jump to ORI
+Skip_0000:  
 
-Skip_0000:    
     CMP.W       #$D000,D2               ; compare with 1101
     BNE         Skip_1101               ; if not equal then skip
     MOVE.W      D6,D3                   ; move current word into working register (D3)

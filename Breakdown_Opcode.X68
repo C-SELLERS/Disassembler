@@ -81,6 +81,23 @@ Opcode_SUBQ:
 
 
 *---------------------------------------------------------------------------------------------------------------------
+* Opcode_ADDQ:
+* 
+* Disassembles the ADDQ operation code and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
+Opcode_SUBQ:
+    LEA         STR_ADDQ, A2
+    JSR         AppendOutput            ; write ADDQ to the output string
+    JSR         Opcode_AppendSizeSuffix
+    JSR         Data11109
+    JSR         AppendComma
+    JSR         EA_AppendMXn
+    BRA         Opcode_Finish
+
+*---------------------------------------------------------------------------------------------------------------------
 * Opcode_MULS:
 * 
 *  Disassembles the MULS operation code and prints the data to the output buffer 

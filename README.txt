@@ -15,6 +15,9 @@ Low priority:
 ------------------------
     extra credit stuff
 
+Opcodes supported that are not required:
+------------------------
+    ADDQ, 
 
 Completed: 
 ------------------------
