@@ -292,6 +292,7 @@ ADD_EA_DN_EA:                   ; case <ea> + Dn -> <ea>
 Opcode_DIVS:
     LEA         STR_DIVS, A2
     JSR         AppendOutput                ; write DIVS to the output string
+    JSR         OpcodeSize_SetToWord        ; set the flag for .W
     JSR         EA_AppendMXn
     JSR         AppendComma
     JSR         Dn
@@ -958,6 +959,7 @@ Opcode_Finish:
     JSR         TrapTask13                      ; Send it to the printer
     LEA         CURRENT_STR_LENGTH, A2
     CLR.B       (A2)                            ; Set Current String Length Back to Zero
+    JSR         OpcodeSize_SetToElse            ; reset Opcode Size
     MOVEM.L     (SP)+, D2-D4/A4                 ; return registers to their previous state
     RTS                                         ; return from function
 

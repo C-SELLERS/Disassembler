@@ -40,6 +40,7 @@ OpcodeSize_Current DC.B    1
 OPCODESIZE_BYTE    EQU 0
 OPCODESIZE_WORD    EQU 1
 OPCODESIZE_LONG    EQU 2
+OPCODESIZE_ELSE    EQU 3
 
 
 *********************************************************************************
