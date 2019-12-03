@@ -570,7 +570,7 @@ AppendComma:
 *---------------------------------------------------------------------------------------------------------------------
 Data11109:
     MOVE.W  D6, D3              ; move current word into working register
-    AND.W   #MASK_11109, D3      ; mask bits 11, 10, 9
+    AND.W   #MASK_11109, D3     ; mask bits 11, 10, 9
     MOVEA   Hex_StrArray, A4    ; Move the base array into A4
     ROL     #7, D3              ; rotate left 7 so bits are in least significant position
     CMP.W   #0, D3              ; check if D3 is 0
@@ -578,7 +578,9 @@ Data11109:
     ADD.W   #8, D3              ; if D3 is zero, add 8
 Data11109_NOT_ZERO:
     MULS    #2, D3              ; multiply by 2 for correct array offset
-    LEA     (A4,D3), A2         ; move ASCII char into A2
+    LEA     STRINGPOUND, A2     ; move string # into A2
+    JSR     AppendOutput        ; print string # in A2
+    LEA     (A4,D3), A2         ; move ASCII immediate into A2
     JSR     AppendOutput
     RTS
 

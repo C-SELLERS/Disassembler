@@ -94,6 +94,7 @@ ERROR_CODE_FILE_3  DC.W    'File is Read only',0
 FILE_ERROR_ARRAY   DC.W    'Success','EOF Encountered','Error','File is Read only',0
 
 STRINGCOMMA     DC.B    ', ',0 
+STRINGPOUND     DC.B    '#',0
 STRINGPOUNDHEX  DC.B    '#$',0 
 STRINGSLASH     DC.B    '/',0  
 

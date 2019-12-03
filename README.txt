@@ -23,7 +23,6 @@ ADDA        #02,A1		    SUBQ.W  2, A1			Same issue as above
 Low priority:
 ------------------------
     extra credit stuff
-    print '#' in Data11109?
 
 
 Completed: 
