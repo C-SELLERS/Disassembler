@@ -888,6 +888,21 @@ Opcode_BVC:
     JSR         Displacement
     BRA         Opcode_Finish
 
+
+*---------------------------------------------------------------------------------------------------------------------
+* Opcode_RESET:
+* 
+*  Disassembles the RESET opcode and prints the data to the output buffer 
+* 
+* Pre: 
+*   - D6: current opcode
+*---------------------------------------------------------------------------------------------------------------------
+Opcode_RESET:
+    LEA         STR_RESET, A2
+    JSR         AppendOutput                    ; write the current string in A2 to the output string
+    BRA         Opcode_Finish
+    
+
 *---------------------------------------------------------------------------------------------------------------------
 * Opcode_NOP:
 * 
@@ -1032,6 +1047,7 @@ Opcode_Finish:
     JSR         OpcodeSize_SetToElse            ; reset Opcode Size
     MOVEM.L     (SP)+, D2-D4/A4                 ; return registers to their previous state
     RTS                                         ; return from function
+
 
 
 *~Font name~Courier New~

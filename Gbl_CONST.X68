@@ -121,6 +121,7 @@ STR_DIVS        DC.B    TAB,'DIVS',TAB,0
 STR_EOR         DC.B    TAB,'EOR',0
 STR_EORI        DC.B    TAB,'EORI',0
 STR_ILLEGAL     DC.B    TAB,'ILLEGAL',TAB,0
+STR_RESET       DC.B    TAB,'RESET',TAB,0
 STR_JSR         DC.B    TAB,'JSR',TAB,TAB,0
 STR_LEA         DC.B    TAB,'LEA',TAB,TAB,0
 STR_LSL         DC.B    TAB,'LSL',TAB,0
@@ -273,6 +274,7 @@ Hex_Str_15              DC.B    'F',0
 
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
+
 
 
 
