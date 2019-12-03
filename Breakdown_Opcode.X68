@@ -334,6 +334,8 @@ Opcode_ADD:
     LEA         STR_ADD, A2
     JSR         AppendOutput            ; write ADD to the output string
     JSR         Opcode_AppendSizeSuffix
+    LEA         TAB, A2
+    JSR         AppendOutput            ; print extra tab for formatting
     MOVE.W      D6,D3                   ; move word value into D3
     AND         #MASK_8, D3             ; mask bit 8
     CMP.W       #$0000,D3               ; compare with 0
