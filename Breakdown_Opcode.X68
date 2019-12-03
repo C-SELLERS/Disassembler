@@ -88,7 +88,7 @@ Opcode_SUBQ:
 * Pre: 
 *   - D6: current opcode
 *---------------------------------------------------------------------------------------------------------------------
-Opcode_SUBQ:
+Opcode_ADDQ:
     LEA         STR_ADDQ, A2
     JSR         AppendOutput            ; write ADDQ to the output string
     JSR         Opcode_AppendSizeSuffix
