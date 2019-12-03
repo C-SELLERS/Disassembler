@@ -7,9 +7,12 @@ TODO:
     * RegisterList failing
 	* Displacement needs to be interpreted (we are printing 0006 when it should be '3', printing 00FA when it should be '-4')
     * Function headers 
-    * Unsolved bug:
+    * Required Documentation
+    * Unsolved bug(s):
 Input				        Output  				Comment
-DIVS        #01,D1		    DIVS    #$83F9, D1 		This bug also messes up the next line
+DIVS        #01,D1		    DIVS    #$83F9, D1 		DIVS #IMM should pull next word from memory and interpret that as Immediate
+                                                    EA_AppendModeRegister does not know size (OpcodeSize_GetSize) because Opcode_AppendSizeSuffix is not called in this context
+                                                    This bug also messes up the next line
 
 EOR         D0,-(A7)		EOR.W   D0, -(A7)
 EOR.W       #$AAFF,D0		CMPI.W  #$AAFF, D0		Predecrement A7 messes up the next line?
