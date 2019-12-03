@@ -8,7 +8,6 @@ TODO:
 	* Displacement needs to be interpreted (we are printing 0006 when it should be '3', printing 00FA when it should be '-4')
     * Function headers 
     * Required Documentation
-    * Handle EORI
 
 Low priority:
 ------------------------
@@ -16,7 +15,7 @@ Low priority:
 
 Opcodes supported that are not required:
 ------------------------
-    ADDQ, 
+    ADDQ, EORI
 
 Completed: 
 ------------------------
