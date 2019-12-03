@@ -9,6 +9,24 @@ TODO:
     * Function headers 
     * Required Documentation
 
+TEST_002 FAILS:
+OUTPUT								ORIGINAL
+
+00111162	MOVE.B	#000F, D0		00111162	MOVE.B      #$FF,D0
+
+00111246	DIVS	#$0001, D1		00111246	DIVS        #01,D1
+
+00111284	CMP.W	#$0002, D1		00111284	CMP         #02,D1
+
+001112A0	BCLR	#$000A, D1		001112A0	EOR.L       #$AFAF5,D1
+001112A4	DATA	FAF5
+
+001112AE	MULS	#$C1F9, D1		001112AE	MULS        #02,D1
+001112B4	ORI.B	#$AAFF, D0		001112B2	MULS        $AAFF,D0
+
+...Thats all folks :)
+
+
 Low priority:
 ------------------------
     extra credit stuff
