@@ -158,6 +158,49 @@ TESTIO
 * MOVEM
 *-----------------------------------------------------------
 
+    MOVEM.L     D0-D7/A0-A6,-(A7)
+    MOVEM.L     D0,-(A7)
+    MOVEM.L     D1,-(A7)
+    MOVEM.L     D2,-(A7)
+    MOVEM.L     D3,-(A7)
+    MOVEM.L     D4,-(A7)
+    MOVEM.L     D5,-(A7)
+    MOVEM.L     D6,-(A7)
+    MOVEM.L     D7,-(A7)
+    MOVEM.L     A0,-(A7)
+    MOVEM.L     A1,-(A7)
+    MOVEM.L     A2,-(A7)
+    MOVEM.L     A3,-(A7)
+    MOVEM.L     A4,-(A7)
+    MOVEM.L     A5,-(A7)
+    MOVEM.L     A6,-(A7)
+    MOVEM.L     A7,-(A7)
+    MOVEM.L     D0-D7/A0-A6,-(A7)
+    MOVEM.L     D0-D5/D7/A3-A6,-(A7)
+    MOVEM.L     D0/D2/D4/D6/A0/A2/A4/A6,-(A7)
+    MOVEM.L     D0-D2/D4/D6-D7/A0-A3/A5/A7,-(A7)
+    MOVEM.L     (A7)+,D0
+    MOVEM.L     (A7)+,D1
+    MOVEM.L     (A7)+,D2
+    MOVEM.L     (A7)+,D3
+    MOVEM.L     (A7)+,D4
+    MOVEM.L     (A7)+,D5
+    MOVEM.L     (A7)+,D6
+    MOVEM.L     (A7)+,D7
+    MOVEM.L     (A7)+,A0
+    MOVEM.L     (A7)+,A1
+    MOVEM.L     (A7)+,A2
+    MOVEM.L     (A7)+,A3
+    MOVEM.L     (A7)+,A4
+    MOVEM.L     (A7)+,A5
+    MOVEM.L     (A7)+,A6
+    MOVEM.L     (A7)+,A7
+    MOVEM.L     (A7)+,D0-D7/A0-A6
+    MOVEM.L     (A7)+,D0-D5/D7/A3-A6
+    MOVEM.L     (A7)+,D0/D2/D4/D6/A0/A2/A4/A6
+    MOVEM.L     (A7)+,D0-D2/D4/D6-D7/A0-A3/A5/A7   
+
+
 
 *-----------------------------------------------------------
 * SUBQ.x 
@@ -801,6 +844,9 @@ TESTIO
     ADD         $0A05,A5
     ADD         $0A05,A6
     ADD         $0A05,A7
+
+
+
 
 
 
