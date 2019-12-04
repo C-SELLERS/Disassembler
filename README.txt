@@ -4,7 +4,6 @@ TODO:
 ------------------------
     * RegisterList_Preincrement
     * RegisterList failing
-	* Displacement needs to be interpreted (we are printing 0006 when it should be '3', printing 00FA when it should be '-4')
     * Function headers 
     * Required Documentation
 
@@ -19,6 +18,7 @@ Opcodes supported that are not required:
 
 Completed: 
 ------------------------
+	* Displacement needs to be interpreted (we are printing 0006 when it should be '3', printing 00FA when it should be '-4')
     * ROLs interpreted as RORs and vice-versa
     * Created STACK_LOCATION, and LEA'd A7 to it in DissassemblerSetup.x68 [crashing error]; 
          - STACK_LOCATION is set to $0070000, but feel free to change that
