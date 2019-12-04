@@ -474,8 +474,9 @@ Displacement_Print_Word:
     AND.L	    #$80000000, D3	    ; mask bit 15
     CMP.L	    #$00000000, D3      ; test bit 15
     BNE	        Displacement_Case_Negative
+
 Displacement_Case_Positive:
-    ADD.L	    2, D6		        ; add 2 to increment location
+    ADD.L	    #1, D6		        ; add 1 to increment location
     ADD.L	    A3, D6		        ; add current location
     JSR	        PrintASCIILong
     RTS
@@ -484,6 +485,7 @@ Displacement_Case_Negative:
     MOVE.L	    #$FFFFFFFE, D3	    ; move $FFFFFFFE to working register
     SUB.L	    D6, D3		        ; convert by subtracting input from $FFFFFFFE
     MOVE.L	    A3, D6		        ; move current address to D6
+    ADD.L       #2, D6              ; add 2 to increment location
     SUB.L	    D3, D6		        ; subtract converted input from current address
     JSR	        PrintASCIILong	    ; print displacement
     RTS
