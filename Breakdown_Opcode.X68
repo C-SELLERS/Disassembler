@@ -334,7 +334,7 @@ Opcode_ADD:
     LEA         STR_ADD, A2
     JSR         AppendOutput            ; write ADD to the output string
     JSR         Opcode_AppendSizeSuffix
-    LEA         TAB, A2
+    LEA         STR_TAB, A2
     JSR         AppendOutput            ; print extra tab for formatting
     MOVE.W      D6,D3                   ; move word value into D3
     AND         #MASK_8, D3             ; mask bit 8
@@ -1049,6 +1049,7 @@ Opcode_Finish:
     JSR         OpcodeSize_SetToElse            ; reset Opcode Size
     MOVEM.L     (SP)+, D2-D4/A4                 ; return registers to their previous state
     RTS                                         ; return from function
+
 
 
 
