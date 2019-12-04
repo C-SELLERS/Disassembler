@@ -2,34 +2,15 @@ Disassembler Project for 422
 
 TODO:
 ------------------------
-    * Main() does not return when A3 >= A4(END_ADDRESS) 
     * RegisterList_Preincrement
     * RegisterList failing
-	* Displacement needs to be interpreted (we are printing 0006 when it should be '3', printing 00FA when it should be '-4')
     * Function headers 
     * Required Documentation
-
-TEST_002 FAILS:
-OUTPUT								ORIGINAL
-
-00111162	MOVE.B	#000F, D0		00111162	MOVE.B      #$FF,D0
-
-00111246	DIVS	#$0001, D1		00111246	DIVS        #01,D1
-
-00111284	CMP.W	#$0002, D1		00111284	CMP         #02,D1
-
-001112A0	BCLR	#$000A, D1		001112A0	EOR.L       #$AFAF5,D1
-001112A4	DATA	FAF5
-
-001112AE	MULS	#$C1F9, D1		001112AE	MULS        #02,D1
-001112B4	ORI.B	#$AAFF, D0		001112B2	MULS        $AAFF,D0
-
-...Thats all folks :)
-
 
 Low priority:
 ------------------------
     extra credit stuff
+    EORI.L is displayed as a BCLR (EORI is not a required opcode)
 
 Opcodes supported that are not required:
 ------------------------
@@ -37,6 +18,7 @@ Opcodes supported that are not required:
 
 Completed: 
 ------------------------
+	* Displacement needs to be interpreted (we are printing 0006 when it should be '3', printing 00FA when it should be '-4')
     * ROLs interpreted as RORs and vice-versa
     * Created STACK_LOCATION, and LEA'd A7 to it in DissassemblerSetup.x68 [crashing error]; 
          - STACK_LOCATION is set to $0070000, but feel free to change that

@@ -453,18 +453,43 @@ Displacement:
     AND.W       #MASK_76543210, D3  ; mask so only the bottom byte is available
     CMP.W       #$0000, D3          ; compare with 0
     BEQ         Displacement_Fetch_Word
-    MOVE.L      D6,-(SP)        ; move D6 to stack for preservation
-    MOVE.W      D3, D6          ; move masked value into D6 for printing
-    JSR         PrintASCIIWord          
-    MOVE.L      (SP)+,D6        ; pop D6 from stack
+    MOVE.L      D6,-(SP)            ; move D6 to stack for preservation
+    MOVE.W      D3, D6              ; move masked value into D6 for printing
+    JSR         Displacement_Print_Byte         
+    MOVE.L      (SP)+,D6            ; pop D6 from stack
     RTS
 Displacement_Fetch_Word:
     JSR         Get_Next_Word_D7
-    MOVE.W      D6,-(SP)        ; move D6 to stack for preservation
-    MOVE.W      D7, D6          ; move value into D6 for printing
-    JSR         PrintASCIIWord
-    MOVE.W      (SP)+,D6        ; pop D6 from stack
+    MOVE.W      D6,-(SP)            ; move D6 to stack for preservation
+    MOVE.W      D7, D6              ; move value into D6 for printing
+    JSR         Displacement_Print_Word
+    MOVE.W      (SP)+,D6            ; pop D6 from stack
     RTS
+
+Displacement_Print_Byte:
+    EXT.W	    D6		            ; extend to word size
+Displacement_Print_Word:
+    EXT.L	    D6		            ; extend to long size
+    MOVE.L	    D6, D3		        ; move to working register
+    AND.L	    #$80000000, D3	    ; mask bit 15
+    CMP.L	    #$00000000, D3      ; test bit 15
+    BNE	        Displacement_Case_Negative
+
+Displacement_Case_Positive:
+    SUB.L	    #2, D6		        ; add 1 to increment location
+    ADD.L	    A3, D6		        ; add current location
+    JSR	        PrintASCIILong
+    RTS
+
+Displacement_Case_Negative:
+    MOVE.L	    #$FFFFFFFE, D3	    ; move $FFFFFFFE to working register
+    SUB.L	    D6, D3		        ; convert by subtracting input from $FFFFFFFE
+    MOVE.L	    A3, D6		        ; move current address to D6
+    SUB.L       #2, D6              ; add 2 to increment location
+    SUB.L	    D3, D6		        ; subtract converted input from current address
+    JSR	        PrintASCIILong	    ; print displacement
+    RTS
+
 
     
 *---------------------------------------------------------------------------------------------------------------------
