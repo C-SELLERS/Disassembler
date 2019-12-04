@@ -98,6 +98,11 @@ STRINGCOMMA     DC.B    ', ',0
 STRINGPOUND     DC.B    '#',0
 STRINGPOUNDHEX  DC.B    '#$',0 
 STRINGSLASH     DC.B    '/',0  
+STR_EIGHT_ZEROES    DC.B    '00000000',0
+STR_FOUR_ZEROES     DC.B    '0000',0
+STR_TWO_ZEROES      DC.B    '00',0
+
+
 
 STRING_B        DC.B    '.B',TAB,0
 STRING_W        DC.B    '.W',TAB,0
@@ -274,6 +279,7 @@ Hex_Str_15              DC.B    'F',0
 
 Hex_StrArray         DC.W       Hex_Str_00, Hex_Str_01, Hex_Str_02, Hex_Str_03, Hex_Str_04, Hex_Str_05, Hex_Str_06, Hex_Str_07
                      DC.W       Hex_Str_08, Hex_Str_09, Hex_Str_10, Hex_Str_11, Hex_Str_12, Hex_Str_13, Hex_Str_14, Hex_Str_15
+
 
 
 

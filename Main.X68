@@ -134,7 +134,7 @@ AppendOutput:
 * Preconditions: Current word is in D6
 *
 *********************************************************************************
-PrintASCIIWord:
+PrintASCIIWord_1:
     MOVEM.L     D2-D3/A4, -(SP)     ; MOVEM all registers used
     MOVEA       Hex_StrArray, A4    ; Move the base array into A4
 
@@ -168,6 +168,152 @@ PrintASCIIWord:
     MOVEM.L     (SP)+, D2-D3/A4     ; return registers to their previous state
     RTS                                ; exit 
     
+PrintASCIILong:
+    MOVEM.L     D0,-(SP)
+    MOVE.L      #8,D0
+    JSR         PrintASCIINumber
+    MOVEM.L     (SP)+,D0
+    RTS
+
+PrintASCIIWord:
+    MOVEM.L     D0,-(SP)
+    MOVE.L      #4,D0
+    JSR         PrintASCIINumber
+    MOVEM.L     (SP)+,D0
+    RTS
+    
+PrintASCIIByte:
+    MOVEM.L     D0,-(SP)
+    MOVE.L      #2,D0
+    JSR         PrintASCIINumber
+    MOVEM.L     (SP)+,D0
+    RTS
+
+PrintASCIINumber:
+    MOVEM.L      D1-D4/D6,-(SP)
+    
+    ;check for zeroes first
+    CMP         #8,D0
+    BEQ         PAW_Check8Zeroes
+
+    CMP         #4,D0
+    BEQ         PAW_Check4Zeroes
+
+    CMP         #2,D0
+    BEQ         PAW_Check2Zeroes
+
+    BRA         PAW_PrepToPrint
+
+PAW_Check8Zeroes
+    CMP.L       #$00000000,D6
+    BNE         PAW_PrepToPrint
+    
+    LEA         STR_EIGHT_ZEROES,A2
+    JSR         AppendOutput
+    BRA         PAW_ReturnAsIs
+   
+PAW_Check4Zeroes
+    CMP.W       #$0000,D6
+    BNE         PAW_PrepToPrint
+    
+    LEA         STR_FOUR_ZEROES,A2
+    JSR         AppendOutput
+    BRA         PAW_ReturnAsIs
+   
+PAW_Check2Zeroes
+    CMP.B       #$00,D6
+    BNE         PAW_PrepToPrint
+    
+    LEA         STR_TWO_ZEROES,A2
+    JSR         AppendOutput
+    BRA         PAW_ReturnAsIs
+  
+
+PAW_PrepToPrint
+    ;D0 = the counter, and is set by an external function 
+    MOVE.L      #IsFalse,D1             ; set D1 as a flag (init to false)
+    CLR.L       D2                      ; D2 to hold the digit
+    CLR.L       D3                      ; clear D3 to hold the bit-shift distance
+    MOVE.L      D0,D4                   ; copy D0 to D4 for future comparisons
+    SUBQ        #01,D4                  ; subtract 1 from D4, because we're counting down not up
+                                         
+PAW_Loop
+    SUBQ        #01,D0
+    BLT         PAW_Return
+
+    MOVE.L      D6,D2                   ; move word into temp register
+    MOVE.L      D0,D3                   ; copy the index to the bit-shifter
+    MULU        #4,D3                   ; multipy the bit-shifter by 4 to shift by bytes
+    ROR.L       D3,D2                   ; shift the byte to the far right
+    AND.L       #$000F,D2               ; mask everything but the last byte
+    CMP.B       #00,D2                  ; check if the number is zero
+    BEQ         PAW_CheckEmpty         ; if zero, perform zero-related checks
+    BRA         PAW_PrintChar          ; if not zero, print the digit as char
+ 
+PAW_CheckEmpty    
+    CMP         D4,D0                  ; check if this is the first zero encountered
+    BEQ         PAW_InitZero            ; if it is the first zero, initialize the zero-flag
+    CMP         #IsTrue,D1              ; check if the zero flag has been previously set
+    BEQ         PAW_Loop               ; if this digit is zero, and the zero flag has been set before, keep skipping
+    BNE         PAW_PrintChar          ; if this is not zero, prin this char 
+   
+PAW_PrintChar
+    MOVE.B      #IsFalse,D1             ; unset the zero flag
+    JSR         PrintASCIIDigit         ; print the digit
+    BRA         PAW_Loop               ; continue to print digits
+ 
+PAW_InitZero
+    MOVE.B      #IsTrue,D1              ; flag the digit as zero
+    BRA         PAW_Loop               ; continue to print digits 
+    
+PAW_Return
+;    CMP         #IsFalse,D1
+;    BEQ         PAW_ReturnAsIs
+;
+;    CMP         #08,D4
+;    BEQ         PAW_Print8Zeroes
+;
+;    CMP         #04,D4
+;    BEQ         PAW_Print4Zeroes
+;
+;    CMP         #02,D4
+;    BEQ         PAW_Print2Zeroes
+;
+;    BRA         PAW_ReturnAsIs         
+;
+;PAW_Print8Zeroes
+;    LEA         STR_EIGHT_ZEROES,A2
+;    JSR         AppendOutput
+;    BRA         PAW_ReturnAsIs
+;    
+;PAW_Print4Zeroes
+;    LEA         STR_FOUR_ZEROES,A2
+;    JSR         AppendOutput
+;    BRA         PAW_ReturnAsIs
+;    
+;PAW_Print2Zeroes
+;    LEA         STR_TWO_ZEROES,A2
+;    JSR         AppendOutput
+;    BRA         PAW_ReturnAsIs
+    
+PAW_ReturnAsIs
+    ;MOVE.L      D6,D2                   ; move word into temp register
+    ;JSR         PrintASCIIDigit         ; print the digit
+    MOVEM.L     (SP)+,D1-D4/D6
+    RTS
+     
+
+* assumes: D2 contains the char in question 
+PrintASCIIDigit:
+    MOVEM.L     D2/A2/A4, -(SP)             ; MOVEM all registers used
+    MOVEA       Hex_StrArray, A4            ; Move the base array into A4
+    AND.L       #$000F,D2
+    MULU        #ARRAY_ELEMENT_WIDTH,D2     ; index to the char in question
+    ADD         D2,A4
+    MOVE.L      A4,A2                  ; point A2 to the ASCII-equivalent of the digit
+    JSR         AppendOutput                ; print the char version of the digit
+    MOVEM.L     (SP)+,D2/A2/A4              ; restore the registers
+    RTS
 
 *********************************************************************************
 * Method Name:  PrintASCIILong
@@ -178,7 +324,7 @@ PrintASCIIWord:
 *
 *********************************************************************************
 
-PrintASCIILong:
+PrintASCIILong_1:
     MOVEM.L     D6-D7, -(SP)        ; MOVEM all registers used
     MOVE.B      #16, D7             ; move 16 into D7 for rotation
     ROL.L       D7, D6              ; rotate D6 by 16 bits
@@ -391,6 +537,14 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     ORG $00111112
    
      
+     
+    
+    MULS        $AAFF,D0
+    MULS        $AFAF5,D1
+
+    ADD         D0,D1
+    ADD         D0,A0 
+     
     INCLUDE '.\UnitTests\TEST_002.x68'
 
 
@@ -398,6 +552,7 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
 
 
    END    $1000        ; last line of source
+
 
 
 

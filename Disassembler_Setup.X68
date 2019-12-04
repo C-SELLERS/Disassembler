@@ -4,7 +4,6 @@
     ; Configure the stack to exist (current default: $0070000)
     LEA         STACK_LOCATION,SP   
     
-
     ; Read in from config.cfg
     LEA         inFile, A1       ;in file name
     MOVE        #51, D0          ;open in file
@@ -42,11 +41,7 @@
     ; Clear Current String Length
     LEA         CURRENT_STR_LENGTH, A1
     CLR.B       (A1)
-
-
-
     
-
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

@@ -211,7 +211,7 @@ Skip_0110:
     MOVE.W      D6,D3                   ; move current word into working register (D3)
 
     CMP.W       #$4E70,D2               ; check against constant RESET code
-    BNE         Opcode_RESET            ; if equal jump to RESET
+    BEQ         Opcode_RESET            ; if equal jump to RESET
     
     CMP.W       #$4E71,D3               ; check against constant NOP code
     BEQ         Opcode_NOP              ; if equal jump to NOP
@@ -243,6 +243,7 @@ Skip_0100:
     BEQ         Opcode_SIMHALT          ; if equal jump to SIMHALT
     
     BRA         Opcode_DATA             ; if no opcodes found jump to DATA
+
 
 
 
