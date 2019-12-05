@@ -24,7 +24,6 @@ Registerlist Test:
 Low priority:
 ------------------------
     extra credit stuff
-    EORI.L is displayed as a BCLR (EORI is not a required opcode)
 
 Opcodes supported that are not required:
 ------------------------

@@ -192,7 +192,7 @@ EA_ProcessImmediate
 
 
 EA_ProcessImmediateByte
-    LEA         EA_Str_Hash,A2                  ; move the '#' value into A2
+    LEA         EA_Str_HashDollar,A2                  ; move the '#$' value into A2
     JSR         AppendOutput
     
     JSR         Get_Next_Word_D6                ; pull the next word into D3
@@ -201,7 +201,7 @@ EA_ProcessImmediateByte
     BRA         EA_Return
 
 EA_ProcessImmediateWord
-    LEA         EA_Str_HashDollar,A2                  ; move the '#' value into A2
+    LEA         EA_Str_HashDollar,A2                  ; move the '#$' value into A2
     JSR         AppendOutput
     
     JSR         Get_Next_Word_D6                ; pull the next word into D3
@@ -209,7 +209,7 @@ EA_ProcessImmediateWord
     BRA         EA_Return
      
 EA_ProcessImmediateLong    
-    LEA         EA_Str_HashDollar,A2                  ; move the '#' value into A2
+    LEA         EA_Str_HashDollar,A2                  ; move the '#$' value into A2
     JSR         AppendOutput
     
     JSR         Get_Next_Long_D7                ; pull the next word into D3
