@@ -455,6 +455,8 @@ Displacement:
     BEQ         Displacement_Fetch_Word
     MOVE.L      D6,-(SP)            ; move D6 to stack for preservation
     MOVE.W      D3, D6              ; move masked value into D6 for printing
+    LEA         EA_Str_Dollar, A2   
+    JSR         AppendOutput        ; print '$'
     JSR         Displacement_Print_Byte         
     MOVE.L      (SP)+,D6            ; pop D6 from stack
     RTS
@@ -462,6 +464,8 @@ Displacement_Fetch_Word:
     JSR         Get_Next_Word_D7
     MOVE.W      D6,-(SP)            ; move D6 to stack for preservation
     MOVE.W      D7, D6              ; move value into D6 for printing
+    LEA         EA_Str_Dollar, A2   
+    JSR         AppendOutput        ; print '$'
     JSR         Displacement_Print_Word
     MOVE.W      (SP)+,D6            ; pop D6 from stack
     RTS
