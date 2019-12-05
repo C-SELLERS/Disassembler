@@ -2,10 +2,22 @@ Disassembler Project for 422
 
 TODO:
 ------------------------
-    * RegisterList_Preincrement
-    * RegisterList failing
     * Function headers 
     * Required Documentation
+    * Registerlist not print dash and contiguous registers
+
+Registerlist Test:
+
+	Input	        				Output
+    MOVEM   A2, -(SP)				MOVEM.L	A2, -(A7)
+    MOVEM   D1-D6, -(SP)			MOVEM.L	D1, -(A7)
+    MOVEM   D2/A5, -(SP)			MOVEM.L	D2/A5, -(A7)
+    MOVEM   D3-D5/A2-A4, -(SP)		MOVEM.L	D3/A2, -(A7)
+    
+    MOVEM   (SP)+, A2				MOVEM.W	(A7)+, A2
+    MOVEM   (SP)+, D1-D6			MOVEM.W	(A7)+, D1
+    MOVEM   (SP)+, D2/A5			MOVEM.W	(A7)+, D2/A5
+    MOVEM   (SP)+, D3-D5/A2-A4		MOVEM.W	(A7)+, D3/A2
 
 Low priority:
 ------------------------
