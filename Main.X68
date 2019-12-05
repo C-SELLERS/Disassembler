@@ -536,16 +536,18 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
 
     ORG $00111112
  
-
-
+ 
+    ;MOVEM.L     A7,-(A7)
+    MOVEM.L     D0/D2/D4/D6/A0/A2/A4/A6,-(A7)
+    ;MOVEM.L     D0-D2/D4/D6-D7/A0-A3/A5/A7,-(A7)
      
     INCLUDE '.\UnitTests\TEST_002.x68'
 
 
  
 
-
    END    $1000        ; last line of source
+
 
 
 
