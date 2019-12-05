@@ -4,7 +4,7 @@ TODO:
 ------------------------
     * Function headers 
     * Required Documentation
-    * Registerlist not print dash and contiguous registers
+    * Registerlist does not print dash and contiguous registers
 
 Registerlist Test:
 
@@ -13,11 +13,13 @@ Registerlist Test:
     MOVEM   D1-D6, -(SP)			MOVEM.L	D1, -(A7)
     MOVEM   D2/A5, -(SP)			MOVEM.L	D2/A5, -(A7)
     MOVEM   D3-D5/A2-A4, -(SP)		MOVEM.L	D3/A2, -(A7)
+    MOVEM   D0-D7/A0-A2, -(SP)      MOVEM.L	D0-D7/A0, -(A7)
     
     MOVEM   (SP)+, A2				MOVEM.W	(A7)+, A2
     MOVEM   (SP)+, D1-D6			MOVEM.W	(A7)+, D1
     MOVEM   (SP)+, D2/A5			MOVEM.W	(A7)+, D2/A5
     MOVEM   (SP)+, D3-D5/A2-A4		MOVEM.W	(A7)+, D3/A2
+    MOVEM   (SP)+, D0-D7/A0-A2      MOVEM.W	(A7)+, D0-D7/A0
 
 Low priority:
 ------------------------
