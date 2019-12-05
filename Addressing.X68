@@ -20,6 +20,7 @@
 
 
 
+
 *---------------------------------------------------------------------------------------------------------------------
 * EA_AppendMXn
 * 
@@ -626,29 +627,9 @@ Data11109_NOT_ZERO:
 * Post: 
 *   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
-
 RegisterList_Predecrement:
-    JSR         Get_Next_Word_D7        ; get next word into D7
-    MOVEA       EA_StrArray_Dn, A4  ; move the base array into A4
-    MOVE.W      #16, D4             ; move counter into D4 and set to 15
-RL_LOOP:
-    CMP.W       #0, D4              ; check for end of loop
-    BEQ         RL_LOOP_END
-    SUBQ        #1, D4                 ; decrement D4
-    BTST        D4, D7                 ; test bit in position D4
-    BNE         RL_LOOP
-    MULU        #2, D4              ; multiply D4 by 2 for offset
-    LEA         (A4, D4), A2
-    JSR         AppendOutput            ; print register
-    DIVS        #2, D4                  ; divide D4 by 2 for counter
-    LEA         STRINGSLASH, A2       
-    JSR         AppendOutput            ; print '/'
-    BRA         RL_LOOP
-RL_LOOP_END:
-    LEA         OUTPUT, A1
-    LEA         CURRENT_STR_LENGTH, A2
-    ADD         (A2), A1
-    MOVE.B      #00, (A1)
+    JSR     EA_SetMovemToPreDec
+    JSR     EA_GetRegisterList   
     RTS
 
 
@@ -665,17 +646,173 @@ RL_LOOP_END:
 *   - The correct ASCII string will be appended to the output buffer
 *---------------------------------------------------------------------------------------------------------------------
 RegisterList_Postincrement:
-    ;todo
+    JSR     EA_SetMovemToNotPreDec
+    JSR     EA_GetRegisterList   
     RTS
 
 
+*---------------------------------------------------------------------------------------------------------------------
+* EA_GetRegisterList:
+* 
+* GetRegisterList reads the bits from word stored in D7 to establish a register list used by MOVEM.
+* This list is reversed using ReverseBitsInD7Word depending on if the flag in EA_GetMovemIsPreDec is set. 
+* 
+* Pre: 
+*   - D7: will receive a word with a bit-list of registers 
+*   - EA_GetMovemIsPreDec set to IsTrue or IsFalse
+* 
+* Post: 
+*   - A list of registers is written to the output buffer 
+*---------------------------------------------------------------------------------------------------------------------
+EA_GetRegisterList:
+    MOVEM.L     D0-D4/D7/A4,-(SP)
+    CLR         D1                      ; D1 = last bit found
+    CLR         D2                      ; D2 = string array offset
+    CLR         D3                      ; D3 = working register for comparisons
+    CLR         D4                      ; D4 = flag for contigousness of registers  
+    JSR         Get_Next_Word_D7        ; D7 = word bit list of registers 
+    MOVEA       EA_StrArray_Dn, A4      ; A4 = Register string list 
+
+    JSR         EA_GetMovemIsPreDec     ; by default, print bits according to pre-decrement sorting
+    BNE         RL_SkipBitReversal
+    
+    JSR         ReverseBitsInD7Word     ; if not default, reverse bits to be read in pre-dec order
+    
+    
+RL_SkipBitReversal
+    MOVE.W      #16,D0                  ; D0 = iterator 
+    
+
+RL_LOOP:
+    CMP.W       #00,D0                  ; check for end of loop
+    BLT         RL_LOOP_END
+    SUBQ        #1, D0                  ; decrement D4
+
+        
+    BTST        D0,D7                   ; test bit in position D4 ; test the register 
+    BEQ         RL_LOOP                 ; if not value, continue           
+    
+    CMP.B       #00,D1                  ;test if this is the first register printed 
+    BEQ         RL_Print1stReg
+
+        ; if not the first 
+            ; test if is last+1
+            
+    JSR         RL_CheckIsContiguous
+    CMP         #IsTrue,D3
+    BEQ         RL_CheckAnStart         ; test if A0
+
+    BRA         RL_PrintSlashReg        ; if not n+1, print "/Xn" & archive
+
+            ;test if last overall 
+                ; print -
+                ; print Dn
+                ; return    
+
+RL_Print1stReg                          
+    ;JSR         RL_CalcOffset           ; if the first
+    JSR         RL_PrintRegister        ; print Rn
+    MOVE.B      D0,D1                   ; archive as most recent
+    BRA         RL_LOOP                 ; continue to loop   
+
+RL_CheckAnStart
+    CMP.B       #07,D0
+    BEQ         RL_Print1stAn           ; if first A0 number, print '-D7/A0'
+
+    MOVE.B      D0,D1                   ; else increment D1
+    BRA         RL_LOOP                 ; and continue to loop
+    
+RL_Print1stAn                           ; print -D7
+    JSR         RL_PrintDash
+    MOVE.B      D0,-(SP)                ; backup D0
+    MOVE.B      D1,D0                   ; calculate offset from D1
+    JSR         RL_PrintRegister        ; print d7
+    MOVE.B      (SP)+,D0                ; restore D0
+    ; intentional fall-through to slash-reg 
+    
+RL_PrintSlashReg
+    JSR         RL_PrintSlash 
+    JSR         RL_PrintRegister        ; print Rn
+    MOVE.B      D0,D1                   ; archive as most recent
+    BRA         RL_LOOP                 ; continue to loop   
+                             
+RL_LOOP_END:
+    JSR         RL_CheckIsContiguous
+    CMP         #IsFalse,D3
+    BEQ         RL_SkipFinal
+
+    JSR         RL_PrintDash
+    JSR         RL_PrintRegister    
+
+RL_SkipFinal
+    MOVEM.L     (SP)+,D0-D4/D7/A4
+    RTS
+
+
+RL_PrintRegister
+    JSR         RL_CheckForRollover
+    MOVE.B      #15,D2                  ; 15 is the max # of bits
+    SUB.B       D0,D2                   ; sub # bits remaining (e.g. 15-10 = 5)
+    MULU        #3,D2                   ; x3 foreach char-digit-null combination
+    MOVE.L      A4,-(SP)
+    LEA         (A4,D2),A2
+    JSR         AppendOutput
+    MOVE.L      (SP)+,A4
+    RTS
+
+RL_PrintDash
+    LEA         STR_DASH,A2
+    JSR         AppendOutput            ; print -
+    RTS
+
+RL_PrintSlash
+    LEA         STR_SLASH, A2       
+    JSR         AppendOutput            ; print '/'
+    RTS
+
+RL_CheckIsContiguous
+    JSR         RL_CheckForRollover
+    MOVE.W      D0,D3                   ; copy current index to temp
+    ADDI        #01,D3                  ; add one to current  
+    CMP         D3,D1
+    BEQ         RL_IsContiguous
+    BRA         RL_IsDiscontiguous
+RL_IsContiguous
+    MOVE.W      #IsTrue,D3
+    RTS
+RL_IsDiscontiguous
+    CMP.B       #$FF,D0
+    BNE         RL_ReportDisContig
+    
+    
+    
+;RL_CheckRollover
+;    CMP         #00,D3
+;    BEQ         RL_IsContiguous
+  
+RL_ReportDisContig
+    MOVE.W      #IsFalse,D3
+    RTS
+
+
+RL_CheckForRollover
+    CMP.B       #$FF,D0
+    BEQ         RL_FixRollover
+    RTS
+    
+RL_FixRollover
+    MOVE.W      #$0000,D0
+    MOVE.W      #IsTrue,D3
+    RTS    
 
 
 
 
- *=====================================================================================================================
- * Effective Addressing Helper Functions
- *=====================================================================================================================
+
+
+*=====================================================================================================================
+* MXn/XnM Helper Functions
+*=====================================================================================================================
 *---------------------------------------------------------------------------------------------------------------------
 * EA_GetIsMxN
 * 
@@ -771,6 +908,10 @@ EA_SetIsXnM
     RTS
     
 
+
+*=====================================================================================================================
+* Opcode Size Helper Functions
+*=====================================================================================================================
 *---------------------------------------------------------------------------------------------------------------------
 * OpcodeSize_SetToByte
 * 
@@ -963,6 +1104,110 @@ Flag_IsTrue
     MOVE.B      #IsTrue,D0
     RTS    
 
+
+
+*=====================================================================================================================
+* Register List Helper Functions
+*=====================================================================================================================
+*---------------------------------------------------------------------------------------------------------------------
+* EA_GetMovemIsPreDec
+* 
+*   Sets D0 to the value stored in 'EA_MovemIsPreDec', for use in comparisons
+* 
+* Pre: 
+*   - 'IsTrue' is defined in Gbl_CONST.x68
+*   - 'IsFalse' is defined in Gbl_CONST.x68
+*
+* Post: 
+*   - D0 is set to 'IsTrue' or 'IsFalse'
+*---------------------------------------------------------------------------------------------------------------------
+EA_GetMovemIsPreDec
+    MOVE.L      A0,-(SP)                ; backup A0
+    LEA         EA_MovemIsPreDec,A0     ; A0 -> 3+
+    MOVE.B      (A0),D0                 ; copy the 'MoveM is Pre-Decrementing' flag into D0  
+    MOVE.L      (SP)+,A0                ; restore A0
+    RTS
+
+
+*---------------------------------------------------------------------------------------------------------------------
+* EA_SetMovemToNotPreDec
+* 
+*   Sets 'EA_MovemIsPreDec' to 'IsFalse'
+* 
+* Pre: 
+*   - 'EA_MovemIsPreDec' is defined in Gbl_CONST.x68 as 1 byte
+*   - 'IsFalse' is defined in Gbl_CONST.x68
+*
+* Post: 
+*   - 'EA_MovemIsPreDec' is set to 'IsFalse'
+*---------------------------------------------------------------------------------------------------------------------
+EA_SetMovemToNotPreDec
+    MOVE.L      A0,-(SP)                ; backup A0
+    LEA         EA_MovemIsPreDec,A0     ; A0 -> 'MoveM is Pre-Decrementing'
+    MOVE.B      #IsFalse,(A0)           ; 'MoveM is Pre-Decrementing' set to isFalse
+    MOVE.L      (SP)+,A0                ; restore A0
+    RTS
+    
+
+*---------------------------------------------------------------------------------------------------------------------
+* EA_SetMovemToNotPreDec
+* 
+*   Sets 'EA_MovemIsPreDec' to 'IsTrue'
+* 
+* Pre: 
+*   - 'EA_MovemIsPreDec' is defined in Gbl_CONST.x68 as 1 byte
+*   - 'IsTrue' is defined in Gbl_CONST.x68
+*
+* Post: 
+*   - 'EA_MovemIsPreDec' is set to 'IsTrue'
+*---------------------------------------------------------------------------------------------------------------------    
+EA_SetMovemToPreDec
+    MOVE.L      A0,-(SP)                ; backup A0
+    LEA         EA_MovemIsPreDec,A0     ; A0 -> 'MoveM is Pre-Decrementing'
+    MOVE.B      #IsTrue,(A0)            ; 'MoveM is Pre-Decrementing' set to isTrue
+    MOVE.L      (SP)+,A0                ; restore A0
+    RTS
+     
+
+*---------------------------------------------------------------------------------------------------------------------
+* ReverseBitsInD7Word
+* 
+*   Reverses the order of the bits stored in the lower-order word of the register D7 (e.g.: FF56 -> 6AFF)
+* 
+* Pre: 
+*   - D7: contains a word value 
+*
+* Post: 
+*   - D7 contains the same word value, in bitwise reverse order
+*--------------------------------------------------------------------------------------------------------------------- 
+ReverseBitsInD7Word
+    MOVEM.L     D1-D5,-(SP)    
+    MOVE.W      D7,-(SP)
+    MOVE.W      #0,D1           ; D1 = iterator
+    MOVE.W      #$8080,D2       ; D2 = bit mask (starting @ #$8080)
+    MOVE.L      D7,D3           ; D3 = temporary value
+    CLR.L       D5              ; D5 = working offset 
+    CLR.L       D7              ; D7 = output value 
+SWAP
+    ADDI        #1,D1           ; increment iterator
+    CMP         #9,D1           ; check if swapped 1/2 bit-length +1 
+    BEQ         SWAP_Return     ; if swapped all upper & lower bits, return
+    
+    MOVE.W      (SP),D3         ; copy bits into temp
+    AND.W       D2,D3           ; mask bits using D2
+    
+    MOVE.B      D1,D5           ; calculate offset = (i * 2) -1
+    MULU        #2,D5           ; iterator * 2
+    SUBQ        #1,D5           ; iterator * 2 - 1
+    ROL.W       D5,D3           ; roll left offset # of times
+    OR.W        D3,D7           ; OR value with output
+    ROR.W       #1,D2           ; shift mask to the right to continue
+    BRA         SWAP
+
+SWAP_Return
+    ADDA        #2,SP           ; advance SP +2 to discard the old D7     
+    MOVEM.L     (SP)+,D1-D5     ; return results in D7
+    RTS  
 
 
 *~Font name~Courier New~
