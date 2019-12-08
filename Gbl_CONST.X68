@@ -176,8 +176,8 @@ MASK_8 			EQU 	$0100
 MASK_76543210   EQU     $00FF
 MASK_7654       EQU     $00F0
 MASK_76 		EQU 	$00C0
-MASK_6          EQU     $0020
-MASK_5          EQU     $0040
+MASK_6          EQU     $0040
+MASK_5          EQU     $0020
 MASK_43 		EQU 	$0018
 MASK_3210       EQU     $000F
 MASK_210        EQU     $0007

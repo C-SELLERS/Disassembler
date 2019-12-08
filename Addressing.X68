@@ -666,10 +666,10 @@ RegisterList_Postincrement:
 *---------------------------------------------------------------------------------------------------------------------
 EA_GetRegisterList:
     MOVEM.L     D0-D4/D7/A4,-(SP)
-    CLR         D1                      ; D1 = last bit found
+    MOVE.B      #$FF,D1                 ; D1 = first bit found & printed, default to 'none'
     CLR         D2                      ; D2 = string array offset
     CLR         D3                      ; D3 = working register for comparisons
-    CLR         D4                      ; D4 = flag for contigousness of registers  
+    MOVE.B      #$FF,D4                 ; D4 = last bit found, default to 'none'   
     JSR         Get_Next_Word_D7        ; D7 = word bit list of registers 
     MOVEA       EA_StrArray_Dn, A4      ; A4 = Register string list 
 
@@ -677,82 +677,180 @@ EA_GetRegisterList:
     BNE         RL_SkipBitReversal
     
     JSR         ReverseBitsInD7Word     ; if not default, reverse bits to be read in pre-dec order
-    
-    
+        
 RL_SkipBitReversal
     MOVE.W      #16,D0                  ; D0 = iterator 
     
 
 RL_LOOP:
     CMP.W       #00,D0                  ; check for end of loop
-    BLT         RL_LOOP_END
+    BLE         RL_LOOP_END             
     SUBQ        #1, D0                  ; decrement D4
 
-        
     BTST        D0,D7                   ; test bit in position D4 ; test the register 
-    BEQ         RL_LOOP                 ; if not value, continue           
+    BEQ         RL_CheckForEndOfList    ; if not value, continue           
     
-    CMP.B       #00,D1                  ;test if this is the first register printed 
-    BEQ         RL_Print1stReg
+    CMP         #$FF,D1                  ; check if this is the first bit printed
+    BEQ         RL_PrintFirstRegister
 
-        ; if not the first 
-            ; test if is last+1
-            
-    JSR         RL_CheckIsContiguous
-    CMP         #IsTrue,D3
-    BEQ         RL_CheckAnStart         ; test if A0
-
-    BRA         RL_PrintSlashReg        ; if not n+1, print "/Xn" & archive
-
-            ;test if last overall 
-                ; print -
-                ; print Dn
-                ; return    
-
-RL_Print1stReg                          
-    ;JSR         RL_CalcOffset           ; if the first
-    JSR         RL_PrintRegister        ; print Rn
-    MOVE.B      D0,D1                   ; archive as most recent
-    BRA         RL_LOOP                 ; continue to loop   
-
-RL_CheckAnStart
     CMP.B       #07,D0
-    BEQ         RL_Print1stAn           ; if first A0 number, print '-D7/A0'
+    BEQ         RL_PrintAnStart         ; update last bit found and continue looping
+    
+    BRA         RL_CheckDefaultCase
+    
 
-    MOVE.B      D0,D1                   ; else increment D1
+RL_CheckDefaultCase
+    CMP         #$FF,D4 
+    BEQ         RL_SkipD4Check
+    
+    ;MOVE.B      D0,D3                   ; copy the iterator into temp
+    ;ADDI        #1,D3                   ; increment i + 1
+    ;CMP         D4,D3                   ; contiguousness if omparing i + 1 to last printed     
+    ;BNE         RL_PrintDefaultCase
+    
+    MOVE.B      D0,D4
+    BRA         RL_LOOP
+    
+    
+    
+RL_SkipD4check 
+    MOVE.B      D0,D3                   ; copy the iterator into temp
+    ADDI        #1,D3                   ; increment i + 1
+    CMP         D1,D3                   ; contiguousness if omparing i + 1 to last printed 
+    ;CMP         D0,D1
+    BNE         RL_PrintDefaultCase
+    
+    MOVE.B      D0,D4
+    BRA         RL_LOOP
+    
+
+RL_PrintDefaultCase    
+    JSR         RL_PrintSlash
+    JSR         RL_PrintRegister
+    
+    MOVE.B      D0,D1
+    MOVE.B      #$FF,D4                   ; else increment last bit found
     BRA         RL_LOOP                 ; and continue to loop
     
-RL_Print1stAn                           ; print -D7
-    JSR         RL_PrintDash
-    MOVE.B      D0,-(SP)                ; backup D0
-    MOVE.B      D1,D0                   ; calculate offset from D1
-    JSR         RL_PrintRegister        ; print d7
-    MOVE.B      (SP)+,D0                ; restore D0
-    ; intentional fall-through to slash-reg 
+
+
+RL_CheckForEndOfList   
+    CMP         #$FF,D1                 ; check if nothing has been set
+    BEQ         RL_LOOP                 ; if nothing has been set, no action it needed
     
-RL_PrintSlashReg
-    JSR         RL_PrintSlash 
+    CMP         #$FF,D4                 ; check if only one register has been identified
+    BEQ         RL_ResetSingleton       ; reset a singleton
+    
+    JSR         RL_PrintDash            ; print -Xn at the end of a list
+    JSR         RL_PrintRegisterD4      ; print the register in D4
+    ;MOVE.B      #$FF,D1                 ; reset D1 
+    MOVE.B      #$FF,D4                 ; reset D4 
+    BRA         RL_LOOP
+    
+RL_ResetSingleton
+    CMP         #$FF,D1
+    BRA         RL_LOOP
+    
+    JSR         RL_PrintDash
+    JSR         RL_PrintRegisterD4
+    MOVE.B      #$FF,D4
+    BRA         RL_LOOP
+    
+    
+RL_PrintFirstRegister
+    CMP.B       #$FF,D1
+    BEQ         RL_SkipSlash
+    JSR         RL_PrintSlash     
+   
+RL_SkipSlash
+    JSR         RL_PrintRegister
+    MOVE.B      D0,D1
+    BRA         RL_LOOP
+
+RL_PrintDashReg
+    JSR         RL_PrintDash 
     JSR         RL_PrintRegister        ; print Rn
     MOVE.B      D0,D1                   ; archive as most recent
     BRA         RL_LOOP                 ; continue to loop   
-                             
+
+
+RL_Print1stReg                          
+    JSR         RL_PrintRegister        ; print Rn
+    MOVE.B      D0,D1                   ; archive as most recent
+    BRA         RL_LOOP                 ; continue to loop   
+
+
+                         
 RL_LOOP_END:
-    JSR         RL_CheckIsContiguous
-    CMP         #IsFalse,D3
-    BEQ         RL_SkipFinal
+    BTST        D0,D7                   ; test bit in position D4 ; test the register 
+    BEQ         RL_FinalCheckD4         ; if not value, continue           
+
+    CMP         #$FF,D4
+    BEQ         RL_PrintSlashA7
 
     JSR         RL_PrintDash
-    JSR         RL_PrintRegister    
+    JSR         RL_PrintRegister
+    BRA         RL_SkipFinal
 
+RL_PrintSlashA7
+    CMP         #00,D1
+    BEQ         RL_SkipFinal
+    
+    JSR         RL_PrintSlash       ;
+    JSR         RL_PrintRegister
+    BRA         RL_SkipFinal
+    
+RL_FinalCheckD4
+    CMP         #$FF,D4
+    BEQ         RL_SkipFinal
+    JSR         RL_PrintDash
+    JSR         RL_PrintRegister
+                ; intentional fall-through
 RL_SkipFinal
     MOVEM.L     (SP)+,D0-D4/D7/A4
     RTS
 
 
+
+
+RL_PrintAnStart
+    CMP.B       #8,D4
+    BNE         RL_SkipDash
+    
+    JSR         RL_PrintDash
+    JSR         RL_PrintRegisterD4      ; calculate offset from D1
+
+     
+RL_SkipDash         
+    MOVE.B      #$FF,D4
+    JSR         RL_PrintSlash           ;
+    JSR         RL_PrintRegister        ; print Rn
+    MOVE.B      D0,D1                   ; archive as most recent
+    BRA         RL_LOOP
+
+
+
+
+
+
+
+
+
+
+
 RL_PrintRegister
-    JSR         RL_CheckForRollover
     MOVE.B      #15,D2                  ; 15 is the max # of bits
     SUB.B       D0,D2                   ; sub # bits remaining (e.g. 15-10 = 5)
+    MULU        #3,D2                   ; x3 foreach char-digit-null combination
+    MOVE.L      A4,-(SP)
+    LEA         (A4,D2),A2
+    JSR         AppendOutput
+    MOVE.L      (SP)+,A4
+    RTS
+
+RL_PrintRegisterD4
+    MOVE.B      #15,D2                  ; 15 is the max # of bits
+    SUB.B       D4,D2                   ; sub # bits remaining (e.g. 15-10 = 5)
     MULU        #3,D2                   ; x3 foreach char-digit-null combination
     MOVE.L      A4,-(SP)
     LEA         (A4,D2),A2
@@ -769,41 +867,6 @@ RL_PrintSlash
     LEA         STR_SLASH, A2       
     JSR         AppendOutput            ; print '/'
     RTS
-
-RL_CheckIsContiguous
-    JSR         RL_CheckForRollover
-    MOVE.W      D0,D3                   ; copy current index to temp
-    ADDI        #01,D3                  ; add one to current  
-    CMP         D3,D1
-    BEQ         RL_IsContiguous
-    BRA         RL_IsDiscontiguous
-RL_IsContiguous
-    MOVE.W      #IsTrue,D3
-    RTS
-RL_IsDiscontiguous
-    CMP.B       #$FF,D0
-    BNE         RL_ReportDisContig
-    
-    
-    
-;RL_CheckRollover
-;    CMP         #00,D3
-;    BEQ         RL_IsContiguous
-  
-RL_ReportDisContig
-    MOVE.W      #IsFalse,D3
-    RTS
-
-
-RL_CheckForRollover
-    CMP.B       #$FF,D0
-    BEQ         RL_FixRollover
-    RTS
-    
-RL_FixRollover
-    MOVE.W      #$0000,D0
-    MOVE.W      #IsTrue,D3
-    RTS    
 
 
 
@@ -1210,7 +1273,8 @@ SWAP_Return
     RTS  
 
 
+
 *~Font name~Courier New~
-*~Font size~10~
+*~Font size~12~
 *~Tab type~1~
 *~Tab size~4~
