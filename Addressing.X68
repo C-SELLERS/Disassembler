@@ -1207,4 +1207,10 @@ SWAP
 SWAP_Return
     ADDA        #2,SP           ; advance SP +2 to discard the old D7     
     MOVEM.L     (SP)+,D1-D5     ; return results in D7
-    RTS 
+    RTS  
+
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
