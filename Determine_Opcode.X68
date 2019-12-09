@@ -54,18 +54,18 @@ Skip_5000:
     AND         #MASK_8,D3              ; mask bit 8
     
     CMP.W       #$0100,D3               ; compare with 1
+    BNE         Skip_BCLR_EORI
+    MOVE.W      D6, D3                  ; reset current word in D3
+    AND.W       #MASK_9, D3             ; Mask bit 9
+    CMP.W       #$0000, D3              ; compare with 0
     BEQ         Opcode_BCLR             ; if equal jump to BCLR
+    BRA         Opcode_CMPI             ; if not equal jump to CMPI
+Skip_BCLR_EORI:
+
     MOVE.W      D6,D3                   ; reset current word in D3
     AND         #MASK_11,D3             ; mask bit 11
-    
     CMP.W       #$0800,D3               ; compare with 1
-    BNE         Skip_CMPI_EORI          ; if not equal then skip
-    MOVE.W      D6, D3                  ; reset current word in D3
-    AND.W       #MASK_10, D3            ; mask bit 10
-    CMP.W       #$0000, D3              ; compare with 0
     BEQ         Opcode_EORI             ; if equal jump to EORI
-    BRA         Opcode_CMPI             ; if not equal jump to CMPI
-Skip_CMPI_EORI:
 
     MOVE.W      D6,D3                   ; reset current word in D3
     AND         #MASK_11108,D3          ; mask bit 11, 10,8
