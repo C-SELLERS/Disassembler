@@ -535,8 +535,6 @@ ascii_val           DC.B $31,$41,$30,$30,$31,$41,$30,$30 * Test value $1A001A00
     
 
     ORG $00111112
- 
-
 
      
     INCLUDE '.\UnitTests\TEST_002.x68'
