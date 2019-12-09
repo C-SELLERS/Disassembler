@@ -1,724 +1,722 @@
-00111112  0187                  BCLR        D0,D7
-00111114  0F97                  BCLR        D7,(A7)
-00111116  0198                  BCLR        D0,(A0)+
-00111118  0FA7                  BCLR        D7,-(A7)
-0011111A  01B9 0000FFFF         BCLR        D0,$FFFF
-00111120  0FB9 00055555         BCLR        D7,$55555
-00111126                        
-00111126  0040 1111             ORI.W       #$1111,D0
-0011112A  0058 AAAA             ORI.W       #$AAAA,(A0)+
-0011112E  0060 0000             ORI.W       #$0000,-(A0)
-00111132  0080 000FFFFF         ORI.L       #$FFFFF,D0
-00111138  0098 00055555         ORI.L       #$55555,(A0)+
-0011113E  00A0 000AAAAA         ORI.L       #$AAAAA,-(A0)
-00111144                    
-00111144  0C40 1111             CMPI.W      #$1111,D0
-00111148  0C58 AAAA             CMPI.W      #$AAAA,(A0)+
-0011114C  0C60 0000             CMPI.W      #$0000,-(A0)
-00111150  0C80 000FFFFF         CMPI.L      #$FFFFF,D0
-00111156  0C98 00055555         CMPI.L      #$55555,(A0)+
-0011115C  0CA0 000AAAAA         CMPI.L      #$AAAAA,-(A0)  
-00111162                    
-00111162  103C 000F             MOVE.B      #$0F,D0
-00111166  1E87                  MOVE.B      D7,(A7)
-00111168  10C7                  MOVE.B      D7,(A0)+
-0011116A  1F00                  MOVE.B      D0,-(A7)
-0011116C  1038 1000             MOVE.B      $1000,D0
-00111170  1039 00010000         MOVE.B      $10000,D0
-00111176                         
-00111176  303C 00AA             MOVE.W      #$AA,D0
-0011117A  3047                  MOVE.W      D7,A0
-0011117C  3E87                  MOVE.W      D7,(A7)
-0011117E  30C0                  MOVE.W      D0,(A0)+
-00111180  3F07                  MOVE.W      D7,-(A7)
-00111182  3038 5555             MOVE.W      $5555,D0
-00111186  3039 000AAAAA         MOVE.W      $AAAAA,D0
-0011118C                    
-0011118C  203C 000000AA         MOVE.L      #$AA,D0
-00111192  2040                  MOVE.L      D0,A0
-00111194  2080                  MOVE.L      D0,(A0)
-00111196  20C0                  MOVE.L      D0,(A0)+
-00111198  2100                  MOVE.L      D0,-(A0)
-0011119A  2038 1000             MOVE.L      $1000,D0
-0011119E  2039 00010000         MOVE.L      $10000,D0
-001111A4                    
-001111A4                         
-001111A4                        
-001111A4  3047                  MOVEA.W     D7,A0
-001111A6  3E50                  MOVEA.W     (A0),A7
-001111A8  3E58                  MOVEA.W     (A0)+,A7
-001111AA  3067                  MOVEA.W     -(A7),A0
-001111AC  3079 0000AAAA         MOVEA.W     $AAAA,A0
-001111B2  3079 00055555         MOVEA.W     $55555,A0     
-001111B8                    
-001111B8                    
-001111B8  2040                  MOVEA.L     D0,A0
-001111BA  2047                  MOVEA.L     D7,A0
-001111BC  2057                  MOVEA.L     (A7),A0
-001111BE  2E58                  MOVEA.L     (A0)+,A7
-001111C0  2067                  MOVEA.L     -(A7),A0
-001111C2  2E79 0000FFAA         MOVEA.L     $FFAA,A7
-001111C8  2079 000FFAA5         MOVEA.L     $FFAA5,A0     
-001111CE                    
-001111CE                    
-001111CE  4E71                  NOP
-001111D0                        
-001111D0  4E75                  RTS
-001111D2                        
-001111D2  4AFC                  ILLEGAL
-001111D4                    
-001111D4  41D7                  LEA         (A7),A0        
-001111D6  41F9 0000FFAA         LEA         $FFAA,A0
-001111DC  4FF9 000AA551         LEA         $AA551,A7
-001111E2                    
-001111E2  4440                  NEG         D0
-001111E4  4456                  NEG         (A6)
-001111E6  4458                  NEG         (A0)+
-001111E8  4461                  NEG         -(A1)
-001111EA  4479 0000AAFF         NEG         $AAFF
-001111F0  4479 00055FAA         NEG         $55FAA
-001111F6                        
-001111F6  4E96                  JSR         (A6)
-001111F8  4EB9 0000AAFF         JSR         $AAFF
-001111FE  4EB9 00055FAA         JSR         $55FAA
-00111204                        
-00111204                    
-00111204  48E7 FFFE             MOVEM.L     D0-D7/A0-A6,-(A7)
-00111208  48E7 8000             MOVEM.L     D0,-(A7)
-0011120C  48E7 4000             MOVEM.L     D1,-(A7)
-00111210  48E7 2000             MOVEM.L     D2,-(A7)
-00111214  48E7 1000             MOVEM.L     D3,-(A7)
-00111218  48E7 0800             MOVEM.L     D4,-(A7)
-0011121C  48E7 0400             MOVEM.L     D5,-(A7)
-00111220  48E7 0200             MOVEM.L     D6,-(A7)
-00111224  48E7 0100             MOVEM.L     D7,-(A7)
-00111228  48E7 0080             MOVEM.L     A0,-(A7)
-0011122C  48E7 0040             MOVEM.L     A1,-(A7)
-00111230  48E7 0020             MOVEM.L     A2,-(A7)
-00111234  48E7 0010             MOVEM.L     A3,-(A7)
-00111238  48E7 0008             MOVEM.L     A4,-(A7)
-0011123C  48E7 0004             MOVEM.L     A5,-(A7)
-00111240  48E7 0002             MOVEM.L     A6,-(A7)
-00111244  48E7 0001             MOVEM.L     A7,-(A7)
-00111248  48E7 FFFE             MOVEM.L     D0-D7/A0-A6,-(A7)
-0011124C  48E7 FD1E             MOVEM.L     D0-D5/D7/A3-A6,-(A7)
-00111250  48E7 AAAA             MOVEM.L     D0/D2/D4/D6/A0/A2/A4/A6,-(A7)
-00111254  48E7 EBF5             MOVEM.L     D0-D2/D4/D6-D7/A0-A3/A5/A7,-(A7)
-00111258  4CDF 0001             MOVEM.L     (A7)+,D0
-0011125C  4CDF 0002             MOVEM.L     (A7)+,D1
-00111260  4CDF 0004             MOVEM.L     (A7)+,D2
-00111264  4CDF 0008             MOVEM.L     (A7)+,D3
-00111268  4CDF 0010             MOVEM.L     (A7)+,D4
-0011126C  4CDF 0020             MOVEM.L     (A7)+,D5
-00111270  4CDF 0040             MOVEM.L     (A7)+,D6
-00111274  4CDF 0080             MOVEM.L     (A7)+,D7
-00111278  4CDF 0100             MOVEM.L     (A7)+,A0
-0011127C  4CDF 0200             MOVEM.L     (A7)+,A1
-00111280  4CDF 0400             MOVEM.L     (A7)+,A2
-00111284  4CDF 0800             MOVEM.L     (A7)+,A3
-00111288  4CDF 1000             MOVEM.L     (A7)+,A4
-0011128C  4CDF 2000             MOVEM.L     (A7)+,A5
-00111290  4CDF 4000             MOVEM.L     (A7)+,A6
-00111294  4CDF 8000             MOVEM.L     (A7)+,A7
-00111298  4CDF 7FFF             MOVEM.L     (A7)+,D0-D7/A0-A6
-0011129C  4CDF 78BF             MOVEM.L     (A7)+,D0-D5/D7/A3-A6
-001112A0  4CDF 5555             MOVEM.L     (A7)+,D0/D2/D4/D6/A0/A2/A4/A6
-001112A4  4CDF AFD7             MOVEM.L     (A7)+,D0-D2/D4/D6-D7/A0-A3/A5/A7   
-001112A8                    
-001112A8                    
-001112A8                    
-001112A8  5300                  SUBQ.B      #1,D0
-001112AA                    
-001112AA  5717                  SUBQ.B      #3,(A7)
-001112AC  5918                  SUBQ.B      #4,(A0)+
-001112AE  5B20                  SUBQ.B      #5,-(A0)  
-001112B0  5D39 0000AAFF         SUBQ.B      #6,$AAFF
-001112B6  5F39 000AFAF5         SUBQ.B      #7,$AFAF5
-001112BC                        
-001112BC  5340                  SUBQ.W      #1,D0
-001112BE  5757                  SUBQ.W      #3,(A7)
-001112C0  5958                  SUBQ.W      #4,(A0)+
-001112C2  5B60                  SUBQ.W      #5,-(A0)  
-001112C4  5D79 0000AAFF         SUBQ.W      #6,$AAFF
-001112CA  5F79 000AFAF5         SUBQ.W      #7,$AFAF5
-001112D0                    
-001112D0                    
-001112D0  5380                  SUBQ.L      #1,D0
-001112D2  5797                  SUBQ.L      #3,(A7)
-001112D4  5998                  SUBQ.L      #4,(A0)+
-001112D6  5BA0                  SUBQ.L      #5,-(A0)  
-001112D8  5DB9 0000AAFF         SUBQ.L      #6,$AAFF
-001112DE  5FB9 000AFAF5         SUBQ.L      #7,$AFAF5
-001112E4                    
-001112E4  83C0                  DIVS        D0,D1
-001112E6  83D9                  DIVS        (A1)+,D1
-001112E8  85E2                  DIVS        -(A2),D2
-001112EA  83FC 0001             DIVS        #01,D1
-001112EE  83F9 0000AAFF         DIVS        $AAFF,D1
-001112F4  85F9 000FFAA5         DIVS        $FFAA5,D2
-001112FA                    
-001112FA  8240                  OR          D0,D1
-001112FC                    
-001112FC  8050                  OR          (A0),D0
-001112FE  8E58                  OR          (A0)+,D7
-00111300  8067                  OR          -(A7),D0
-00111302  827C 0002             OR          #02,D1
-00111306                    
-00111306                    
-00111306  9240                  SUB         D0,D1
-00111308  9048                  SUB         A0,D0
-0011130A  9050                  SUB         (A0),D0
-0011130C  9058                  SUB         (A0)+,D0
-0011130E  9267                  SUB         -(A7),D1
-00111310  5541                  SUB         #02,D1
-00111312  9079 0000AAFF         SUB         $AAFF,D0
-00111318  9279 000AFAF5         SUB         $AFAF5,D1
-0011131E                    
-0011131E  B240                  CMP         D0,D1
-00111320  B048                  CMP         A0,D0
-00111322  B050                  CMP         (A0),D0
-00111324  B058                  CMP         (A0)+,D0
-00111326  B267                  CMP         -(A7),D1
-00111328  B27C 0002             CMP         #02,D1
-0011132C  B079 0000AAFF         CMP         $AAFF,D0
-00111332  B279 000AFAF5         CMP         $AFAF5,D1
-00111338                    
-00111338  B141                  EOR         D0,D1
-0011133A  B150                  EOR         D0,(A0)
-0011133C  B158                  EOR         D0,(A0)+
-0011133E  B167                  EOR         D0,-(A7)
-00111340  0A40 AAFF             EOR.W       #$AAFF,D0
-00111344  0A81 000AFAF5         EOR.L       #$AFAF5,D1
-0011134A                        
-0011134A  C3C0                  MULS        D0,D1
-0011134C  C1D0                  MULS        (A0),D0
-0011134E  C1D8                  MULS        (A0)+,D0
-00111350  C3E7                  MULS        -(A7),D1
-00111352  C3FC 0002             MULS        #02,D1
-00111356  C1F9 0000AAFF         MULS        $AAFF,D0
-0011135C  C3F9 000AFAF5         MULS        $AFAF5,D1
-00111362                    
-00111362  D240                  ADD         D0,D1
-00111364  D0C0                  ADD         D0,A0
-00111366  D050                  ADD         (A0),D0
-00111368  D058                  ADD         (A0)+,D0
-0011136A  D267                  ADD         -(A7),D1
-0011136C  5441                  ADD         #02,D1
-0011136E  D079 0000AAFF         ADD         $AAFF,D0
-00111374  D279 000AFAF5         ADD         $AFAF5,D1
-0011137A                    
-0011137A  D0C0                  ADDA        D0,A0
-0011137C  D0C0                  ADDA        D0,A0
-0011137E  D0D0                  ADDA        (A0),A0
-00111380  D0D8                  ADDA        (A0)+,A0
-00111382  D2E7                  ADDA        -(A7),A1
-00111384  5449                  ADDA        #02,A1
-00111386  D0F9 0000AAFF         ADDA        $AAFF,A0
-0011138C  DEF9 000AFAF5         ADDA        $AFAF5,A7
-00111392                    
-00111392  E0D0                  ASR         (A0)
-00111394  E0DF                  ASR         (A7)+
-00111396  E0E0                  ASR         -(A0)
-00111398  E0F9 0000AFAF         ASR         $AFAF
-0011139E  E0F9 0FFAA550         ASR         $FFAA550
-001113A4                    
-001113A4  E1D0                  ASL         (A0)
-001113A6  E1DF                  ASL         (A7)+
-001113A8  E1E0                  ASL         -(A0)
-001113AA  E1F9 0000AFAF         ASL         $AFAF
-001113B0  E1F9 0FFAA550         ASL         $FFAA550
-001113B6                      
-001113B6  E2D0                  LSR         (A0)
-001113B8  E2DF                  LSR         (A7)+
-001113BA  E2E0                  LSR         -(A0)
-001113BC  E2F9 0000AFAF         LSR         $AFAF
-001113C2  E2F9 0FFAA550         LSR         $FFAA550
-001113C8                    
-001113C8  E3D0                  LSL         (A0)
-001113CA  E3DF                  LSL         (A7)+
-001113CC  E3E0                  LSL         -(A0)
-001113CE  E3F9 0000AFAF         LSL         $AFAF
-001113D4  E3F9 0FFAA550         LSL         $FFAA550
-001113DA                    
-001113DA  E7D0                  ROL         (A0)
-001113DC  E7DF                  ROL         (A7)+
-001113DE  E7E0                  ROL         -(A0)
-001113E0  E7F9 0000AFAF         ROL         $AFAF
-001113E6  E7F9 0FFAA550         ROL         $FFAA550
-001113EC                    
-001113EC  E6D0                  ROR         (A0)
-001113EE  E6DF                  ROR         (A7)+
-001113F0  E6E0                  ROR         -(A0)
-001113F2  E6F9 0000AFAF         ROR         $AFAF
-001113F8  E6F9 0FFAA550         ROR         $FFAA550
-
-001113FE                        ; D0 to all other data registers
-001113FE  D040                  ADD         D0,D0   
-00111400  D240                  ADD         D0,D1
-00111402  D440                  ADD         D0,D2
-00111404  D640                  ADD         D0,D3
-00111406  D840                  ADD         D0,D4
-00111408  DA40                  ADD         D0,D5
-0011140A  DC40                  ADD         D0,D6
-0011140C  DE40                  ADD         D0,D7
-0011140E                    
-0011140E                        ; D1 to all other data registers
-0011140E  D041                  ADD         D1,D0   
-00111410  D241                  ADD         D1,D1
-00111412  D441                  ADD         D1,D2
-00111414  D641                  ADD         D1,D3
-00111416  D841                  ADD         D1,D4
-00111418  DA41                  ADD         D1,D5
-0011141A  DC41                  ADD         D1,D6
-0011141C  DE41                  ADD         D1,D7
-0011141E                    
-0011141E                        ; D2 to all other data registers
-0011141E  D042                  ADD         D2,D0   
-00111420  D242                  ADD         D2,D1
-00111422  D442                  ADD         D2,D2
-00111424  D642                  ADD         D2,D3
-00111426  D842                  ADD         D2,D4
-00111428  DA42                  ADD         D2,D5
-0011142A  DC42                  ADD         D2,D6
-0011142C  DE42                  ADD         D2,D7
-0011142E                    
-0011142E                        ; D3 to all other data registers
-0011142E  D043                  ADD         D3,D0   
-00111430  D243                  ADD         D3,D1
-00111432  D443                  ADD         D3,D2
-00111434  D643                  ADD         D3,D3
-00111436  D843                  ADD         D3,D4
-00111438  DA43                  ADD         D3,D5
-0011143A  DC43                  ADD         D3,D6
-0011143C  DE43                  ADD         D3,D7
-0011143E                    
-0011143E                        ; D4 to all other data registers
-0011143E  D044                  ADD         D4,D0  
-00111440  D244                  ADD         D4,D1
-00111442  D444                  ADD         D4,D2
-00111444  D644                  ADD         D4,D3
-00111446  D844                  ADD         D4,D4
-00111448  DA44                  ADD         D4,D5
-0011144A  DC44                  ADD         D4,D6
-0011144C  DE44                  ADD         D4,D7
-0011144E                    
-0011144E                        ; D5 to all other data registers
-0011144E  D045                  ADD         D5,D0   
-00111450  D245                  ADD         D5,D1
-00111452  D445                  ADD         D5,D2
-00111454  D645                  ADD         D5,D3
-00111456  D845                  ADD         D5,D4
-00111458  DA45                  ADD         D5,D5
-0011145A  DC45                  ADD         D5,D6
-0011145C  DE45                  ADD         D5,D7
-0011145E                    
-0011145E                        ; D6 to all other data registers
-0011145E  D046                  ADD         D6,D0   
-00111460  D246                  ADD         D6,D1
-00111462  D446                  ADD         D6,D2
-00111464  D646                  ADD         D6,D3
-00111466  D846                  ADD         D6,D4
-00111468  DA46                  ADD         D6,D5
-0011146A  DC46                  ADD         D6,D6
-0011146C  DE46                  ADD         D6,D7
-0011146E                    
-0011146E                        ; D7 to all other data registers
-0011146E  D047                  ADD         D7,D0   
-00111470  D247                  ADD         D7,D1
-00111472  D447                  ADD         D7,D2
-00111474  D647                  ADD         D7,D3
-00111476  D847                  ADD         D7,D4
-00111478  DA47                  ADD         D7,D5
-0011147A  DC47                  ADD         D7,D6
-0011147C  DE47                  ADD         D7,D7
-0011147E                    
-0011147E                        ; D0 to all other address registers
-0011147E  D0C0                  ADD         D0,A0   
-00111480  D2C0                  ADD         D0,A1
-00111482  D4C0                  ADD         D0,A2
-00111484  D6C0                  ADD         D0,A3
-00111486  D8C0                  ADD         D0,A4
-00111488  DAC0                  ADD         D0,A5
-0011148A  DCC0                  ADD         D0,A6
-0011148C  DEC0                  ADD         D0,A7
-0011148E                        
-0011148E                        ; D1 to all other address registers
-0011148E  D0C1                  ADD         D1,A0   
-00111490  D2C1                  ADD         D1,A1
-00111492  D4C1                  ADD         D1,A2
-00111494  D6C1                  ADD         D1,A3
-00111496  D8C1                  ADD         D1,A4
-00111498  DAC1                  ADD         D1,A5
-0011149A  DCC1                  ADD         D1,A6
-0011149C  DEC1                  ADD         D1,A7
-0011149E                    
-0011149E                        ; D2 to all other address registers 
-0011149E  D0C2                  ADD         D2,A0   
-001114A0  D2C2                  ADD         D2,A1
-001114A2  D4C2                  ADD         D2,A2
-001114A4  D6C2                  ADD         D2,A3
-001114A6  D8C2                  ADD         D2,A4
-001114A8  DAC2                  ADD         D2,A5
-001114AA  DCC2                  ADD         D2,A6
-001114AC  DEC2                  ADD         D2,A7
-001114AE                    
-001114AE                        ; D3 to all other address registers
-001114AE  D0C3                  ADD         D3,A0   
-001114B0  D2C3                  ADD         D3,A1
-001114B2  D4C3                  ADD         D3,A2
-001114B4  D6C3                  ADD         D3,A3
-001114B6  D8C3                  ADD         D3,A4
-001114B8  DAC3                  ADD         D3,A5
-001114BA  DCC3                  ADD         D3,A6
-001114BC  DEC3                  ADD         D3,A7
-001114BE                    
-001114BE                        ; D4 to all other address registers
-001114BE  D0C4                  ADD         D4,A0
-001114C0  D2C4                  ADD         D4,A1
-001114C2  D4C4                  ADD         D4,A2
-001114C4  D6C4                  ADD         D4,A3
-001114C6  D8C4                  ADD         D4,A4
-001114C8  DAC4                  ADD         D4,A5
-001114CA  DCC4                  ADD         D4,A6
-001114CC  DEC4                  ADD         D4,A7
-001114CE                    
-001114CE                        ; D5 to all other address registers
-001114CE  D0C5                  ADD         D5,A0   
-001114D0  D2C5                  ADD         D5,A1
-001114D2  D4C5                  ADD         D5,A2
-001114D4  D6C5                  ADD         D5,A3
-001114D6  D8C5                  ADD         D5,A4
-001114D8  DAC5                  ADD         D5,A5
-001114DA  DCC5                  ADD         D5,A6
-001114DC  DEC5                  ADD         D5,A7
-001114DE                    
-001114DE                        ; D6 to all other address registers
-001114DE  D0C6                  ADD         D6,A0   
-001114E0  D2C6                  ADD         D6,A1
-001114E2  D4C6                  ADD         D6,A2
-001114E4  D6C6                  ADD         D6,A3
-001114E6  D8C6                  ADD         D6,A4
-001114E8  DAC6                  ADD         D6,A5
-001114EA  DCC6                  ADD         D6,A6
-001114EC  DEC6                  ADD         D6,A7
-001114EE                    
-001114EE                        ; D7 to all other address registers
-001114EE  D0C7                  ADD         D7,A0   
-001114F0  D2C7                  ADD         D7,A1
-001114F2  D4C7                  ADD         D7,A2
-001114F4  D6C7                  ADD         D7,A3
-001114F6  D8C7                  ADD         D7,A4
-001114F8  DAC7                  ADD         D7,A5
-001114FA  DCC7                  ADD         D7,A6
-001114FC  DEC7                  ADD         D7,A7
-001114FE                        
-001114FE                        ; values from all address registers to A0
-001114FE  D0D0                  ADD         (A0),A0   
-00111500  D0D1                  ADD         (A1),A0
-00111502  D0D2                  ADD         (A2),A0
-00111504  D0D3                  ADD         (A3),A0
-00111506  D0D4                  ADD         (A4),A0
-00111508  D0D5                  ADD         (A5),A0
-0011150A  D0D6                  ADD         (A6),A0
-0011150C  D0D7                  ADD         (A7),A0
-0011150E                    
-0011150E                        ; values from all address registers to A1
-0011150E  D2D0                  ADD         (A0),A1   
-00111510  D2D1                  ADD         (A1),A1
-00111512  D2D2                  ADD         (A2),A1
-00111514  D2D3                  ADD         (A3),A1
-00111516  D2D4                  ADD         (A4),A1
-00111518  D2D5                  ADD         (A5),A1
-0011151A  D2D6                  ADD         (A6),A1
-0011151C  D2D7                  ADD         (A7),A1
-0011151E                                 
-0011151E                        ; values from all address registers to A2      
-0011151E  D4D0                  ADD         (A0),A2   
-00111520  D4D1                  ADD         (A1),A2
-00111522  D4D2                  ADD         (A2),A2
-00111524  D4D3                  ADD         (A3),A2
-00111526  D4D4                  ADD         (A4),A2
-00111528  D4D5                  ADD         (A5),A2
-0011152A  D4D6                  ADD         (A6),A2
-0011152C  D4D7                  ADD         (A7),A2
-0011152E                    
-0011152E                        ; values from all address registers to A3
-0011152E  D6D0                  ADD         (A0),A3   
-00111530  D6D1                  ADD         (A1),A3
-00111532  D6D2                  ADD         (A2),A3
-00111534  D6D3                  ADD         (A3),A3
-00111536  D6D4                  ADD         (A4),A3
-00111538  D6D5                  ADD         (A5),A3
-0011153A  D6D6                  ADD         (A6),A3
-0011153C  D6D7                  ADD         (A7),A3
-0011153E                                      
-0011153E                          ; values from all address registers to A4
-0011153E  D8D0                  ADD         (A0),A4   
-00111540  D8D1                  ADD         (A1),A4
-00111542  D8D2                  ADD         (A2),A4
-00111544  D8D3                  ADD         (A3),A4
-00111546  D8D4                  ADD         (A4),A4
-00111548  D8D5                  ADD         (A5),A4
-0011154A  D8D6                  ADD         (A6),A4
-0011154C  D8D7                  ADD         (A7),A4
-0011154E                                        
-0011154E                        ; values from all address registers to A5
-0011154E  DAD0                  ADD         (A0),A5   
-00111550  DAD1                  ADD         (A1),A5
-00111552  DAD2                  ADD         (A2),A5
-00111554  DAD3                  ADD         (A3),A5
-00111556  DAD4                  ADD         (A4),A5
-00111558  DAD5                  ADD         (A5),A5
-0011155A  DAD6                  ADD         (A6),A5
-0011155C  DAD7                  ADD         (A7),A5
-0011155E                                        
-0011155E                        ; values from all address registers to A6
-0011155E  DCD0                  ADD         (A0),A6   
-00111560  DCD1                  ADD         (A1),A6
-00111562  DCD2                  ADD         (A2),A6
-00111564  DCD3                  ADD         (A3),A6
-00111566  DCD4                  ADD         (A4),A6
-00111568  DCD5                  ADD         (A5),A6
-0011156A  DCD6                  ADD         (A6),A6
-0011156C  DCD7                  ADD         (A7),A6
-0011156E                                        
-0011156E                            ; values from all address registers to A7
-0011156E  DED0                  ADD         (A0),A7   
-00111570  DED1                  ADD         (A1),A7
-00111572  DED2                  ADD         (A2),A7
-00111574  DED3                  ADD         (A3),A7
-00111576  DED4                  ADD         (A4),A7
-00111578  DED5                  ADD         (A5),A7
-0011157A  DED6                  ADD         (A6),A7
-0011157C  DED7                  ADD         (A7),A7    
-0011157E                        
-0011157E                            ; post-increment from all address registers to A0
-0011157E  D0D8                  ADD         (A0)+,A0   
-00111580  D0D9                  ADD         (A1)+,A0
-00111582  D0DA                  ADD         (A2)+,A0
-00111584  D0DB                  ADD         (A3)+,A0
-00111586  D0DC                  ADD         (A4)+,A0
-00111588  D0DD                  ADD         (A5)+,A0
-0011158A  D0DE                  ADD         (A6)+,A0
-0011158C  D0DF                  ADD         (A7)+,A0
-0011158E                                        
-0011158E                        ; post-increment from all address registers to A1         
-0011158E  D2D8                  ADD         (A0)+,A1   
-00111590  D2D9                  ADD         (A1)+,A1
-00111592  D2DA                  ADD         (A2)+,A1
-00111594  D2DB                  ADD         (A3)+,A1
-00111596  D2DC                  ADD         (A4)+,A1
-00111598  D2DD                  ADD         (A5)+,A1
-0011159A  D2DE                  ADD         (A6)+,A1
-0011159C  D2DF                  ADD         (A7)+,A1
-0011159E                                      
-0011159E                        ; post-increment from all address registers to A2         
-0011159E  D4D8                  ADD         (A0)+,A2   
-001115A0  D4D9                  ADD         (A1)+,A2
-001115A2  D4DA                  ADD         (A2)+,A2
-001115A4  D4DB                  ADD         (A3)+,A2
-001115A6  D4DC                  ADD         (A4)+,A2
-001115A8  D4DD                  ADD         (A5)+,A2
-001115AA  D4DE                  ADD         (A6)+,A2
-001115AC  D4DF                  ADD         (A7)+,A2
-001115AE                                          
-001115AE                            ; post-increment from all address registers to A3
-001115AE  D6D8                  ADD         (A0)+,A3   
-001115B0  D6D9                  ADD         (A1)+,A3
-001115B2  D6DA                  ADD         (A2)+,A3
-001115B4  D6DB                  ADD         (A3)+,A3
-001115B6  D6DC                  ADD         (A4)+,A3
-001115B8  D6DD                  ADD         (A5)+,A3
-001115BA  D6DE                  ADD         (A6)+,A3
-001115BC  D6DF                  ADD         (A7)+,A3
-001115BE                                      
-001115BE                        ; post-increment from all address registers to A4        
-001115BE  D8D8                  ADD         (A0)+,A4   
-001115C0  D8D9                  ADD         (A1)+,A4
-001115C2  D8DA                  ADD         (A2)+,A4
-001115C4  D8DB                  ADD         (A3)+,A4
-001115C6  D8DC                  ADD         (A4)+,A4
-001115C8  D8DD                  ADD         (A5)+,A4
-001115CA  D8DE                  ADD         (A6)+,A4
-001115CC  D8DF                  ADD         (A7)+,A4
-001115CE                                     
-001115CE                        ; post-increment from all address registers to A5            
-001115CE  DAD8                  ADD         (A0)+,A5   
-001115D0  DAD9                  ADD         (A1)+,A5
-001115D2  DADA                  ADD         (A2)+,A5
-001115D4  DADB                  ADD         (A3)+,A5
-001115D6  DADC                  ADD         (A4)+,A5
-001115D8  DADD                  ADD         (A5)+,A5
-001115DA  DADE                  ADD         (A6)+,A5
-001115DC  DADF                  ADD         (A7)+,A5
-001115DE                                        
-001115DE                        ; post-increment from all address registers to A6         
-001115DE  DCD8                  ADD         (A0)+,A6   
-001115E0  DCD9                  ADD         (A1)+,A6
-001115E2  DCDA                  ADD         (A2)+,A6
-001115E4  DCDB                  ADD         (A3)+,A6
-001115E6  DCDC                  ADD         (A4)+,A6
-001115E8  DCDD                  ADD         (A5)+,A6
-001115EA  DCDE                  ADD         (A6)+,A6
-001115EC  DCDF                  ADD         (A7)+,A6
-001115EE                                        
-001115EE                         ; post-increment from all address registers to A7        
-001115EE  DED8                  ADD         (A0)+,A7  
-001115F0  DED9                  ADD         (A1)+,A7
-001115F2  DEDA                  ADD         (A2)+,A7
-001115F4  DEDB                  ADD         (A3)+,A7
-001115F6  DEDC                  ADD         (A4)+,A7
-001115F8  DEDD                  ADD         (A5)+,A7
-001115FA  DEDE                  ADD         (A6)+,A7
-001115FC  DEDF                  ADD         (A7)+,A7
-001115FE                        
-001115FE                            ; pre-decrement from all address registers to A0
-001115FE  D0E0                  ADD         -(A0),A0   
-00111600  D0E1                  ADD         -(A1),A0
-00111602  D0E2                  ADD         -(A2),A0
-00111604  D0E3                  ADD         -(A3),A0
-00111606  D0E4                  ADD         -(A4),A0
-00111608  D0E5                  ADD         -(A5),A0
-0011160A  D0E6                  ADD         -(A6),A0
-0011160C  D0E7                  ADD         -(A7),A0
-0011160E                               
-0011160E                        ; pre-decrement from all address registers to A1                      
-0011160E  D2E0                  ADD         -(A0),A1   
-00111610  D2E1                  ADD         -(A1),A1
-00111612  D2E2                  ADD         -(A2),A1
-00111614  D2E3                  ADD         -(A3),A1
-00111616  D2E4                  ADD         -(A4),A1
-00111618  D2E5                  ADD         -(A5),A1
-0011161A  D2E6                  ADD         -(A6),A1
-0011161C  D2E7                  ADD         -(A7),A1
-0011161E                            
-0011161E                        ; pre-decrement from all address registers to A2              
-0011161E  D4E0                  ADD         -(A0),A2   
-00111620  D4E1                  ADD         -(A1),A2
-00111622  D4E2                  ADD         -(A2),A2
-00111624  D4E3                  ADD         -(A3),A2
-00111626  D4E4                  ADD         -(A4),A2
-00111628  D4E5                  ADD         -(A5),A2
-0011162A  D4E6                  ADD         -(A6),A2
-0011162C  D4E7                  ADD         -(A7),A2
-0011162E                                  
-0011162E                        ; pre-decrement from all address registers to A3              
-0011162E  D6E0                  ADD         -(A0),A3   
-00111630  D6E1                  ADD         -(A1),A3
-00111632  D6E2                  ADD         -(A2),A3
-00111634  D6E3                  ADD         -(A3),A3
-00111636  D6E4                  ADD         -(A4),A3
-00111638  D6E5                  ADD         -(A5),A3
-0011163A  D6E6                  ADD         -(A6),A3
-0011163C  D6E7                  ADD         -(A7),A3
-0011163E                                     
-0011163E                        ; pre-decrement from all address registers to A4         
-0011163E  D8E0                  ADD         -(A0),A4   
-00111640  D8E1                  ADD         -(A1),A4
-00111642  D8E2                  ADD         -(A2),A4
-00111644  D8E3                  ADD         -(A3),A4
-00111646  D8E4                  ADD         -(A4),A4
-00111648  D8E5                  ADD         -(A5),A4
-0011164A  D8E6                  ADD         -(A6),A4
-0011164C  D8E7                  ADD         -(A7),A4
-0011164E                                        
-0011164E                        ; pre-decrement from all address registers to A5         
-0011164E  DAE0                  ADD         -(A0),A5   
-00111650  DAE1                  ADD         -(A1),A5
-00111652  DAE2                  ADD         -(A2),A5
-00111654  DAE3                  ADD         -(A3),A5
-00111656  DAE4                  ADD         -(A4),A5
-00111658  DAE5                  ADD         -(A5),A5
-0011165A  DAE6                  ADD         -(A6),A5
-0011165C  DAE7                  ADD         -(A7),A5
-0011165E                                     
-0011165E                        ; pre-decrement from all address registers to A6          
-0011165E  DCE0                  ADD         -(A0),A6   
-00111660  DCE1                  ADD         -(A1),A6
-00111662  DCE2                  ADD         -(A2),A6
-00111664  DCE3                  ADD         -(A3),A6
-00111666  DCE4                  ADD         -(A4),A6
-00111668  DCE5                  ADD         -(A5),A6
-0011166A  DCE6                  ADD         -(A6),A6
-0011166C  DCE7                  ADD         -(A7),A6
-0011166E                                          
-0011166E                        ; pre-decrement from all address registers to A7          
-0011166E  DEE0                  ADD         -(A0),A7   
-00111670  DEE1                  ADD         -(A1),A7
-00111672  DEE2                  ADD         -(A2),A7
-00111674  DEE3                  ADD         -(A3),A7
-00111676  DEE4                  ADD         -(A4),A7
-00111678  DEE5                  ADD         -(A5),A7
-0011167A  DEE6                  ADD         -(A6),A7
-0011167C  DEE7                  ADD         -(A7),A7
-0011167E                        
-0011167E                        ; immediate to all data registers    
-0011167E  5240                  ADD         #01,D0   
-00111680  5241                  ADD         #01,D1
-00111682  5242                  ADD         #01,D2
-00111684  5243                  ADD         #01,D3
-00111686  5244                  ADD         #01,D4
-00111688  5245                  ADD         #01,D5
-0011168A  5246                  ADD         #01,D6
-0011168C  5247                  ADD         #01,D7
-0011168E                    
-0011168E                        ; immediate to all address register
-0011168E  5248                  ADD         #01,A0   
-00111690  5249                  ADD         #01,A1
-00111692  524A                  ADD         #01,A2
-00111694  524B                  ADD         #01,A3
-00111696  524C                  ADD         #01,A4
-00111698  524D                  ADD         #01,A5
-0011169A  524E                  ADD         #01,A6
-0011169C  524F                  ADD         #01,A7
-0011169E                    
-0011169E                        ; immediate to all address register values
-0011169E  5250                  ADD         #01,(A0)   
-001116A0  5251                  ADD         #01,(A1)
-001116A2  5252                  ADD         #01,(A2)
-001116A4  5253                  ADD         #01,(A3)
-001116A6  5254                  ADD         #01,(A4)
-001116A8  5255                  ADD         #01,(A5)
-001116AA  5256                  ADD         #01,(A6)
-001116AC  5257                  ADD         #01,(A7)
-001116AE                    
-001116AE                        ; immediate to all address register with post increment
-001116AE  5258                  ADD         #01,(A0)+   
-001116B0  5259                  ADD         #01,(A1)+
-001116B2  525A                  ADD         #01,(A2)+
-001116B4  525B                  ADD         #01,(A3)+
-001116B6  525C                  ADD         #01,(A4)+
-001116B8  525D                  ADD         #01,(A5)+
-001116BA  525E                  ADD         #01,(A6)+
-001116BC  525F                  ADD         #01,(A7)+
-001116BE                    
-001116BE                        ; immediate to all address register with pre-decrement
-001116BE  5260                  ADD         #01,-(A0)   
-001116C0  5261                  ADD         #01,-(A1)
-001116C2  5262                  ADD         #01,-(A2)
-001116C4  5263                  ADD         #01,-(A3)
-001116C6  5264                  ADD         #01,-(A4)
-001116C8  5265                  ADD         #01,-(A5)
-001116CA  5266                  ADD         #01,-(A6)
-001116CC  5267                  ADD         #01,-(A7)
-001116CE                    
-001116CE                        ; absolute short to all data registers
-001116CE  D078 0001             ADD         $01,D0     
-001116D2  D278 0001             ADD         $01,D1
-001116D6  D478 0001             ADD         $01,D2
-001116DA  D678 0001             ADD         $01,D3
-001116DE  D878 0001             ADD         $01,D4
-001116E2  DA78 0001             ADD         $01,D5
-001116E6  DC78 0001             ADD         $01,D6
-001116EA  DE78 0001             ADD         $01,D7
-001116EE                    
-001116EE                        ; absolute long to all data registers
-001116EE  D0F8 0A05             ADD         $0A05,A0    
-001116F2  D2F8 0A05             ADD         $0A05,A1
-001116F6  D4F8 0A05             ADD         $0A05,A2
-001116FA  D6F8 0A05             ADD         $0A05,A3
-001116FE  D8F8 0A05             ADD         $0A05,A4
-00111702  DAF8 0A05             ADD         $0A05,A5
-00111706  DCF8 0A05             ADD         $0A05,A6
-0011170A  DEF8 0A05             ADD         $0A05,A7
-
+00111112  0187                        BCLR        D0,D7
+00111114  0F97                        BCLR        D7,(A7)
+00111116  0198                        BCLR        D0,(A0)+
+00111118  0FA7                        BCLR        D7,-(A7)
+0011111A  01B9 0000FFFF               BCLR        D0,$FFFF
+00111120  0FB9 00055555               BCLR        D7,$55555
+00111126                              
+00111126  0040 1111                   ORI.W       #$1111,D0
+0011112A  0058 AAAA                   ORI.W       #$AAAA,(A0)+
+0011112E  0060 0000                   ORI.W       #$0000,-(A0)
+00111132  0080 000FFFFF               ORI.L       #$FFFFF,D0
+00111138  0098 00055555               ORI.L       #$55555,(A0)+
+0011113E  00A0 000AAAAA               ORI.L       #$AAAAA,-(A0)
+00111144                          
+00111144  0C40 1111                   CMPI.W      #$1111,D0
+00111148  0C58 AAAA                   CMPI.W      #$AAAA,(A0)+
+0011114C  0C60 0000                   CMPI.W      #$0000,-(A0)
+00111150  0C80 000FFFFF               CMPI.L      #$FFFFF,D0
+00111156  0C98 00055555               CMPI.L      #$55555,(A0)+
+0011115C  0CA0 000AAAAA               CMPI.L      #$AAAAA,-(A0)  
+00111162                          
+00111162  103C 000F                   MOVE.B      #$0F,D0
+00111166  1E87                        MOVE.B      D7,(A7)
+00111168  10C7                        MOVE.B      D7,(A0)+
+0011116A  1F00                        MOVE.B      D0,-(A7)
+0011116C  1038 1000                   MOVE.B      $1000,D0
+00111170  1039 00010000               MOVE.B      $10000,D0
+00111176                               
+00111176  303C 00AA                   MOVE.W      #$AA,D0
+0011117A  3047                        MOVE.W      D7,A0
+0011117C  3E87                        MOVE.W      D7,(A7)
+0011117E  30C0                        MOVE.W      D0,(A0)+
+00111180  3F07                        MOVE.W      D7,-(A7)
+00111182  3038 5555                   MOVE.W      $5555,D0
+00111186  3039 000AAAAA               MOVE.W      $AAAAA,D0
+0011118C                          
+0011118C  203C 000000AA               MOVE.L      #$AA,D0
+00111192  2040                        MOVE.L      D0,A0
+00111194  2080                        MOVE.L      D0,(A0)
+00111196  20C0                        MOVE.L      D0,(A0)+
+00111198  2100                        MOVE.L      D0,-(A0)
+0011119A  2038 1000                   MOVE.L      $1000,D0
+0011119E  2039 00010000               MOVE.L      $10000,D0
+001111A4                          
+001111A4                               
+001111A4                              
+001111A4  3047                        MOVEA.W     D7,A0
+001111A6  3E50                        MOVEA.W     (A0),A7
+001111A8  3E58                        MOVEA.W     (A0)+,A7
+001111AA  3067                        MOVEA.W     -(A7),A0
+001111AC  3079 0000AAAA               MOVEA.W     $AAAA,A0
+001111B2  3079 00055555               MOVEA.W     $55555,A0     
+001111B8                          
+001111B8                          
+001111B8  2040                        MOVEA.L     D0,A0
+001111BA  2047                        MOVEA.L     D7,A0
+001111BC  2057                        MOVEA.L     (A7),A0
+001111BE  2E58                        MOVEA.L     (A0)+,A7
+001111C0  2067                        MOVEA.L     -(A7),A0
+001111C2  2E79 0000FFAA               MOVEA.L     $FFAA,A7
+001111C8  2079 000FFAA5               MOVEA.L     $FFAA5,A0     
+001111CE                          
+001111CE                          
+001111CE  4E71                        NOP
+001111D0                              
+001111D0  4E75                        RTS
+001111D2                              
+001111D2  4AFC                        ILLEGAL
+001111D4                          
+001111D4  41D7                        LEA         (A7),A0        
+001111D6  41F9 0000FFAA               LEA         $FFAA,A0
+001111DC  4FF9 000AA551               LEA         $AA551,A7
+001111E2                          
+001111E2  4440                        NEG         D0
+001111E4  4456                        NEG         (A6)
+001111E6  4458                        NEG         (A0)+
+001111E8  4461                        NEG         -(A1)
+001111EA  4479 0000AAFF               NEG         $AAFF
+001111F0  4479 00055FAA               NEG         $55FAA
+001111F6                              
+001111F6  4E96                        JSR         (A6)
+001111F8  4EB9 0000AAFF               JSR         $AAFF
+001111FE  4EB9 00055FAA               JSR         $55FAA
+00111204                              
+00111204                          
+00111204  48E7 FFFE                   MOVEM.L     D0-D7/A0-A6,-(A7)
+00111208  48E7 8000                   MOVEM.L     D0,-(A7)
+0011120C  48E7 4000                   MOVEM.L     D1,-(A7)
+00111210  48E7 2000                   MOVEM.L     D2,-(A7)
+00111214  48E7 1000                   MOVEM.L     D3,-(A7)
+00111218  48E7 0800                   MOVEM.L     D4,-(A7)
+0011121C  48E7 0400                   MOVEM.L     D5,-(A7)
+00111220  48E7 0200                   MOVEM.L     D6,-(A7)
+00111224  48E7 0100                   MOVEM.L     D7,-(A7)
+00111228  48E7 0080                   MOVEM.L     A0,-(A7)
+0011122C  48E7 0040                   MOVEM.L     A1,-(A7)
+00111230  48E7 0020                   MOVEM.L     A2,-(A7)
+00111234  48E7 0010                   MOVEM.L     A3,-(A7)
+00111238  48E7 0008                   MOVEM.L     A4,-(A7)
+0011123C  48E7 0004                   MOVEM.L     A5,-(A7)
+00111240  48E7 0002                   MOVEM.L     A6,-(A7)
+00111244  48E7 0001                   MOVEM.L     A7,-(A7)
+00111248  48E7 FFFE                   MOVEM.L     D0-D7/A0-A6,-(A7)
+0011124C  48E7 FD1E                   MOVEM.L     D0-D5/D7/A3-A6,-(A7)
+00111250  48E7 AAAA                   MOVEM.L     D0/D2/D4/D6/A0/A2/A4/A6,-(A7)
+00111254  48E7 EBF5                   MOVEM.L     D0-D2/D4/D6-D7/A0-A3/A5/A7,-(A7)
+00111258  4CDF 0001                   MOVEM.L     (A7)+,D0
+0011125C  4CDF 0002                   MOVEM.L     (A7)+,D1
+00111260  4CDF 0004                   MOVEM.L     (A7)+,D2
+00111264  4CDF 0008                   MOVEM.L     (A7)+,D3
+00111268  4CDF 0010                   MOVEM.L     (A7)+,D4
+0011126C  4CDF 0020                   MOVEM.L     (A7)+,D5
+00111270  4CDF 0040                   MOVEM.L     (A7)+,D6
+00111274  4CDF 0080                   MOVEM.L     (A7)+,D7
+00111278  4CDF 0100                   MOVEM.L     (A7)+,A0
+0011127C  4CDF 0200                   MOVEM.L     (A7)+,A1
+00111280  4CDF 0400                   MOVEM.L     (A7)+,A2
+00111284  4CDF 0800                   MOVEM.L     (A7)+,A3
+00111288  4CDF 1000                   MOVEM.L     (A7)+,A4
+0011128C  4CDF 2000                   MOVEM.L     (A7)+,A5
+00111290  4CDF 4000                   MOVEM.L     (A7)+,A6
+00111294  4CDF 8000                   MOVEM.L     (A7)+,A7
+00111298  4CDF 7FFF                   MOVEM.L     (A7)+,D0-D7/A0-A6
+0011129C  4CDF 78BF                   MOVEM.L     (A7)+,D0-D5/D7/A3-A6
+001112A0  4CDF 5555                   MOVEM.L     (A7)+,D0/D2/D4/D6/A0/A2/A4/A6
+001112A4  4CDF AFD7                   MOVEM.L     (A7)+,D0-D2/D4/D6-D7/A0-A3/A5/A7   
+001112A8                          
+001112A8                          
+001112A8                          
+001112A8  5300                        SUBQ.B      #1,D0
+001112AA                          
+001112AA  5717                        SUBQ.B      #3,(A7)
+001112AC  5918                        SUBQ.B      #4,(A0)+
+001112AE  5B20                        SUBQ.B      #5,-(A0)  
+001112B0  5D39 0000AAFF               SUBQ.B      #6,$AAFF
+001112B6  5F39 000AFAF5               SUBQ.B      #7,$AFAF5
+001112BC                              
+001112BC  5340                        SUBQ.W      #1,D0
+001112BE  5757                        SUBQ.W      #3,(A7)
+001112C0  5958                        SUBQ.W      #4,(A0)+
+001112C2  5B60                        SUBQ.W      #5,-(A0)  
+001112C4  5D79 0000AAFF               SUBQ.W      #6,$AAFF
+001112CA  5F79 000AFAF5               SUBQ.W      #7,$AFAF5
+001112D0                          
+001112D0                          
+001112D0  5380                        SUBQ.L      #1,D0
+001112D2  5797                        SUBQ.L      #3,(A7)
+001112D4  5998                        SUBQ.L      #4,(A0)+
+001112D6  5BA0                        SUBQ.L      #5,-(A0)  
+001112D8  5DB9 0000AAFF               SUBQ.L      #6,$AAFF
+001112DE  5FB9 000AFAF5               SUBQ.L      #7,$AFAF5
+001112E4                          
+001112E4  83C0                        DIVS        D0,D1
+001112E6  83D9                        DIVS        (A1)+,D1
+001112E8  85E2                        DIVS        -(A2),D2
+001112EA  83FC 0001                   DIVS        #01,D1
+001112EE  83F9 0000AAFF               DIVS        $AAFF,D1
+001112F4  85F9 000FFAA5               DIVS        $FFAA5,D2
+001112FA                          
+001112FA  8240                        OR          D0,D1
+001112FC                          
+001112FC  8050                        OR          (A0),D0
+001112FE  8E58                        OR          (A0)+,D7
+00111300  8067                        OR          -(A7),D0
+00111302  827C 0002                   OR          #02,D1
+00111306                          
+00111306                          
+00111306  9240                        SUB         D0,D1
+00111308  9048                        SUB         A0,D0
+0011130A  9050                        SUB         (A0),D0
+0011130C  9058                        SUB         (A0)+,D0
+0011130E  9267                        SUB         -(A7),D1
+00111310  5541                        SUB         #02,D1
+00111312  9079 0000AAFF               SUB         $AAFF,D0
+00111318  9279 000AFAF5               SUB         $AFAF5,D1
+0011131E                          
+0011131E  B240                        CMP         D0,D1
+00111320  B048                        CMP         A0,D0
+00111322  B050                        CMP         (A0),D0
+00111324  B058                        CMP         (A0)+,D0
+00111326  B267                        CMP         -(A7),D1
+00111328  B27C 0002                   CMP         #02,D1
+0011132C  B079 0000AAFF               CMP         $AAFF,D0
+00111332  B279 000AFAF5               CMP         $AFAF5,D1
+00111338                          
+00111338  B141                        EOR         D0,D1
+0011133A  B150                        EOR         D0,(A0)
+0011133C  B158                        EOR         D0,(A0)+
+0011133E  B167                        EOR         D0,-(A7)
+00111340  0A40 AAFF                   EOR.W       #$AAFF,D0
+00111344                              
+00111344  C3C0                        MULS        D0,D1
+00111346  C1D0                        MULS        (A0),D0
+00111348  C1D8                        MULS        (A0)+,D0
+0011134A  C3E7                        MULS        -(A7),D1
+0011134C  C3FC 0002                   MULS        #02,D1
+00111350  C1F9 0000AAFF               MULS        $AAFF,D0
+00111356  C3F9 000AFAF5               MULS        $AFAF5,D1
+0011135C                          
+0011135C  D240                        ADD         D0,D1
+0011135E  D0C0                        ADD         D0,A0
+00111360  D050                        ADD         (A0),D0
+00111362  D058                        ADD         (A0)+,D0
+00111364  D267                        ADD         -(A7),D1
+00111366  5441                        ADD         #02,D1
+00111368  D079 0000AAFF               ADD         $AAFF,D0
+0011136E  D279 000AFAF5               ADD         $AFAF5,D1
+00111374                          
+00111374  D0C0                        ADDA        D0,A0
+00111376  D0C0                        ADDA        D0,A0
+00111378  D0D0                        ADDA        (A0),A0
+0011137A  D0D8                        ADDA        (A0)+,A0
+0011137C  D2E7                        ADDA        -(A7),A1
+0011137E  5449                        ADDA        #02,A1
+00111380  D0F9 0000AAFF               ADDA        $AAFF,A0
+00111386  DEF9 000AFAF5               ADDA        $AFAF5,A7
+0011138C                          
+0011138C  E0D0                        ASR         (A0)
+0011138E  E0DF                        ASR         (A7)+
+00111390  E0E0                        ASR         -(A0)
+00111392  E0F9 0000AFAF               ASR         $AFAF
+00111398  E0F9 0FFAA550               ASR         $FFAA550
+0011139E                          
+0011139E  E1D0                        ASL         (A0)
+001113A0  E1DF                        ASL         (A7)+
+001113A2  E1E0                        ASL         -(A0)
+001113A4  E1F9 0000AFAF               ASL         $AFAF
+001113AA  E1F9 0FFAA550               ASL         $FFAA550
+001113B0                            
+001113B0  E2D0                        LSR         (A0)
+001113B2  E2DF                        LSR         (A7)+
+001113B4  E2E0                        LSR         -(A0)
+001113B6  E2F9 0000AFAF               LSR         $AFAF
+001113BC  E2F9 0FFAA550               LSR         $FFAA550
+001113C2                          
+001113C2  E3D0                        LSL         (A0)
+001113C4  E3DF                        LSL         (A7)+
+001113C6  E3E0                        LSL         -(A0)
+001113C8  E3F9 0000AFAF               LSL         $AFAF
+001113CE  E3F9 0FFAA550               LSL         $FFAA550
+001113D4                          
+001113D4  E7D0                        ROL         (A0)
+001113D6  E7DF                        ROL         (A7)+
+001113D8  E7E0                        ROL         -(A0)
+001113DA  E7F9 0000AFAF               ROL         $AFAF
+001113E0  E7F9 0FFAA550               ROL         $FFAA550
+001113E6                          
+001113E6  E6D0                        ROR         (A0)
+001113E8  E6DF                        ROR         (A7)+
+001113EA  E6E0                        ROR         -(A0)
+001113EC  E6F9 0000AFAF               ROR         $AFAF
+001113F2  E6F9 0FFAA550               ROR         $FFAA550
+001113F8                          
+001113F8                                  ; D0 to all other data registers
+001113F8  D040                        ADD         D0,D0   
+001113FA  D240                        ADD         D0,D1
+001113FC  D440                        ADD         D0,D2
+001113FE  D640                        ADD         D0,D3
+00111400  D840                        ADD         D0,D4
+00111402  DA40                        ADD         D0,D5
+00111404  DC40                        ADD         D0,D6
+00111406  DE40                        ADD         D0,D7
+00111408                          
+00111408                              ; D1 to all other data registers
+00111408  D041                        ADD         D1,D0   
+0011140A  D241                        ADD         D1,D1
+0011140C  D441                        ADD         D1,D2
+0011140E  D641                        ADD         D1,D3
+00111410  D841                        ADD         D1,D4
+00111412  DA41                        ADD         D1,D5
+00111414  DC41                        ADD         D1,D6
+00111416  DE41                        ADD         D1,D7
+00111418                          
+00111418                              ; D2 to all other data registers
+00111418  D042                        ADD         D2,D0   
+0011141A  D242                        ADD         D2,D1
+0011141C  D442                        ADD         D2,D2
+0011141E  D642                        ADD         D2,D3
+00111420  D842                        ADD         D2,D4
+00111422  DA42                        ADD         D2,D5
+00111424  DC42                        ADD         D2,D6
+00111426  DE42                        ADD         D2,D7
+00111428                          
+00111428                              ; D3 to all other data registers
+00111428  D043                        ADD         D3,D0   
+0011142A  D243                        ADD         D3,D1
+0011142C  D443                        ADD         D3,D2
+0011142E  D643                        ADD         D3,D3
+00111430  D843                        ADD         D3,D4
+00111432  DA43                        ADD         D3,D5
+00111434  DC43                        ADD         D3,D6
+00111436  DE43                        ADD         D3,D7
+00111438                          
+00111438                              ; D4 to all other data registers
+00111438  D044                        ADD         D4,D0  
+0011143A  D244                        ADD         D4,D1
+0011143C  D444                        ADD         D4,D2
+0011143E  D644                        ADD         D4,D3
+00111440  D844                        ADD         D4,D4
+00111442  DA44                        ADD         D4,D5
+00111444  DC44                        ADD         D4,D6
+00111446  DE44                        ADD         D4,D7
+00111448                          
+00111448                              ; D5 to all other data registers
+00111448  D045                        ADD         D5,D0   
+0011144A  D245                        ADD         D5,D1
+0011144C  D445                        ADD         D5,D2
+0011144E  D645                        ADD         D5,D3
+00111450  D845                        ADD         D5,D4
+00111452  DA45                        ADD         D5,D5
+00111454  DC45                        ADD         D5,D6
+00111456  DE45                        ADD         D5,D7
+00111458                          
+00111458                              ; D6 to all other data registers
+00111458  D046                        ADD         D6,D0   
+0011145A  D246                        ADD         D6,D1
+0011145C  D446                        ADD         D6,D2
+0011145E  D646                        ADD         D6,D3
+00111460  D846                        ADD         D6,D4
+00111462  DA46                        ADD         D6,D5
+00111464  DC46                        ADD         D6,D6
+00111466  DE46                        ADD         D6,D7
+00111468                          
+00111468                              ; D7 to all other data registers
+00111468  D047                        ADD         D7,D0   
+0011146A  D247                        ADD         D7,D1
+0011146C  D447                        ADD         D7,D2
+0011146E  D647                        ADD         D7,D3
+00111470  D847                        ADD         D7,D4
+00111472  DA47                        ADD         D7,D5
+00111474  DC47                        ADD         D7,D6
+00111476  DE47                        ADD         D7,D7
+00111478                          
+00111478                              ; D0 to all other address registers
+00111478  D0C0                        ADD         D0,A0   
+0011147A  D2C0                        ADD         D0,A1
+0011147C  D4C0                        ADD         D0,A2
+0011147E  D6C0                        ADD         D0,A3
+00111480  D8C0                        ADD         D0,A4
+00111482  DAC0                        ADD         D0,A5
+00111484  DCC0                        ADD         D0,A6
+00111486  DEC0                        ADD         D0,A7
+00111488                              
+00111488                              ; D1 to all other address registers
+00111488  D0C1                        ADD         D1,A0   
+0011148A  D2C1                        ADD         D1,A1
+0011148C  D4C1                        ADD         D1,A2
+0011148E  D6C1                        ADD         D1,A3
+00111490  D8C1                        ADD         D1,A4
+00111492  DAC1                        ADD         D1,A5
+00111494  DCC1                        ADD         D1,A6
+00111496  DEC1                        ADD         D1,A7
+00111498                          
+00111498                              ; D2 to all other address registers 
+00111498  D0C2                        ADD         D2,A0   
+0011149A  D2C2                        ADD         D2,A1
+0011149C  D4C2                        ADD         D2,A2
+0011149E  D6C2                        ADD         D2,A3
+001114A0  D8C2                        ADD         D2,A4
+001114A2  DAC2                        ADD         D2,A5
+001114A4  DCC2                        ADD         D2,A6
+001114A6  DEC2                        ADD         D2,A7
+001114A8                          
+001114A8                              ; D3 to all other address registers
+001114A8  D0C3                        ADD         D3,A0   
+001114AA  D2C3                        ADD         D3,A1
+001114AC  D4C3                        ADD         D3,A2
+001114AE  D6C3                        ADD         D3,A3
+001114B0  D8C3                        ADD         D3,A4
+001114B2  DAC3                        ADD         D3,A5
+001114B4  DCC3                        ADD         D3,A6
+001114B6  DEC3                        ADD         D3,A7
+001114B8                          
+001114B8                              ; D4 to all other address registers
+001114B8  D0C4                        ADD         D4,A0
+001114BA  D2C4                        ADD         D4,A1
+001114BC  D4C4                        ADD         D4,A2
+001114BE  D6C4                        ADD         D4,A3
+001114C0  D8C4                        ADD         D4,A4
+001114C2  DAC4                        ADD         D4,A5
+001114C4  DCC4                        ADD         D4,A6
+001114C6  DEC4                        ADD         D4,A7
+001114C8                          
+001114C8                              ; D5 to all other address registers
+001114C8  D0C5                        ADD         D5,A0   
+001114CA  D2C5                        ADD         D5,A1
+001114CC  D4C5                        ADD         D5,A2
+001114CE  D6C5                        ADD         D5,A3
+001114D0  D8C5                        ADD         D5,A4
+001114D2  DAC5                        ADD         D5,A5
+001114D4  DCC5                        ADD         D5,A6
+001114D6  DEC5                        ADD         D5,A7
+001114D8                          
+001114D8                              ; D6 to all other address registers
+001114D8  D0C6                        ADD         D6,A0   
+001114DA  D2C6                        ADD         D6,A1
+001114DC  D4C6                        ADD         D6,A2
+001114DE  D6C6                        ADD         D6,A3
+001114E0  D8C6                        ADD         D6,A4
+001114E2  DAC6                        ADD         D6,A5
+001114E4  DCC6                        ADD         D6,A6
+001114E6  DEC6                        ADD         D6,A7
+001114E8                          
+001114E8                              ; D7 to all other address registers
+001114E8  D0C7                        ADD         D7,A0   
+001114EA  D2C7                        ADD         D7,A1
+001114EC  D4C7                        ADD         D7,A2
+001114EE  D6C7                        ADD         D7,A3
+001114F0  D8C7                        ADD         D7,A4
+001114F2  DAC7                        ADD         D7,A5
+001114F4  DCC7                        ADD         D7,A6
+001114F6  DEC7                        ADD         D7,A7
+001114F8                              
+001114F8                              ; values from all address registers to A0
+001114F8  D0D0                        ADD         (A0),A0   
+001114FA  D0D1                        ADD         (A1),A0
+001114FC  D0D2                        ADD         (A2),A0
+001114FE  D0D3                        ADD         (A3),A0
+00111500  D0D4                        ADD         (A4),A0
+00111502  D0D5                        ADD         (A5),A0
+00111504  D0D6                        ADD         (A6),A0
+00111506  D0D7                        ADD         (A7),A0
+00111508                          
+00111508                              ; values from all address registers to A1
+00111508  D2D0                        ADD         (A0),A1   
+0011150A  D2D1                        ADD         (A1),A1
+0011150C  D2D2                        ADD         (A2),A1
+0011150E  D2D3                        ADD         (A3),A1
+00111510  D2D4                        ADD         (A4),A1
+00111512  D2D5                        ADD         (A5),A1
+00111514  D2D6                        ADD         (A6),A1
+00111516  D2D7                        ADD         (A7),A1
+00111518                                       
+00111518                              ; values from all address registers to A2      
+00111518  D4D0                        ADD         (A0),A2   
+0011151A  D4D1                        ADD         (A1),A2
+0011151C  D4D2                        ADD         (A2),A2
+0011151E  D4D3                        ADD         (A3),A2
+00111520  D4D4                        ADD         (A4),A2
+00111522  D4D5                        ADD         (A5),A2
+00111524  D4D6                        ADD         (A6),A2
+00111526  D4D7                        ADD         (A7),A2
+00111528                          
+00111528                              ; values from all address registers to A3
+00111528  D6D0                        ADD         (A0),A3   
+0011152A  D6D1                        ADD         (A1),A3
+0011152C  D6D2                        ADD         (A2),A3
+0011152E  D6D3                        ADD         (A3),A3
+00111530  D6D4                        ADD         (A4),A3
+00111532  D6D5                        ADD         (A5),A3
+00111534  D6D6                        ADD         (A6),A3
+00111536  D6D7                        ADD         (A7),A3
+00111538                                            
+00111538                                ; values from all address registers to A4
+00111538  D8D0                        ADD         (A0),A4   
+0011153A  D8D1                        ADD         (A1),A4
+0011153C  D8D2                        ADD         (A2),A4
+0011153E  D8D3                        ADD         (A3),A4
+00111540  D8D4                        ADD         (A4),A4
+00111542  D8D5                        ADD         (A5),A4
+00111544  D8D6                        ADD         (A6),A4
+00111546  D8D7                        ADD         (A7),A4
+00111548                                              
+00111548                              ; values from all address registers to A5
+00111548  DAD0                        ADD         (A0),A5   
+0011154A  DAD1                        ADD         (A1),A5
+0011154C  DAD2                        ADD         (A2),A5
+0011154E  DAD3                        ADD         (A3),A5
+00111550  DAD4                        ADD         (A4),A5
+00111552  DAD5                        ADD         (A5),A5
+00111554  DAD6                        ADD         (A6),A5
+00111556  DAD7                        ADD         (A7),A5
+00111558                                              
+00111558                              ; values from all address registers to A6
+00111558  DCD0                        ADD         (A0),A6   
+0011155A  DCD1                        ADD         (A1),A6
+0011155C  DCD2                        ADD         (A2),A6
+0011155E  DCD3                        ADD         (A3),A6
+00111560  DCD4                        ADD         (A4),A6
+00111562  DCD5                        ADD         (A5),A6
+00111564  DCD6                        ADD         (A6),A6
+00111566  DCD7                        ADD         (A7),A6
+00111568                                              
+00111568                                  ; values from all address registers to A7
+00111568  DED0                        ADD         (A0),A7   
+0011156A  DED1                        ADD         (A1),A7
+0011156C  DED2                        ADD         (A2),A7
+0011156E  DED3                        ADD         (A3),A7
+00111570  DED4                        ADD         (A4),A7
+00111572  DED5                        ADD         (A5),A7
+00111574  DED6                        ADD         (A6),A7
+00111576  DED7                        ADD         (A7),A7    
+00111578                              
+00111578                                  ; post-increment from all address registers to A0
+00111578  D0D8                        ADD         (A0)+,A0   
+0011157A  D0D9                        ADD         (A1)+,A0
+0011157C  D0DA                        ADD         (A2)+,A0
+0011157E  D0DB                        ADD         (A3)+,A0
+00111580  D0DC                        ADD         (A4)+,A0
+00111582  D0DD                        ADD         (A5)+,A0
+00111584  D0DE                        ADD         (A6)+,A0
+00111586  D0DF                        ADD         (A7)+,A0
+00111588                                              
+00111588                              ; post-increment from all address registers to A1         
+00111588  D2D8                        ADD         (A0)+,A1   
+0011158A  D2D9                        ADD         (A1)+,A1
+0011158C  D2DA                        ADD         (A2)+,A1
+0011158E  D2DB                        ADD         (A3)+,A1
+00111590  D2DC                        ADD         (A4)+,A1
+00111592  D2DD                        ADD         (A5)+,A1
+00111594  D2DE                        ADD         (A6)+,A1
+00111596  D2DF                        ADD         (A7)+,A1
+00111598                                            
+00111598                              ; post-increment from all address registers to A2         
+00111598  D4D8                        ADD         (A0)+,A2   
+0011159A  D4D9                        ADD         (A1)+,A2
+0011159C  D4DA                        ADD         (A2)+,A2
+0011159E  D4DB                        ADD         (A3)+,A2
+001115A0  D4DC                        ADD         (A4)+,A2
+001115A2  D4DD                        ADD         (A5)+,A2
+001115A4  D4DE                        ADD         (A6)+,A2
+001115A6  D4DF                        ADD         (A7)+,A2
+001115A8                                                
+001115A8                                  ; post-increment from all address registers to A3
+001115A8  D6D8                        ADD         (A0)+,A3   
+001115AA  D6D9                        ADD         (A1)+,A3
+001115AC  D6DA                        ADD         (A2)+,A3
+001115AE  D6DB                        ADD         (A3)+,A3
+001115B0  D6DC                        ADD         (A4)+,A3
+001115B2  D6DD                        ADD         (A5)+,A3
+001115B4  D6DE                        ADD         (A6)+,A3
+001115B6  D6DF                        ADD         (A7)+,A3
+001115B8                                            
+001115B8                              ; post-increment from all address registers to A4        
+001115B8  D8D8                        ADD         (A0)+,A4   
+001115BA  D8D9                        ADD         (A1)+,A4
+001115BC  D8DA                        ADD         (A2)+,A4
+001115BE  D8DB                        ADD         (A3)+,A4
+001115C0  D8DC                        ADD         (A4)+,A4
+001115C2  D8DD                        ADD         (A5)+,A4
+001115C4  D8DE                        ADD         (A6)+,A4
+001115C6  D8DF                        ADD         (A7)+,A4
+001115C8                                           
+001115C8                              ; post-increment from all address registers to A5            
+001115C8  DAD8                        ADD         (A0)+,A5   
+001115CA  DAD9                        ADD         (A1)+,A5
+001115CC  DADA                        ADD         (A2)+,A5
+001115CE  DADB                        ADD         (A3)+,A5
+001115D0  DADC                        ADD         (A4)+,A5
+001115D2  DADD                        ADD         (A5)+,A5
+001115D4  DADE                        ADD         (A6)+,A5
+001115D6  DADF                        ADD         (A7)+,A5
+001115D8                                              
+001115D8                              ; post-increment from all address registers to A6         
+001115D8  DCD8                        ADD         (A0)+,A6   
+001115DA  DCD9                        ADD         (A1)+,A6
+001115DC  DCDA                        ADD         (A2)+,A6
+001115DE  DCDB                        ADD         (A3)+,A6
+001115E0  DCDC                        ADD         (A4)+,A6
+001115E2  DCDD                        ADD         (A5)+,A6
+001115E4  DCDE                        ADD         (A6)+,A6
+001115E6  DCDF                        ADD         (A7)+,A6
+001115E8                                              
+001115E8                               ; post-increment from all address registers to A7        
+001115E8  DED8                        ADD         (A0)+,A7  
+001115EA  DED9                        ADD         (A1)+,A7
+001115EC  DEDA                        ADD         (A2)+,A7
+001115EE  DEDB                        ADD         (A3)+,A7
+001115F0  DEDC                        ADD         (A4)+,A7
+001115F2  DEDD                        ADD         (A5)+,A7
+001115F4  DEDE                        ADD         (A6)+,A7
+001115F6  DEDF                        ADD         (A7)+,A7
+001115F8                              
+001115F8                                  ; pre-decrement from all address registers to A0
+001115F8  D0E0                        ADD         -(A0),A0   
+001115FA  D0E1                        ADD         -(A1),A0
+001115FC  D0E2                        ADD         -(A2),A0
+001115FE  D0E3                        ADD         -(A3),A0
+00111600  D0E4                        ADD         -(A4),A0
+00111602  D0E5                        ADD         -(A5),A0
+00111604  D0E6                        ADD         -(A6),A0
+00111606  D0E7                        ADD         -(A7),A0
+00111608                                     
+00111608                              ; pre-decrement from all address registers to A1                      
+00111608  D2E0                        ADD         -(A0),A1   
+0011160A  D2E1                        ADD         -(A1),A1
+0011160C  D2E2                        ADD         -(A2),A1
+0011160E  D2E3                        ADD         -(A3),A1
+00111610  D2E4                        ADD         -(A4),A1
+00111612  D2E5                        ADD         -(A5),A1
+00111614  D2E6                        ADD         -(A6),A1
+00111616  D2E7                        ADD         -(A7),A1
+00111618                                  
+00111618                              ; pre-decrement from all address registers to A2              
+00111618  D4E0                        ADD         -(A0),A2   
+0011161A  D4E1                        ADD         -(A1),A2
+0011161C  D4E2                        ADD         -(A2),A2
+0011161E  D4E3                        ADD         -(A3),A2
+00111620  D4E4                        ADD         -(A4),A2
+00111622  D4E5                        ADD         -(A5),A2
+00111624  D4E6                        ADD         -(A6),A2
+00111626  D4E7                        ADD         -(A7),A2
+00111628                                        
+00111628                              ; pre-decrement from all address registers to A3              
+00111628  D6E0                        ADD         -(A0),A3   
+0011162A  D6E1                        ADD         -(A1),A3
+0011162C  D6E2                        ADD         -(A2),A3
+0011162E  D6E3                        ADD         -(A3),A3
+00111630  D6E4                        ADD         -(A4),A3
+00111632  D6E5                        ADD         -(A5),A3
+00111634  D6E6                        ADD         -(A6),A3
+00111636  D6E7                        ADD         -(A7),A3
+00111638                                           
+00111638                              ; pre-decrement from all address registers to A4         
+00111638  D8E0                        ADD         -(A0),A4   
+0011163A  D8E1                        ADD         -(A1),A4
+0011163C  D8E2                        ADD         -(A2),A4
+0011163E  D8E3                        ADD         -(A3),A4
+00111640  D8E4                        ADD         -(A4),A4
+00111642  D8E5                        ADD         -(A5),A4
+00111644  D8E6                        ADD         -(A6),A4
+00111646  D8E7                        ADD         -(A7),A4
+00111648                                              
+00111648                              ; pre-decrement from all address registers to A5         
+00111648  DAE0                        ADD         -(A0),A5   
+0011164A  DAE1                        ADD         -(A1),A5
+0011164C  DAE2                        ADD         -(A2),A5
+0011164E  DAE3                        ADD         -(A3),A5
+00111650  DAE4                        ADD         -(A4),A5
+00111652  DAE5                        ADD         -(A5),A5
+00111654  DAE6                        ADD         -(A6),A5
+00111656  DAE7                        ADD         -(A7),A5
+00111658                                           
+00111658                              ; pre-decrement from all address registers to A6          
+00111658  DCE0                        ADD         -(A0),A6   
+0011165A  DCE1                        ADD         -(A1),A6
+0011165C  DCE2                        ADD         -(A2),A6
+0011165E  DCE3                        ADD         -(A3),A6
+00111660  DCE4                        ADD         -(A4),A6
+00111662  DCE5                        ADD         -(A5),A6
+00111664  DCE6                        ADD         -(A6),A6
+00111666  DCE7                        ADD         -(A7),A6
+00111668                                                
+00111668                              ; pre-decrement from all address registers to A7          
+00111668  DEE0                        ADD         -(A0),A7   
+0011166A  DEE1                        ADD         -(A1),A7
+0011166C  DEE2                        ADD         -(A2),A7
+0011166E  DEE3                        ADD         -(A3),A7
+00111670  DEE4                        ADD         -(A4),A7
+00111672  DEE5                        ADD         -(A5),A7
+00111674  DEE6                        ADD         -(A6),A7
+00111676  DEE7                        ADD         -(A7),A7
+00111678                              
+00111678                              ; immediate to all data registers    
+00111678  5240                        ADD         #01,D0   
+0011167A  5241                        ADD         #01,D1
+0011167C  5242                        ADD         #01,D2
+0011167E  5243                        ADD         #01,D3
+00111680  5244                        ADD         #01,D4
+00111682  5245                        ADD         #01,D5
+00111684  5246                        ADD         #01,D6
+00111686  5247                        ADD         #01,D7
+00111688                          
+00111688                              ; immediate to all address register
+00111688  5248                        ADD         #01,A0   
+0011168A  5249                        ADD         #01,A1
+0011168C  524A                        ADD         #01,A2
+0011168E  524B                        ADD         #01,A3
+00111690  524C                        ADD         #01,A4
+00111692  524D                        ADD         #01,A5
+00111694  524E                        ADD         #01,A6
+00111696  524F                        ADD         #01,A7
+00111698                          
+00111698                              ; immediate to all address register values
+00111698  5250                        ADD         #01,(A0)   
+0011169A  5251                        ADD         #01,(A1)
+0011169C  5252                        ADD         #01,(A2)
+0011169E  5253                        ADD         #01,(A3)
+001116A0  5254                        ADD         #01,(A4)
+001116A2  5255                        ADD         #01,(A5)
+001116A4  5256                        ADD         #01,(A6)
+001116A6  5257                        ADD         #01,(A7)
+001116A8                          
+001116A8                              ; immediate to all address register with post increment
+001116A8  5258                        ADD         #01,(A0)+   
+001116AA  5259                        ADD         #01,(A1)+
+001116AC  525A                        ADD         #01,(A2)+
+001116AE  525B                        ADD         #01,(A3)+
+001116B0  525C                        ADD         #01,(A4)+
+001116B2  525D                        ADD         #01,(A5)+
+001116B4  525E                        ADD         #01,(A6)+
+001116B6  525F                        ADD         #01,(A7)+
+001116B8                          
+001116B8                              ; immediate to all address register with pre-decrement
+001116B8  5260                        ADD         #01,-(A0)   
+001116BA  5261                        ADD         #01,-(A1)
+001116BC  5262                        ADD         #01,-(A2)
+001116BE  5263                        ADD         #01,-(A3)
+001116C0  5264                        ADD         #01,-(A4)
+001116C2  5265                        ADD         #01,-(A5)
+001116C4  5266                        ADD         #01,-(A6)
+001116C6  5267                        ADD         #01,-(A7)
+001116C8                          
+001116C8                              ; absolute short to all data registers
+001116C8  D078 0001                   ADD         $01,D0     
+001116CC  D278 0001                   ADD         $01,D1
+001116D0  D478 0001                   ADD         $01,D2
+001116D4  D678 0001                   ADD         $01,D3
+001116D8  D878 0001                   ADD         $01,D4
+001116DC  DA78 0001                   ADD         $01,D5
+001116E0  DC78 0001                   ADD         $01,D6
+001116E4  DE78 0001                   ADD         $01,D7
+001116E8                          
+001116E8                              ; absolute long to all data registers
+001116E8  D0F8 0A05                   ADD         $0A05,A0    
+001116EC  D2F8 0A05                   ADD         $0A05,A1
+001116F0  D4F8 0A05                   ADD         $0A05,A2
+001116F4  D6F8 0A05                   ADD         $0A05,A3
+001116F8  D8F8 0A05                   ADD         $0A05,A4
+001116FC  DAF8 0A05                   ADD         $0A05,A5
+00111700  DCF8 0A05                   ADD         $0A05,A6
+00111704  DEF8 0A05                   ADD         $0A05,A7
