@@ -192,7 +192,7 @@ EA_ProcessImmediate
 
 
 EA_ProcessImmediateByte
-    LEA         EA_Str_HashDollar,A2                  ; move the '#$' value into A2
+    LEA         EA_Str_Hash,A2                  ; move the '#' value into A2
     JSR         AppendOutput
     
     JSR         Get_Next_Word_D6                ; pull the next word into D3
@@ -201,7 +201,7 @@ EA_ProcessImmediateByte
     BRA         EA_Return
 
 EA_ProcessImmediateWord
-    LEA         EA_Str_HashDollar,A2                  ; move the '#$' value into A2
+    LEA         EA_Str_HashDollar,A2                  ; move the '#' value into A2
     JSR         AppendOutput
     
     JSR         Get_Next_Word_D6                ; pull the next word into D3
@@ -209,13 +209,14 @@ EA_ProcessImmediateWord
     BRA         EA_Return
      
 EA_ProcessImmediateLong    
-    LEA         EA_Str_HashDollar,A2                  ; move the '#$' value into A2
+    LEA         EA_Str_HashDollar,A2                  ; move the '#' value into A2
     JSR         AppendOutput
     
     JSR         Get_Next_Long_D7                ; pull the next word into D3
     MOVE.L      D7,D6
     JSR         PrintASCIIWord                  ; PrintAsciiWord uses d6 as input
     BRA         EA_Return
+
 
 
 EA_ProcessAbsoluteWord
@@ -1206,10 +1207,4 @@ SWAP
 SWAP_Return
     ADDA        #2,SP           ; advance SP +2 to discard the old D7     
     MOVEM.L     (SP)+,D1-D5     ; return results in D7
-    RTS  
-
-
-*~Font name~Courier New~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
+    RTS 
